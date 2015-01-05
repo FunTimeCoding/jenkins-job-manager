@@ -1,0 +1,9 @@
+[run]
+branch = True
+omit = tests/*
+       */__init__.py
+[html]
+directory = build/htmlcov
+[xml]
+output = build/log/coverage.xml
+; vim: ft=cfg

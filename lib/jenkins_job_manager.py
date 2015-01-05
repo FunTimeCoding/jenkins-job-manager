@@ -1,4 +1,4 @@
-class ExampleClass:
+class JenkinsJobManager:
 
     def run(self):
         print('Hello World')

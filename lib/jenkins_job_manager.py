@@ -11,18 +11,15 @@ class JenkinsJobManager:
 
         if args.url is not None:
             print('URL:', args.url)
-            self.create_xml()
+            output = self.create_xml(url=args.url, repo_type="git")
+            print(output)
         else:
             parser.print_help()
 
         return 0
 
-    def create_xml(self):
-        my_parser = etree.XMLParser(remove_blank_text=True)
-        original = etree.parse('/Users/shiin/Code/Personal/jenkins-tools/bare-job.xml', parser=my_parser)
-        original_serialized = etree.tostring(original, encoding='unicode', pretty_print=True)
-        print(original_serialized)
-
+    @staticmethod
+    def create_xml(url, repo_type="git"):
         root = etree.Element("project")
         root.append(etree.Element("actions"))
 
@@ -33,10 +30,28 @@ class JenkinsJobManager:
         dependencies.text = "false"
         root.append(dependencies)
 
-        root.append(etree.Element("properties"))
+        properties = etree.Element("properties")
+        root.append(properties)
 
         scm = etree.Element("scm")
-        scm.set("class", "hudson.scm.NullSCM")
+        if repo_type is "git":
+            scm.set("class", "hudson.plugins.git.GitSCM")
+            scm.set("plugin", "git@2.3.2")
+
+            remote_config = etree.Element("userRemoteConfigs")
+            git_remote_config = etree.Element("hudson.plugins.git.UserRemoteConfig")
+            url_element = etree.Element("url")
+            url_element.text = url
+            git_remote_config.append(url_element)
+            remote_config.append(git_remote_config)
+            scm.append(remote_config)
+
+            version = etree.Element("configVersion")
+            version.text = "2"
+            scm.append(version)
+        else:
+            scm.set("class", "hudson.scm.NullSCM")
+
         root.append(scm)
 
         roam = etree.Element("canRoam")
@@ -65,9 +80,4 @@ class JenkinsJobManager:
         root.append(etree.Element("publishers"))
         root.append(etree.Element("buildWrappers"))
         mine_serialized = etree.tostring(root, encoding='unicode', pretty_print=True)
-        print(mine_serialized)
-
-        if original_serialized == mine_serialized:
-            print('equal')
-        else:
-            print('not equal')
+        return mine_serialized

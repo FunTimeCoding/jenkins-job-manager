@@ -80,4 +80,5 @@ class JenkinsJobManager:
         root.append(etree.Element("publishers"))
         root.append(etree.Element("buildWrappers"))
         mine_serialized = etree.tostring(root, encoding='unicode', pretty_print=True)
+
         return mine_serialized

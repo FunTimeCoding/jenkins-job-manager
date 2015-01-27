@@ -5,6 +5,7 @@ def text_compare(t1, t2):
         return True
     return (t1 or '').strip() == (t2 or '').strip()
 
+
 def xml_compare(x1, x2, reporter=None):
     if x1.tag != x2.tag:
         if reporter:

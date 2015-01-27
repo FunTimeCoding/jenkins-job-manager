@@ -12,5 +12,4 @@ setup(name='jenkins-job-manager',
       version='0.1',
       install_requires=['nose2', 'lxml'],
       packages=['NAME'],
-      scripts=[]
-)
+      scripts=[])

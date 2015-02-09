@@ -31,12 +31,21 @@ class JenkinsJobManager:
         root.append(dependencies)
 
         properties = etree.Element("properties")
+
+        # disk_usage = etree.Element("hudson.plugins.disk__usage.DiskUsageProperty")
+        # disk_usage.set("plugin", "disk-usage@0.24")
+        # properties.append(disk_usage)
+
         root.append(properties)
 
         scm = etree.Element("scm")
         if repo_type is "git":
             scm.set("class", "hudson.plugins.git.GitSCM")
             scm.set("plugin", "git@2.3.2")
+
+            version = etree.Element("configVersion")
+            version.text = "2"
+            scm.append(version)
 
             remote_config = etree.Element("userRemoteConfigs")
             git_remote_config = etree.Element("hudson.plugins.git.UserRemoteConfig")
@@ -46,9 +55,23 @@ class JenkinsJobManager:
             remote_config.append(git_remote_config)
             scm.append(remote_config)
 
-            version = etree.Element("configVersion")
-            version.text = "2"
-            scm.append(version)
+            branches = etree.Element("branches")
+            branch_spec = etree.Element("hudson.plugins.git.BranchSpec")
+            branch_spec_name = etree.Element("name")
+            branch_spec_name.text = "*/master"
+            branch_spec.append(branch_spec_name)
+            branches.append(branch_spec)
+            scm.append(branches)
+
+            generate_submodule_configs = etree.Element("doGenerateSubmoduleConfigurations")
+            generate_submodule_configs.text = "false"
+            scm.append(generate_submodule_configs)
+
+            submodule_configs = etree.Element("submoduleCfg")
+            submodule_configs.set("class", "list")
+            scm.append(submodule_configs)
+
+            scm.append(etree.Element("extensions"))
         else:
             scm.set("class", "hudson.scm.NullSCM")
 

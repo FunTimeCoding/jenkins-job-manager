@@ -11,5 +11,5 @@ setup(name='jenkins-job-manager',
       author_email='funtimecoding@gmail.com',
       version='0.1',
       install_requires=['nose2', 'lxml'],
-      packages=['NAME'],
-      scripts=[])
+      packages=[],
+      scripts=['bin/jjm'])

@@ -1,4 +1,19 @@
-# Python Skeleton
+# Jenkins Job Manager
+
+
+## Setup
+
+Install jenkins-job-manager.
+
+```sh
+pip3 install -e jenkins-job-manager
+```
+
+Uninstall jenkins-job-manager.
+
+```sh
+pip3 uninstall jenkins-job-manager
+```
 
 
 ## Operation

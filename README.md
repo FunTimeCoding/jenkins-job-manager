@@ -3,10 +3,14 @@
 
 ## Operation
 
-Run scripts.
+Run the main script.
 
 ```sh
-PYTHONPATH=. bin/example-script
+PYTHONPATH=. bin/jjm
+```
+
+```sh
+jjm --url http://gitlab.ping.lan/shiin/jenkins-job-manager.git
 ```
 
 

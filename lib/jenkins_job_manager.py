@@ -18,6 +18,16 @@ class JenkinsJobManager:
 
         return 0
 
+    def guess_repo_type(self, url):
+        repo_type = ""
+
+        if "git" in url:
+            repo_type = "git"
+        elif "svn" in url:
+            repo_type = "svn"
+
+        return repo_type
+
     @staticmethod
     def create_xml(url, repo_type="git"):
         root = etree.Element("project")

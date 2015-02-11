@@ -19,12 +19,6 @@ class JenkinsJobManager:
         print('URL: ' + self.options['url'])
         print('Repository type: ' + self.options['repo_type'])
 
-        # if options['url'] is '':
-        #    option_provider.print_help()
-        #elif options['repo_type'] is '':
-        #    print('Unable to determine repository type.')
-        #    return 1
-
         output = self.create_xml(url=self.options['url'], repo_type=self.options['repo_type'])
         print(output)
 

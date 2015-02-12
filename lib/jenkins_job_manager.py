@@ -1,28 +1,69 @@
+import argparse
 from lxml import etree
 
 
 class JenkinsJobManager:
-    def __init__(self, options: dict=None):
-        if options is None:
-            self.options = dict(
-                verbose=False,
-                repo_type='',
-                url=''
-            )
-        else:
-            self.options = options
+    def __init__(self, arguments: list=[]):
+        args = self.parse_args(arguments)
+
+        self.verbose = args.verbose
+        self.repo_type = args.type
+        self.url = args.url
+
+        if self.is_valid_repo_type(self.repo_type) is False:
+            self.repo_type = self.guess_repo_type(self.url)
+
+        if self.verbose is True:
+            print('Repository type: ' + self.repo_type)
+            print('URL: ' + self.url)
 
     def run(self) -> int:
-        if self.options['verbose'] is True:
-            print('Verbose messages enabled.')
-
-        print('URL: ' + self.options['url'])
-        print('Repository type: ' + self.options['repo_type'])
-
-        output = self.create_xml(url=self.options['url'], repo_type=self.options['repo_type'])
-        print(output)
-
+        print(self.create_xml(url=self.url, repo_type=self.repo_type))
         return 0
+
+    @staticmethod
+    def get_valid_repo_types() -> list:
+        return ['svn', 'git']
+
+    @staticmethod
+    def is_valid_repo_type(repo_type: str) -> bool:
+        return repo_type in JenkinsJobManager.get_valid_repo_types()
+
+    @staticmethod
+    def guess_repo_type(url: str) -> str:
+        for valid_type in JenkinsJobManager.get_valid_repo_types():
+            if valid_type in url:
+                return valid_type
+        return ''
+
+    @staticmethod
+    def parse_args(arguments: list=None) -> argparse.Namespace:
+        parser = argparse.ArgumentParser(description='Generate a config.xml for jenkins jobs.')
+
+        required_group = parser.add_argument_group('required named arguments')
+        required_group.add_argument(
+            '-u',
+            '--url',
+            help='URL to the repository to check out on Jenkins',
+            default=''
+        )
+
+        parser.add_argument(
+            '-t',
+            '--type',
+            help='Repository type. Supported: ' + ', '.join(JenkinsJobManager.get_valid_repo_types()),
+            choices=JenkinsJobManager.get_valid_repo_types(),
+            default=''
+        )
+
+        parser.add_argument(
+            '-v',
+            '--verbose',
+            help='Turn on some verbose messages.',
+            action='store_true'
+        )
+
+        return parser.parse_args(arguments)
 
     @staticmethod
     def create_xml(url: str='', repo_type: str='') -> str:

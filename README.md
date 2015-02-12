@@ -34,16 +34,16 @@ jjm --url http://gitlab.ping.lan/shiin/jenkins-job-manager.git
 Install test tools.
 
 ```sh
-pip3 install nose2
+pip3 install -U pytest pytest-cov
 ```
 
 Run tests.
 
 ```sh
-nose2
+./run-tests.sh
 ```
 
-Run ant like Jenkins. Requires `ant` to be installed.
+Run `ant` like Jenkins. Requires `ant` to be installed.
 
 ```sh
 ant

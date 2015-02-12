@@ -5,22 +5,6 @@ from tests.helper.xml_comparator import xml_compare
 from tests.helper.string_type_detector import get_string_type
 
 
-def create_git_options():
-    return dict(
-        verbose=False,
-        repo_type='git',
-        url='http://example.org/my_git_repo.git'
-    )
-
-
-def create_svn_options():
-    return dict(
-        verbose=False,
-        repo_type='svn',
-        url='http://example.org/my_svn_repo'
-    )
-
-
 def test_plain_run_returns_zero():
     jjm = JenkinsJobManager()
     assert jjm.run() == 0
@@ -46,7 +30,7 @@ def test_create_xml_without_repo():
 
 
 def test_create_xml_with_git_repo():
-    jjm = JenkinsJobManager(create_git_options())
+    jjm = JenkinsJobManager(['--url', 'http://example.org/my_git_repo.git'])
     my_parser = etree.XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/git-job.xml', parser=my_parser)
@@ -66,7 +50,7 @@ def test_create_xml_with_git_repo():
 
 
 def test_create_xml_with_svn_repo():
-    jjm = JenkinsJobManager(create_svn_options())
+    jjm = JenkinsJobManager(['--url', 'http://example.org/my_svn_repo'])
     my_parser = etree.XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/svn-job.xml', parser=my_parser)
@@ -88,7 +72,6 @@ def test_create_xml_with_svn_repo():
 def clear_properties_node(xml):
     properties = xml.find('properties')
     for node in properties.findall('*'):
-        print('removing tag \'' + node.tag + '\' from \'' + properties.tag + '\'')
         properties.remove(node)
 
 
@@ -109,3 +92,14 @@ def test_correct_return_types():
     assert get_string_type(serialized_xml_generated) == 'str'
     assert type(serialized_xml_fixture) == str
     assert type(serialized_xml_generated) == str
+
+
+def test_repo_type():
+    assert JenkinsJobManager.guess_repo_type('https://github.com/FunTimeCoding/dotfiles.git') == 'git'
+    assert JenkinsJobManager.guess_repo_type('svn+ssh://svn.rz.adition/adition_v4/branches/release-v4.28') == 'svn'
+    assert JenkinsJobManager.guess_repo_type('') == ''
+
+
+def test_repo_types():
+    for repo_type in JenkinsJobManager.get_valid_repo_types():
+        assert type(repo_type) == str

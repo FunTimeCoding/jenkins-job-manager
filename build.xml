@@ -4,9 +4,14 @@
     <target name="build">
         <delete dir="${workspace}/build"/>
         <mkdir dir="${workspace}/build/log"/>
+        <exec executable="${workspace}/run-lint-check.sh">
+            <arg value="--ci-mode"/>
+        </exec>
+        <exec executable="${workspace}/run-code-style-check.sh">
+            <arg value="--ci-mode"/>
+        </exec>
         <exec executable="${workspace}/run-tests.sh">
-            <arg value="-c"/>
-            <arg value="pytest-ci.ini"/>
+            <arg value="--ci-mode"/>
         </exec>
     </target>
 </project>

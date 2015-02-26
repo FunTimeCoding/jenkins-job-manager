@@ -38,7 +38,8 @@ class JenkinsJobManager:
 
     @staticmethod
     def parse_args(arguments: list=None) -> argparse.Namespace:
-        parser = argparse.ArgumentParser(description='Generate a config.xml for jenkins jobs.')
+        description = 'Generate a config.xml for jenkins jobs.'
+        parser = argparse.ArgumentParser(description=description)
 
         required_group = parser.add_argument_group('required named arguments')
         required_group.add_argument(
@@ -48,10 +49,11 @@ class JenkinsJobManager:
             default=''
         )
 
+        repo_types = ', '.join(JenkinsJobManager.get_valid_repo_types())
         parser.add_argument(
             '-t',
             '--type',
-            help='Repository type. Supported: ' + ', '.join(JenkinsJobManager.get_valid_repo_types()),
+            help='Repository type. Supported: ' + repo_types,
             choices=JenkinsJobManager.get_valid_repo_types(),
             default=''
         )
@@ -87,7 +89,8 @@ class JenkinsJobManager:
             scm.append(version)
 
             remote_config = etree.Element('userRemoteConfigs')
-            git_remote_config = etree.Element('hudson.plugins.git.UserRemoteConfig')
+            git_remote_config_tag = 'hudson.plugins.git.UserRemoteConfig'
+            git_remote_config = etree.Element(git_remote_config_tag)
             url_element = etree.Element('url')
             url_element.text = url
             git_remote_config.append(url_element)
@@ -102,7 +105,8 @@ class JenkinsJobManager:
             branches.append(branch_spec)
             scm.append(branches)
 
-            generate_submodule_configs = etree.Element('doGenerateSubmoduleConfigurations')
+            generate_tag = 'doGenerateSubmoduleConfigurations'
+            generate_submodule_configs = etree.Element(generate_tag)
             generate_submodule_configs.text = 'false'
             scm.append(generate_submodule_configs)
 
@@ -117,7 +121,8 @@ class JenkinsJobManager:
 
             locations = etree.Element('locations')
 
-            module_location = etree.Element('hudson.scm.SubversionSCM_-ModuleLocation')
+            module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
+            module_location = etree.Element(module_tag)
 
             remote = etree.Element('remote')
             remote.text = url
@@ -188,6 +193,8 @@ class JenkinsJobManager:
         root.append(etree.Element('builders'))
         root.append(etree.Element('publishers'))
         root.append(etree.Element('buildWrappers'))
-        mine_serialized = etree.tostring(root, encoding='unicode', pretty_print=True)
+        mine_serialized = etree.tostring(root,
+                                         encoding='unicode',
+                                         pretty_print=True)
 
         return mine_serialized

@@ -11,8 +11,12 @@ def test_compare():
 
     assert xml_compare(root_a, root_b) is True
 
-    serialized_a = etree.tostring(root_a, encoding='unicode', pretty_print=True)
-    serialized_b = etree.tostring(root_b, encoding='unicode', pretty_print=True)
+    serialized_a = etree.tostring(root_a,
+                                  encoding='unicode',
+                                  pretty_print=True)
+    serialized_b = etree.tostring(root_b,
+                                  encoding='unicode',
+                                  pretty_print=True)
     assert serialized_a == serialized_b
 
 
@@ -25,6 +29,10 @@ def test_compare_negative():
 
     assert xml_compare(root_a, root_b) is False
 
-    serialized_a = etree.tostring(root_a, encoding='unicode', pretty_print=True)
-    serialized_b = etree.tostring(root_b, encoding='unicode', pretty_print=True)
+    serialized_a = etree.tostring(root_a,
+                                  encoding='unicode',
+                                  pretty_print=True)
+    serialized_b = etree.tostring(root_b,
+                                  encoding='unicode',
+                                  pretty_print=True)
     assert serialized_a != serialized_b

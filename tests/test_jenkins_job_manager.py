@@ -6,20 +6,23 @@ from tests.helper.string_type_detector import get_string_type
 
 
 def test_plain_run_returns_zero():
-    jjm = JenkinsJobManager()
+    jjm = JenkinsJobManager([])
     assert jjm.run() == 0
 
 
 def test_create_xml_without_repo():
-    jjm = JenkinsJobManager()
+    jjm = JenkinsJobManager([])
     my_parser = etree.XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/bare-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
-    serialized_xml_fixture = etree.tostring(fixture_root_node, encoding='unicode', pretty_print=True)
+    serialized_xml_fixture = etree.tostring(fixture_root_node,
+                                            encoding='unicode',
+                                            pretty_print=True)
 
     serialized_xml_generated = jjm.create_xml()
-    generated_root_node = etree.fromstring(serialized_xml_generated, parser=my_parser)
+    generated_root_node = etree.fromstring(serialized_xml_generated,
+                                           parser=my_parser)
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
@@ -36,10 +39,15 @@ def test_create_xml_with_git_repo():
     fixture_tree = etree.parse('tests/fixture/git-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
     clear_properties_node(fixture_root_node)
-    serialized_xml_fixture = etree.tostring(fixture_root_node, encoding='unicode', pretty_print=True)
+    serialized_xml_fixture = etree.tostring(fixture_root_node,
+                                            encoding='unicode',
+                                            pretty_print=True)
 
-    serialized_xml_generated = jjm.create_xml('http://example.org/my_git_repo.git', repo_type='git')
-    generated_root_node = etree.fromstring(serialized_xml_generated, parser=my_parser)
+    git_url = 'http://example.org/my_git_repo.git'
+    serialized_xml_generated = jjm.create_xml(git_url,
+                                              repo_type='git')
+    generated_root_node = etree.fromstring(serialized_xml_generated,
+                                           parser=my_parser)
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
@@ -56,10 +64,14 @@ def test_create_xml_with_svn_repo():
     fixture_tree = etree.parse('tests/fixture/svn-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
     clear_properties_node(fixture_root_node)
-    serialized_xml_fixture = etree.tostring(fixture_root_node, encoding='unicode', pretty_print=True)
+    serialized_xml_fixture = etree.tostring(fixture_root_node,
+                                            encoding='unicode',
+                                            pretty_print=True)
 
-    serialized_xml_generated = jjm.create_xml('http://example.org/my_svn_repo', repo_type='svn')
-    generated_root_node = etree.fromstring(serialized_xml_generated, parser=my_parser)
+    serialized_xml_generated = jjm.create_xml('http://example.org/my_svn_repo',
+                                              repo_type='svn')
+    generated_root_node = etree.fromstring(serialized_xml_generated,
+                                           parser=my_parser)
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
@@ -76,15 +88,18 @@ def clear_properties_node(xml):
 
 
 def test_correct_return_types():
-    jjm = JenkinsJobManager()
+    jjm = JenkinsJobManager([])
     my_parser = etree.XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/bare-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
-    serialized_xml_fixture = etree.tostring(fixture_root_node, encoding='unicode', pretty_print=True)
+    serialized_xml_fixture = etree.tostring(fixture_root_node,
+                                            encoding='unicode',
+                                            pretty_print=True)
 
     serialized_xml_generated = jjm.create_xml('http://example.org/my_svn_repo')
-    generated_root_node = etree.fromstring(serialized_xml_generated, parser=my_parser)
+    generated_root_node = etree.fromstring(serialized_xml_generated,
+                                           parser=my_parser)
 
     assert type(fixture_root_node) == lxml.etree._Element
     assert type(generated_root_node) == lxml.etree._Element
@@ -95,8 +110,13 @@ def test_correct_return_types():
 
 
 def test_repo_type():
-    assert JenkinsJobManager.guess_repo_type('https://github.com/FunTimeCoding/dotfiles.git') == 'git'
-    assert JenkinsJobManager.guess_repo_type('svn+ssh://svn.rz.adition/adition_v4/branches/release-v4.28') == 'svn'
+    git_url = 'https://github.com/FunTimeCoding/dotfiles.git'
+    git_url_type = JenkinsJobManager.guess_repo_type(git_url)
+    assert git_url_type == 'git'
+
+    svn_url = 'svn+ssh://svn.rz.adition/adition_v4/branches/release-v4.28'
+    svn_url_type = JenkinsJobManager.guess_repo_type(svn_url)
+    assert svn_url_type == 'svn'
     assert JenkinsJobManager.guess_repo_type('') == ''
 
 

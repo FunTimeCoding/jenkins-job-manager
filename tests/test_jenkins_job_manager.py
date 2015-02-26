@@ -1,4 +1,4 @@
-from lib.jenkins_job_manager import JenkinsJobManager
+from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 from lxml import etree
 import lxml.etree
 from tests.helper.xml_comparator import xml_compare

@@ -7,4 +7,4 @@ omit = tests/*
 directory = build/htmlcov
 [xml]
 output = build/log/coverage.xml
-; vim: ft=cfg
+; vim: ft=dosini

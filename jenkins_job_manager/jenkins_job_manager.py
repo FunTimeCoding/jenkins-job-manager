@@ -3,7 +3,7 @@ from lxml import etree
 
 
 class JenkinsJobManager:
-    def __init__(self, arguments: list=[]):
+    def __init__(self, arguments: list):
         args = self.parse_args(arguments)
 
         self.verbose = args.verbose

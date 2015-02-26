@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import sys
 
-__author__ = 'shiin'
-
-from lib.jenkins_job_manager import JenkinsJobManager
+from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 
 
 def main():

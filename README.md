@@ -1,35 +1,28 @@
-# Jenkins Job Manager
+# JenkinsJobManager
 
 
 ## Setup
 
-Install jenkins-job-manager.
+Install the project.
 
 ```sh
-pip3 install -e jenkins-job-manager
+pip3 install -e ../jenkins-job-manager
 ```
 
-Uninstall jenkins-job-manager.
+Uninstall the project.
 
 ```sh
 pip3 uninstall jenkins-job-manager
 ```
 
 
-## Operation
+## Development
 
-Run the main script.
+Run the main script without having to install the project.
 
 ```sh
 PYTHONPATH=. bin/jjm
 ```
-
-```sh
-jjm --url http://gitlab.ping.lan/shiin/jenkins-job-manager.git
-```
-
-
-## Development
 
 Install development tools.
 
@@ -52,6 +45,8 @@ ant
 ```
 
 
-## Important details
+## Skeleton details
 
 * The reason why the `tests` directory is not called `test` is because a package named `test` exists.
+* The main source code directory is the same name as the package in python packages.
+* Dashes in project names become underscores in python code. They are still legit.

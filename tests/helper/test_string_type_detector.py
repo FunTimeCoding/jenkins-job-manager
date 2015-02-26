@@ -1,7 +1,5 @@
 from tests.helper.string_type_detector import get_string_type
 
-# pylint: disable=missing-docstring
-
 
 def test_is_str():
     assert get_string_type('foo') is 'str'

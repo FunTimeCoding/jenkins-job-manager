@@ -4,10 +4,8 @@ from lxml.etree import Element, XMLParser
 from tests.helper.xml_comparator import xml_compare
 from tests.helper.string_type_detector import get_string_type
 
-# pylint: disable=missing-docstring
-
-git_fixture_url = 'http://example.org/my_git_repo.git'
-svn_fixture_url = 'http://example.org/my_svn_repo'
+GIT_FIXTURE_URL = 'http://example.org/my_git_repo.git'
+SVN_FIXTURE_URL = 'http://example.org/my_svn_repo'
 
 
 def test_plain_run_returns_zero():
@@ -37,7 +35,7 @@ def test_create_xml_without_repo():
 
 
 def test_create_xml_with_git_repo():
-    jjm = JenkinsJobManager(['--url', git_fixture_url])
+    jjm = JenkinsJobManager(['--url', GIT_FIXTURE_URL])
     my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/git-job.xml', parser=my_parser)
@@ -47,7 +45,7 @@ def test_create_xml_with_git_repo():
                                             encoding='unicode',
                                             pretty_print=True)
 
-    serialized_xml_generated = jjm.create_xml(git_fixture_url,
+    serialized_xml_generated = jjm.create_xml(GIT_FIXTURE_URL,
                                               repo_type='git')
     generated_root_node = serialized_to_element(serialized_xml_generated)
 
@@ -60,7 +58,7 @@ def test_create_xml_with_git_repo():
 
 
 def test_create_xml_with_svn_repo():
-    jjm = JenkinsJobManager(['--url', svn_fixture_url])
+    jjm = JenkinsJobManager(['--url', SVN_FIXTURE_URL])
     my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/svn-job.xml', parser=my_parser)
@@ -70,7 +68,7 @@ def test_create_xml_with_svn_repo():
                                             encoding='unicode',
                                             pretty_print=True)
 
-    serialized_xml_generated = jjm.create_xml(svn_fixture_url,
+    serialized_xml_generated = jjm.create_xml(SVN_FIXTURE_URL,
                                               repo_type='svn')
     generated_root_node = serialized_to_element(serialized_xml_generated)
 
@@ -98,7 +96,7 @@ def test_correct_return_types():
                                             encoding='unicode',
                                             pretty_print=True)
 
-    serialized_xml_generated = jjm.create_xml(svn_fixture_url)
+    serialized_xml_generated = jjm.create_xml(SVN_FIXTURE_URL)
     generated_root_node = serialized_to_element(serialized_xml_generated)
 
     # assert type(fixture_root_node) == Element
@@ -110,10 +108,10 @@ def test_correct_return_types():
 
 
 def test_repo_type():
-    git_url_type = JenkinsJobManager.guess_repo_type(git_fixture_url)
+    git_url_type = JenkinsJobManager.guess_repo_type(GIT_FIXTURE_URL)
     assert git_url_type == 'git'
 
-    svn_url_type = JenkinsJobManager.guess_repo_type(svn_fixture_url)
+    svn_url_type = JenkinsJobManager.guess_repo_type(SVN_FIXTURE_URL)
     assert svn_url_type == 'svn'
 
     no_url_type = JenkinsJobManager.guess_repo_type('')

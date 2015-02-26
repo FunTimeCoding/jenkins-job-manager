@@ -1,7 +1,7 @@
 from lxml.etree import Element
 
 
-def text_compare(text_a, text_b):
+def text_compare(text_a: str, text_b: str) -> bool:
     if not text_a and not text_b:
         return True
     if text_a == '*' or text_b == '*':
@@ -9,7 +9,7 @@ def text_compare(text_a, text_b):
     return (text_a or '').strip() == (text_b or '').strip()
 
 
-def xml_compare(element_a: Element, element_b: Element, reporter=None):
+def xml_compare(element_a: Element, element_b: Element, reporter=None) -> bool:
     if element_a.tag != element_b.tag:
         if reporter:
             reporter('Tags do not match: %s and %s' % (element_a.tag,

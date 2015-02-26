@@ -1,18 +1,10 @@
-"""Main module of this program."""
 import argparse
 from lxml import etree
 from lxml.etree import Element
 
 
 class JenkinsJobManager:
-    """Take program arguments and generate XML output."""
-
     def __init__(self, arguments: list):
-        """
-        :type self: JenkinsJobManager
-        :type arguments: list
-        :param arguments:
-        """
         args = self.parse_args(arguments)
 
         self.verbose = args.verbose
@@ -27,37 +19,19 @@ class JenkinsJobManager:
             print('URL: ' + self.url)
 
     def run(self) -> int:
-        """
-        :type self: JenkinsJobManager
-        :return:
-        """
         print(self.create_xml(url=self.url, repo_type=self.repo_type))
         return 0
 
     @staticmethod
     def get_valid_repo_types() -> list:
-        """
-        :rtype : list
-        :return:
-        """
         return ['svn', 'git']
 
     @staticmethod
     def is_valid_repo_type(repo_type: str) -> bool:
-        """
-        :type repo_type: str
-        :param repo_type:
-        :return:
-        """
         return repo_type in JenkinsJobManager.get_valid_repo_types()
 
     @staticmethod
     def guess_repo_type(url: str) -> str:
-        """
-        :type url: str
-        :param url:
-        :return:
-        """
         for valid_type in JenkinsJobManager.get_valid_repo_types():
             if valid_type in url:
                 return valid_type
@@ -65,11 +39,6 @@ class JenkinsJobManager:
 
     @staticmethod
     def parse_args(arguments: list=None) -> argparse.Namespace:
-        """
-        :type arguments: list
-        :param arguments:
-        :return:
-        """
         description = 'Generate a config.xml for jenkins jobs.'
         parser = argparse.ArgumentParser(description=description)
 
@@ -101,13 +70,6 @@ class JenkinsJobManager:
 
     @staticmethod
     def create_xml(url: str='', repo_type: str='') -> str:
-        """
-        :type repo_type: str
-        :type url: str
-        :param url:
-        :param repo_type:
-        :return:
-        """
         root = Element('project')
         root.append(Element('actions'))
         root.append(Element('description'))
@@ -182,15 +144,8 @@ class JenkinsJobManager:
 
 
 class GitXmlGenerator:
-    """Generate Git specific XML output."""
-
     @staticmethod
     def generate_remote_config(url: str) -> Element:
-        """
-        :type url: str
-        :param url:
-        :return:
-        """
         remote_config = Element('userRemoteConfigs')
         git_remote_config_tag = 'hudson.plugins.git.UserRemoteConfig'
         git_remote_config = Element(git_remote_config_tag)
@@ -202,9 +157,6 @@ class GitXmlGenerator:
 
     @staticmethod
     def generate_branches() -> Element:
-        """
-        :return:
-        """
         branches = Element('branches')
         branch_spec = Element('hudson.plugins.git.BranchSpec')
         branch_spec_name = Element('name')
@@ -215,18 +167,12 @@ class GitXmlGenerator:
 
     @staticmethod
     def generate_version() -> Element:
-        """
-        :return:
-        """
         version = Element('configVersion')
         version.text = '2'
         return version
 
     @staticmethod
     def generate_do_submodules() -> Element:
-        """
-        :return:
-        """
         generate_tag = 'doGenerateSubmoduleConfigurations'
         generate_submodule_configs = Element(generate_tag)
         generate_submodule_configs.text = 'false'
@@ -234,24 +180,14 @@ class GitXmlGenerator:
 
     @staticmethod
     def generate_submodule_configs() -> Element:
-        """
-        :return:
-        """
         submodule_configs = Element('submoduleCfg')
         submodule_configs.set('class', 'list')
         return submodule_configs
 
 
 class SvnXmlGenerator:
-    """Generate Subversion specific XML output."""
-
     @staticmethod
     def generate_locations(url: str) -> Element:
-        """
-        :type url: str
-        :param url:
-        :return:
-        """
         locations = Element('locations')
 
         module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
@@ -280,27 +216,18 @@ class SvnXmlGenerator:
 
     @staticmethod
     def generate_updater() -> Element:
-        """
-        :return:
-        """
         updater = Element('workspaceUpdater')
         updater.set('class', 'hudson.scm.subversion.UpdateUpdater')
         return updater
 
     @staticmethod
     def generate_ignore_changes() -> Element:
-        """
-        :return:
-        """
         ignore_changes = Element('ignoreDirPropChanges')
         ignore_changes.text = 'false'
         return ignore_changes
 
     @staticmethod
     def generate_filter_changes() -> Element:
-        """
-        :return:
-        """
         filter_changes = Element('filterChangelog')
         filter_changes.text = 'false'
         return filter_changes

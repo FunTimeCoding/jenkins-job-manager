@@ -1,5 +1,3 @@
-"""Package metadata containing useful information."""
-
 try:
     from setuptools import setup
 except ImportError:

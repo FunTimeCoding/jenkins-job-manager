@@ -97,7 +97,7 @@ def test_correct_return_types():
                                             pretty_print=True)
 
     serialized_xml_generated = jjm.create_xml(SVN_FIXTURE_URL)
-    generated_root_node = serialized_to_element(serialized_xml_generated)
+    # generated_root_node = serialized_to_element(serialized_xml_generated)
 
     # assert type(fixture_root_node) == Element
     # assert type(generated_root_node) == Element

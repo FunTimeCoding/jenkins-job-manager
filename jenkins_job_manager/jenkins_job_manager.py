@@ -6,7 +6,6 @@ from lxml.etree import Element
 class JenkinsJobManager:
     def __init__(self, arguments: list):
         args = self.parse_args(arguments)
-
         self.verbose = args.verbose
         self.repo_type = args.type
         self.url = args.url
@@ -32,10 +31,14 @@ class JenkinsJobManager:
 
     @staticmethod
     def guess_repo_type(url: str) -> str:
+        repo_type = ''
+
         for valid_type in JenkinsJobManager.get_valid_repo_types():
             if valid_type in url:
-                return valid_type
-        return ''
+                repo_type = valid_type
+                break
+
+        return repo_type
 
     @staticmethod
     def parse_args(arguments: list=None) -> argparse.Namespace:
@@ -73,74 +76,95 @@ class JenkinsJobManager:
         root = Element('project')
         root.append(Element('actions'))
         root.append(Element('description'))
+        generator = GenericXmlGenerator()
+        root.append(generator.generate_dependencies())
+        root.append(Element('properties'))
+        root.append(generator.generate_scm_for_repo_type(url, repo_type))
+        root.append(generator.generate_roam())
+        root.append(generator.generate_disabled())
+        root.append(generator.generate_upstream())
+        root.append(generator.generate_downstream())
+        root.append(Element('triggers'))
+        root.append(generator.generate_concurrent())
+        root.append(Element('builders'))
+        root.append(Element('publishers'))
+        root.append(Element('buildWrappers'))
+        return JenkinsJobManager.serialize_xml(root)
 
+    @staticmethod
+    def serialize_xml(element: Element):
+        return etree.tostring(element, encoding='unicode', pretty_print=True)
+
+
+class GenericXmlGenerator:
+    @staticmethod
+    def generate_dependencies() -> Element:
         dependencies = Element('keepDependencies')
         dependencies.text = 'false'
-        root.append(dependencies)
+        return dependencies
 
-        root.append(Element('properties'))
+    @staticmethod
+    def generate_roam() -> Element:
+        roam = Element('canRoam')
+        roam.text = 'true'
+        return roam
 
+    @staticmethod
+    def generate_disabled() -> Element:
+        disabled = Element('disabled')
+        disabled.text = 'false'
+        return disabled
+
+    @staticmethod
+    def generate_upstream() -> Element:
+        upstream = Element('blockBuildWhenDownstreamBuilding')
+        upstream.text = 'false'
+        return upstream
+
+    @staticmethod
+    def generate_downstream() -> Element:
+        downstream = Element('blockBuildWhenUpstreamBuilding')
+        downstream.text = 'false'
+        return downstream
+
+    @staticmethod
+    def generate_concurrent() -> Element:
+        concurrent = Element('concurrentBuild')
+        concurrent.text = 'false'
+        return concurrent
+
+    @staticmethod
+    def generate_scm_for_repo_type(url: str, repo_type: str) -> Element:
         scm = Element('scm')
         if repo_type is 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
             scm.set('plugin', 'git@2.3.2')
 
-            generator = GitXmlGenerator()
-            scm.append(generator.generate_version())
-            scm.append(generator.generate_remote_config(url))
-            scm.append(generator.generate_branches())
-            scm.append(generator.generate_do_submodules())
-            scm.append(generator.generate_submodule_configs())
+            git_generator = GitXmlGenerator()
+            scm.append(git_generator.generate_version())
+            scm.append(git_generator.generate_remote_config(url))
+            scm.append(git_generator.generate_branches())
+            scm.append(git_generator.generate_do_submodules())
+            scm.append(git_generator.generate_submodule_configs())
             scm.append(Element('extensions'))
         elif repo_type is 'svn':
             scm.set('class', 'hudson.scm.SubversionSCM')
             scm.set('plugin', 'subversion@2.4.5')
 
-            generator = SvnXmlGenerator()
-            scm.append(generator.generate_locations(url))
+            svn_generator = SvnXmlGenerator()
+            scm.append(svn_generator.generate_locations(url))
             scm.append(Element('excludedRegions'))
             scm.append(Element('includedRegions'))
             scm.append(Element('excludedUsers'))
             scm.append(Element('excludedRevprop'))
             scm.append(Element('excludedCommitMessages'))
-            scm.append(generator.generate_updater())
-            scm.append(generator.generate_ignore_changes())
-            scm.append(generator.generate_filter_changes())
+            scm.append(svn_generator.generate_updater())
+            scm.append(svn_generator.generate_ignore_changes())
+            scm.append(svn_generator.generate_filter_changes())
         else:
             scm.set('class', 'hudson.scm.NullSCM')
 
-        root.append(scm)
-
-        roam = Element('canRoam')
-        roam.text = 'true'
-        root.append(roam)
-
-        disabled = Element('disabled')
-        disabled.text = 'false'
-        root.append(disabled)
-
-        upstream = Element('blockBuildWhenDownstreamBuilding')
-        upstream.text = 'false'
-        root.append(upstream)
-
-        downstream = Element('blockBuildWhenUpstreamBuilding')
-        downstream.text = 'false'
-        root.append(downstream)
-
-        root.append(Element('triggers'))
-
-        concurrent = Element('concurrentBuild')
-        concurrent.text = 'false'
-        root.append(concurrent)
-
-        root.append(Element('builders'))
-        root.append(Element('publishers'))
-        root.append(Element('buildWrappers'))
-        mine_serialized = etree.tostring(root,
-                                         encoding='unicode',
-                                         pretty_print=True)
-
-        return mine_serialized
+        return scm
 
 
 class GitXmlGenerator:

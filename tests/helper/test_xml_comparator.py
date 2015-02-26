@@ -1,13 +1,14 @@
 from lxml import etree
+from lxml.etree import Element
 from tests.helper.xml_comparator import xml_compare
 
 
 def test_compare():
-    root_a = etree.Element('root')
-    root_a.append(etree.Element('element'))
+    root_a = Element('root')
+    root_a.append(Element('element'))
 
-    root_b = etree.Element('root')
-    root_b.append(etree.Element('element'))
+    root_b = Element('root')
+    root_b.append(Element('element'))
 
     assert xml_compare(root_a, root_b) is True
 
@@ -21,11 +22,11 @@ def test_compare():
 
 
 def test_compare_negative():
-    root_a = etree.Element('root')
-    root_a.append(etree.Element('element'))
+    root_a = Element('root')
+    root_a.append(Element('element'))
 
-    root_b = etree.Element('root')
-    root_b.append(etree.Element('another'))
+    root_b = Element('root')
+    root_b.append(Element('another'))
 
     assert xml_compare(root_a, root_b) is False
 

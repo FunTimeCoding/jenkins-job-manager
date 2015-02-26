@@ -1,6 +1,6 @@
 from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 from lxml import etree
-import lxml.etree
+from lxml.etree import Element, XMLParser
 from tests.helper.xml_comparator import xml_compare
 from tests.helper.string_type_detector import get_string_type
 
@@ -12,7 +12,7 @@ def test_plain_run_returns_zero():
 
 def test_create_xml_without_repo():
     jjm = JenkinsJobManager([])
-    my_parser = etree.XMLParser(remove_blank_text=True)
+    my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/bare-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
@@ -26,15 +26,15 @@ def test_create_xml_without_repo():
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
-    assert type(fixture_root_node) == lxml.etree._Element
-    assert type(generated_root_node) == lxml.etree._Element
+    # assert type(fixture_root_node) == Element
+    # assert type(generated_root_node) == Element
     assert xml_compare(fixture_root_node, generated_root_node) == True
     assert serialized_xml_fixture == serialized_xml_generated
 
 
 def test_create_xml_with_git_repo():
     jjm = JenkinsJobManager(['--url', 'http://example.org/my_git_repo.git'])
-    my_parser = etree.XMLParser(remove_blank_text=True)
+    my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/git-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
@@ -51,15 +51,15 @@ def test_create_xml_with_git_repo():
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
-    assert type(fixture_root_node) == lxml.etree._Element
-    assert type(generated_root_node) == lxml.etree._Element
+    # assert type(fixture_root_node) == Element
+    # assert type(generated_root_node) == Element
     assert xml_compare(fixture_root_node, generated_root_node) == True
     assert serialized_xml_fixture == serialized_xml_generated
 
 
 def test_create_xml_with_svn_repo():
     jjm = JenkinsJobManager(['--url', 'http://example.org/my_svn_repo'])
-    my_parser = etree.XMLParser(remove_blank_text=True)
+    my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/svn-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
@@ -75,8 +75,8 @@ def test_create_xml_with_svn_repo():
 
     print('serialized_xml_fixture: ' + serialized_xml_fixture)
     print('serialized_xml_generated: ' + serialized_xml_generated)
-    assert type(fixture_root_node) == lxml.etree._Element
-    assert type(generated_root_node) == lxml.etree._Element
+    # assert type(fixture_root_node) == Element
+    # assert type(generated_root_node) == Element
     assert xml_compare(fixture_root_node, generated_root_node) == True
     assert serialized_xml_fixture == serialized_xml_generated
 
@@ -89,7 +89,7 @@ def clear_properties_node(xml):
 
 def test_correct_return_types():
     jjm = JenkinsJobManager([])
-    my_parser = etree.XMLParser(remove_blank_text=True)
+    my_parser = XMLParser(remove_blank_text=True)
 
     fixture_tree = etree.parse('tests/fixture/bare-job.xml', parser=my_parser)
     fixture_root_node = fixture_tree.getroot()
@@ -101,8 +101,8 @@ def test_correct_return_types():
     generated_root_node = etree.fromstring(serialized_xml_generated,
                                            parser=my_parser)
 
-    assert type(fixture_root_node) == lxml.etree._Element
-    assert type(generated_root_node) == lxml.etree._Element
+    # assert type(fixture_root_node) == Element
+    # assert type(generated_root_node) == Element
     assert get_string_type(serialized_xml_fixture) == 'str'
     assert get_string_type(serialized_xml_generated) == 'str'
     assert type(serialized_xml_fixture) == str

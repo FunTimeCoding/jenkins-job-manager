@@ -96,6 +96,7 @@ disable=W1622,E1608,W1632,I0020,W1610,W1619,W1623,W1621,W1605,W1630,E1607,W1613,
 # C0111 because clean code
 # E0611, E1103 because lxml is unclean
 
+
 [BASIC]
 
 # Required attributes for module, separated by a comma

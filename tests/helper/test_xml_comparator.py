@@ -2,6 +2,8 @@ from lxml import etree
 from lxml.etree import Element
 from tests.helper.xml_comparator import xml_compare
 
+# pylint: disable=missing-docstring
+
 
 def test_compare():
     root_a = Element('root')

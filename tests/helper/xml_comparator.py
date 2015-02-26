@@ -1,52 +1,53 @@
 from lxml.etree import Element
 
 
-def text_compare(t1, t2):
-    if not t1 and not t2:
+def text_compare(text_a, text_b):
+    if not text_a and not text_b:
         return True
-    if t1 == '*' or t2 == '*':
+    if text_a == '*' or text_b == '*':
         return True
-    return (t1 or '').strip() == (t2 or '').strip()
+    return (text_a or '').strip() == (text_b or '').strip()
 
 
-def xml_compare(x1: Element, x2: Element, reporter=None):
-    if x1.tag != x2.tag:
+def xml_compare(element_a: Element, element_b: Element, reporter=None):
+    if element_a.tag != element_b.tag:
         if reporter:
-            reporter('Tags do not match: %s and %s' % (x1.tag, x2.tag))
+            reporter('Tags do not match: %s and %s' % (element_a.tag,
+                                                       element_b.tag))
         return False
-    for name, value in x1.attrib.items():
-        if x2.attrib.get(name) != value:
+    for name, value in element_a.attrib.items():
+        if element_b.attrib.get(name) != value:
             if reporter:
                 reporter('Attributes do not match: %s=%r, %s=%r'
-                         % (name, value, name, x2.attrib.get(name)))
+                         % (name, value, name, element_b.attrib.get(name)))
             return False
-    for name in x2.attrib.keys():
-        if name not in x1.attrib:
+    for name in element_b.attrib.keys():
+        if name not in element_a.attrib:
             if reporter:
                 reporter('x2 has an attribute x1 is missing: %s'
                          % name)
             return False
-    if not text_compare(x1.text, x2.text):
+    if not text_compare(element_a.text, element_b.text):
         if reporter:
-            reporter('text: %r != %r' % (x1.text, x2.text))
+            reporter('text: %r != %r' % (element_a.text, element_b.text))
         return False
-    if not text_compare(x1.tail, x2.tail):
+    if not text_compare(element_a.tail, element_b.tail):
         if reporter:
-            reporter('tail: %r != %r' % (x1.tail, x2.tail))
+            reporter('tail: %r != %r' % (element_a.tail, element_b.tail))
         return False
-    cl1 = x1.getchildren()
-    cl2 = x2.getchildren()
+    cl1 = element_a.getchildren()
+    cl2 = element_b.getchildren()
     if len(cl1) != len(cl2):
         if reporter:
             reporter('children length differs, %i != %i'
                      % (len(cl1), len(cl2)))
         return False
     i = 0
-    for c1, c2 in zip(cl1, cl2):
+    for child_a, child_b in zip(cl1, cl2):
         i += 1
-        if not xml_compare(c1, c2, reporter=reporter):
+        if not xml_compare(child_a, child_b, reporter=reporter):
             if reporter:
                 reporter('children %i do not match: %s'
-                         % (i, c1.tag))
+                         % (i, child_a.tag))
             return False
     return True

@@ -42,7 +42,7 @@ class JenkinsJobManager:
 
     @staticmethod
     def parse_args(arguments: list=None) -> argparse.Namespace:
-        description = 'Generate a config.xml for jenkins jobs.'
+        description = 'Generate a config.xml for Jenkins jobs.'
         parser = argparse.ArgumentParser(description=description)
 
         required_group = parser.add_argument_group('required named arguments')

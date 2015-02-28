@@ -3,10 +3,16 @@
 
 ## Setup
 
-Install the project.
+Install the project from a local clone.
 
 ```sh
 pip3 install -e ../jenkins-job-manager
+```
+
+Install the project from GitHub.
+
+```sh
+pip3 install git+git://github.com/FunTimeCoding/jenkins-job-manager.git
 ```
 
 Uninstall the project.

@@ -53,11 +53,10 @@ class JenkinsJobManager:
             default=''
         )
 
-        repo_types = ', '.join(JenkinsJobManager.get_valid_repo_types())
         parser.add_argument(
             '-t',
             '--type',
-            help='Repository type. Supported: ' + repo_types,
+            help='Repository type.',
             choices=JenkinsJobManager.get_valid_repo_types(),
             default=''
         )

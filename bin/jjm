@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 import sys
-
 from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 
 
 def main():
-    jjm = JenkinsJobManager(sys.argv)
-    return jjm.run()
+    manager = JenkinsJobManager(sys.argv[1:])
+    return manager.run()
 
 
 if __name__ == '__main__':

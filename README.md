@@ -50,6 +50,12 @@ Build project like Jenkins.
 ./build.sh
 ```
 
+Install build dependencies for `lxml` on Debian Wheezy.
+
+```sh
+apt-get install -s libxml2-dev libxslt1-dev
+```
+
 
 ## Skeleton details
 

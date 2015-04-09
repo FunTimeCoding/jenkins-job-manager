@@ -4,8 +4,7 @@ from lxml.etree import Element
 
 
 class JenkinsJobManager:
-    # def __init__(self, arguments: list):
-    def __init__(self, arguments):
+    def __init__(self, arguments: list):
         args = self.parse_args(arguments)
         self.verbose = args.verbose
         self.repo_type = args.type
@@ -18,24 +17,20 @@ class JenkinsJobManager:
             print('Repository type: ' + self.repo_type)
             print('URL: ' + self.url)
 
-    # def run(self) -> int:
-    def run(self):
+    def run(self) -> int:
         print(self.create_xml(url=self.url, repo_type=self.repo_type))
         return 0
 
     @staticmethod
-    # def get_valid_repo_types() -> list:
-    def get_valid_repo_types():
+    def get_valid_repo_types() -> list:
         return ['svn', 'git']
 
     @staticmethod
-    # def is_valid_repo_type(repo_type: str) -> bool:
-    def is_valid_repo_type(repo_type):
+    def is_valid_repo_type(repo_type: str) -> bool:
         return repo_type in JenkinsJobManager.get_valid_repo_types()
 
     @staticmethod
-    # def guess_repo_type(url: str) -> str:
-    def guess_repo_type(url):
+    def guess_repo_type(url: str) -> str:
         repo_type = ''
 
         for valid_type in JenkinsJobManager.get_valid_repo_types():
@@ -46,8 +41,7 @@ class JenkinsJobManager:
         return repo_type
 
     @staticmethod
-    # def parse_args(arguments: list=None) -> argparse.Namespace:
-    def parse_args(arguments):
+    def parse_args(arguments: list=None) -> argparse.Namespace:
         description = 'Generate a config.xml for Jenkins jobs.'
         parser = argparse.ArgumentParser(description=description)
 
@@ -77,8 +71,7 @@ class JenkinsJobManager:
         return parser.parse_args(arguments)
 
     @staticmethod
-    # def create_xml(url: str='', repo_type: str='') -> str:
-    def create_xml(url, repo_type):
+    def create_xml(url: str='', repo_type: str='') -> str:
         root = Element('project')
         root.append(Element('actions'))
         root.append(Element('description'))
@@ -98,57 +91,49 @@ class JenkinsJobManager:
         return JenkinsJobManager.serialize_xml(root)
 
     @staticmethod
-    # def serialize_xml(element: Element):
-    def serialize_xml(element):
+    def serialize_xml(element: Element):
         return etree.tostring(element, encoding='unicode', pretty_print=True)
 
 
 class GenericXmlGenerator:
     @staticmethod
-    # def generate_dependencies() -> Element:
-    def generate_dependencies():
+    def generate_dependencies() -> Element:
         dependencies = Element('keepDependencies')
         dependencies.text = 'false'
         return dependencies
 
     @staticmethod
-    # def generate_roam() -> Element:
-    def generate_roam():
+    def generate_roam() -> Element:
         roam = Element('canRoam')
         roam.text = 'true'
         return roam
 
     @staticmethod
-    # def generate_disabled() -> Element:
-    def generate_disabled():
+    def generate_disabled() -> Element:
         disabled = Element('disabled')
         disabled.text = 'false'
         return disabled
 
     @staticmethod
-    # def generate_upstream() -> Element:
-    def generate_upstream():
+    def generate_upstream() -> Element:
         upstream = Element('blockBuildWhenDownstreamBuilding')
         upstream.text = 'false'
         return upstream
 
     @staticmethod
-    # def generate_downstream() -> Element:
-    def generate_downstream():
+    def generate_downstream() -> Element:
         downstream = Element('blockBuildWhenUpstreamBuilding')
         downstream.text = 'false'
         return downstream
 
     @staticmethod
-    # def generate_concurrent() -> Element:
-    def generate_concurrent():
+    def generate_concurrent() -> Element:
         concurrent = Element('concurrentBuild')
         concurrent.text = 'false'
         return concurrent
 
     @staticmethod
-    # def generate_scm_for_repo_type(url: str, repo_type: str) -> Element:
-    def generate_scm_for_repo_type(url, repo_type):
+    def generate_scm_for_repo_type(url: str, repo_type: str) -> Element:
         scm = Element('scm')
         if repo_type is 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
@@ -183,8 +168,7 @@ class GenericXmlGenerator:
 
 class GitXmlGenerator:
     @staticmethod
-    # def generate_remote_config(url: str) -> Element:
-    def generate_remote_config(url):
+    def generate_remote_config(url: str) -> Element:
         remote_config = Element('userRemoteConfigs')
         git_remote_config_tag = 'hudson.plugins.git.UserRemoteConfig'
         git_remote_config = Element(git_remote_config_tag)
@@ -195,8 +179,7 @@ class GitXmlGenerator:
         return remote_config
 
     @staticmethod
-    # def generate_branches() -> Element:
-    def generate_branches():
+    def generate_branches() -> Element:
         branches = Element('branches')
         branch_spec = Element('hudson.plugins.git.BranchSpec')
         branch_spec_name = Element('name')
@@ -206,23 +189,20 @@ class GitXmlGenerator:
         return branches
 
     @staticmethod
-    # def generate_version() -> Element:
-    def generate_version():
+    def generate_version() -> Element:
         version = Element('configVersion')
         version.text = '2'
         return version
 
     @staticmethod
-    # def generate_do_submodules() -> Element:
-    def generate_do_submodules():
+    def generate_do_submodules() -> Element:
         generate_tag = 'doGenerateSubmoduleConfigurations'
         generate_submodule_configs = Element(generate_tag)
         generate_submodule_configs.text = 'false'
         return generate_submodule_configs
 
     @staticmethod
-    # def generate_submodule_configs() -> Element:
-    def generate_submodule_configs():
+    def generate_submodule_configs() -> Element:
         submodule_configs = Element('submoduleCfg')
         submodule_configs.set('class', 'list')
         return submodule_configs
@@ -230,8 +210,7 @@ class GitXmlGenerator:
 
 class SvnXmlGenerator:
     @staticmethod
-    # def generate_locations(url: str) -> Element:
-    def generate_locations(url):
+    def generate_locations(url: str) -> Element:
         locations = Element('locations')
 
         module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
@@ -259,22 +238,19 @@ class SvnXmlGenerator:
         return locations
 
     @staticmethod
-    # def generate_updater() -> Element:
-    def generate_updater():
+    def generate_updater() -> Element:
         updater = Element('workspaceUpdater')
         updater.set('class', 'hudson.scm.subversion.UpdateUpdater')
         return updater
 
     @staticmethod
-    # def generate_ignore_changes() -> Element:
-    def generate_ignore_changes():
+    def generate_ignore_changes() -> Element:
         ignore_changes = Element('ignoreDirPropChanges')
         ignore_changes.text = 'false'
         return ignore_changes
 
     @staticmethod
-    # def generate_filter_changes() -> Element:
-    def generate_filter_changes():
+    def generate_filter_changes() -> Element:
         filter_changes = Element('filterChangelog')
         filter_changes.text = 'false'
         return filter_changes

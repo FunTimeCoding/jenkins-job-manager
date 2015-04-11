@@ -69,4 +69,5 @@ pip3 install -U -r "${WORKSPACE}/requirements.txt" &> "${BUILD_DIR}/log/pip.log"
 
 "${WORKSPACE}"/run-lint-check.sh --ci-mode
 "${WORKSPACE}"/run-style-check.sh --ci-mode
+"${WORKSPACE}"/run-metrics.sh --ci-mode
 "${WORKSPACE}"/run-tests.sh --ci-mode

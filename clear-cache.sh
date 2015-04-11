@@ -4,7 +4,7 @@ SCRIPT_DIR=$(cd $(dirname ${0}); pwd)
 
 echo "Deleting python cache files and directories and the .egg-info directory."
 
-FILES="build .pyvenv .coverage"
+FILES="build .pyvenv .coverage .sonar"
 
 for FILE in ${FILES}; do
     if [ -e "${FILE}" ]; then

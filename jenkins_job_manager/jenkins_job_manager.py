@@ -106,7 +106,10 @@ class JenkinsJobManager:
         if enable_build is True:
             timer_trigger = Element('hudson.triggers.TimerTrigger')
             timer_spec = Element('spec')
+            # end of week, friday mornings
             timer_spec.text = 'H 6 * * 5'
+            # end of day, mornings
+            # timer_spec.text = 'H 6 * * 1-5'
             timer_trigger.append(timer_spec)
             triggers.append(timer_trigger)
             scm_trigger = Element('hudson.triggers.SCMTrigger')

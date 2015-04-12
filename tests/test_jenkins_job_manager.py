@@ -5,6 +5,8 @@ from tests.helper.xml_comparator import xml_compare
 from tests.helper.string_type_detector import get_string_type
 
 GIT_FIXTURE_URL = 'http://example.org/my_git_repo.git'
+GITHUB_FIXTURE_URL = 'http://github.com/username/my_git_repo'
+UNKNOWN_FIXTURE_URL = 'http://example.org/no_known_repo_type'
 SVN_FIXTURE_URL = 'http://example.org/my_svn_repo'
 
 
@@ -55,6 +57,13 @@ def test_create_xml_with_git_repo():
     # assert type(generated_root_node) == Element
     assert xml_compare(fixture_root_node, generated_root_node) == True
     assert serialized_xml_fixture == serialized_xml_generated
+
+
+def test_repo_type():
+    assert JenkinsJobManager.guess_repo_type(GIT_FIXTURE_URL) == 'git'
+    assert JenkinsJobManager.guess_repo_type(SVN_FIXTURE_URL) == 'svn'
+    assert JenkinsJobManager.guess_repo_type(GITHUB_FIXTURE_URL) == 'git'
+    assert JenkinsJobManager.guess_repo_type(UNKNOWN_FIXTURE_URL) == ''
 
 
 def test_create_xml_with_svn_repo():

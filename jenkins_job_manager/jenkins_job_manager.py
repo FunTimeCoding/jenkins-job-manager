@@ -78,7 +78,11 @@ class JenkinsJobManager:
         generator = GenericXmlGenerator()
         root.append(generator.generate_dependencies())
         root.append(Element('properties'))
-        root.append(generator.generate_scm_for_repo_type(url, repo_type))
+        scm = generator.generate_scm_for_repo_type(
+            url=url,
+            repo_type=repo_type
+        )
+        root.append(scm)
         root.append(generator.generate_roam())
         root.append(generator.generate_disabled())
         root.append(generator.generate_upstream())
@@ -135,7 +139,7 @@ class GenericXmlGenerator:
     @staticmethod
     def generate_scm_for_repo_type(url: str, repo_type: str) -> Element:
         scm = Element('scm')
-        if repo_type is 'git':
+        if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
             scm.set('plugin', 'git@2.3.2')
 
@@ -146,7 +150,7 @@ class GenericXmlGenerator:
             scm.append(git_generator.generate_do_submodules())
             scm.append(git_generator.generate_submodule_configs())
             scm.append(Element('extensions'))
-        elif repo_type is 'svn':
+        elif repo_type == 'svn':
             scm.set('class', 'hudson.scm.SubversionSCM')
             scm.set('plugin', 'subversion@2.4.5')
 

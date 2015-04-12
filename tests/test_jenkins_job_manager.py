@@ -89,6 +89,31 @@ def test_create_xml_with_svn_repo():
     assert serialized_xml_fixture == serialized_xml_generated
 
 
+def test_create_xml_build_command():
+    jjm = JenkinsJobManager(['--url', GIT_FIXTURE_URL, '--build'])
+    my_parser = XMLParser(remove_blank_text=True)
+
+    fixture_tree = etree.parse('tests/fixture/python-build-job.xml',
+                               parser=my_parser)
+    fixture_root_node = fixture_tree.getroot()
+    clear_properties_node(fixture_root_node)
+    serialized_xml_fixture = etree.tostring(fixture_root_node,
+                                            encoding='unicode',
+                                            pretty_print=True)
+
+    serialized_xml_generated = jjm.create_xml(GIT_FIXTURE_URL,
+                                              repo_type='git',
+                                              enable_build=True)
+    generated_root_node = serialized_to_element(serialized_xml_generated)
+
+    print('serialized_xml_fixture: ' + serialized_xml_fixture)
+    print('serialized_xml_generated: ' + serialized_xml_generated)
+    # assert type(fixture_root_node) == Element
+    # assert type(generated_root_node) == Element
+    assert xml_compare(fixture_root_node, generated_root_node) == True
+    assert serialized_xml_fixture == serialized_xml_generated
+
+
 def clear_properties_node(xml):
     properties = xml.find('properties')
     for node in properties.findall('*'):

@@ -9,16 +9,22 @@ class JenkinsJobManager:
         self.verbose = args.verbose
         self.repo_type = args.type
         self.url = args.url
+        self.enable_build = args.build
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.url)
 
         if self.verbose is True:
             print('Repository type: ' + self.repo_type)
+            print('Enable build: ' + str(self.enable_build))
             print('URL: ' + self.url)
 
     def run(self) -> int:
-        print(self.create_xml(url=self.url, repo_type=self.repo_type))
+        print(self.create_xml(
+            url=self.url,
+            repo_type=self.repo_type,
+            enable_build=self.enable_build
+        ))
         return 0
 
     @staticmethod
@@ -64,14 +70,22 @@ class JenkinsJobManager:
         parser.add_argument(
             '-v',
             '--verbose',
-            help='Turn on some verbose messages.',
+            help='Enable verbose messages.',
+            action='store_true'
+        )
+
+        parser.add_argument(
+            '-b',
+            '--build',
+            help='Generate the build command.',
             action='store_true'
         )
 
         return parser.parse_args(arguments)
 
     @staticmethod
-    def create_xml(url: str='', repo_type: str='') -> str:
+    def create_xml(url: str='', repo_type: str='',
+                   enable_build: bool=False) -> str:
         root = Element('project')
         root.append(Element('actions'))
         root.append(Element('description'))
@@ -87,9 +101,34 @@ class JenkinsJobManager:
         root.append(generator.generate_disabled())
         root.append(generator.generate_upstream())
         root.append(generator.generate_downstream())
-        root.append(Element('triggers'))
+
+        triggers = Element('triggers')
+        if enable_build is True:
+            timer_trigger = Element('hudson.triggers.TimerTrigger')
+            timer_spec = Element('spec')
+            timer_spec.text = 'H 6 * * 5'
+            timer_trigger.append(timer_spec)
+            triggers.append(timer_trigger)
+            scm_trigger = Element('hudson.triggers.SCMTrigger')
+            scm_spec = Element('spec')
+            scm_spec.text = 'H/30 * * * *'
+            scm_trigger.append(scm_spec)
+            hooks = Element('ignorePostCommitHooks')
+            hooks.text = 'false'
+            scm_trigger.append(hooks)
+            triggers.append(scm_trigger)
+        root.append(triggers)
         root.append(generator.generate_concurrent())
-        root.append(Element('builders'))
+
+        builders = Element('builders')
+        if enable_build is True:
+            shell = Element('hudson.tasks.Shell')
+            command = Element('command')
+            command.text = "export PYTHONHOME=/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.4\n./build.sh"
+            shell.append(command)
+            builders.append(shell)
+
+        root.append(builders)
         root.append(Element('publishers'))
         root.append(Element('buildWrappers'))
         return JenkinsJobManager.serialize_xml(root)
@@ -141,7 +180,7 @@ class GenericXmlGenerator:
         scm = Element('scm')
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@2.3.2')
+            scm.set('plugin', 'git@2.3.5')
 
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())

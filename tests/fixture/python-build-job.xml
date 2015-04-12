@@ -4,7 +4,7 @@
     <description></description>
     <keepDependencies>false</keepDependencies>
     <properties>
-        <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.24"/>
+        <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.25"/>
     </properties>
     <scm class="hudson.plugins.git.GitSCM" plugin="git@2.3.5">
         <configVersion>2</configVersion>
@@ -26,9 +26,22 @@
     <disabled>false</disabled>
     <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
     <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-    <triggers/>
+    <triggers>
+        <hudson.triggers.TimerTrigger>
+            <spec>H 6 * * 5</spec>
+        </hudson.triggers.TimerTrigger>
+        <hudson.triggers.SCMTrigger>
+            <spec>H/30 * * * *</spec>
+            <ignorePostCommitHooks>false</ignorePostCommitHooks>
+        </hudson.triggers.SCMTrigger>
+    </triggers>
     <concurrentBuild>false</concurrentBuild>
-    <builders/>
+    <builders>
+        <hudson.tasks.Shell>
+            <command>export PYTHONHOME=/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.4
+./build.sh</command>
+        </hudson.tasks.Shell>
+    </builders>
     <publishers/>
     <buildWrappers/>
 </project>

@@ -1,6 +1,7 @@
 from lxml import etree
 from lxml.etree import Element
 from tests.helper.xml_comparator import xml_compare
+from tests.helper.xml_comparator import Reporter
 
 
 def test_compare():
@@ -37,3 +38,15 @@ def test_compare_negative():
                                   encoding='unicode',
                                   pretty_print=True)
     assert serialized_a != serialized_b
+
+
+def test_with_reporter():
+    root_a = Element('root')
+    root_a.append(Element('element'))
+
+    root_b = Element('root')
+    root_b.append(Element('another'))
+
+    reporter = Reporter()
+    assert xml_compare(root_a, root_b, reporter) is False
+    assert reporter.count == 2

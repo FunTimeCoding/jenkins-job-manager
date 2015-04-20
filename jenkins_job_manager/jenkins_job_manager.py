@@ -1,6 +1,6 @@
 import argparse
-from lxml import etree
 from lxml.etree import Element
+from jenkins_job_manager.lxml_helper import serialize_element
 
 
 class JenkinsJobManager:
@@ -20,11 +20,7 @@ class JenkinsJobManager:
             print('URL: ' + self.url)
 
     def run(self) -> int:
-        print(self.create_xml(
-            url=self.url,
-            repo_type=self.repo_type,
-            enable_build=self.enable_build
-        ))
+        print(self.generate_serialized_xml())
         return 0
 
     @staticmethod
@@ -83,9 +79,7 @@ class JenkinsJobManager:
 
         return parser.parse_args(arguments)
 
-    @staticmethod
-    def create_xml(url: str='', repo_type: str='',
-                   enable_build: bool=False) -> str:
+    def generate_xml(self) -> Element:
         root = Element('project')
         root.append(Element('actions'))
         root.append(Element('description'))
@@ -93,8 +87,8 @@ class JenkinsJobManager:
         root.append(generator.generate_dependencies())
         root.append(Element('properties'))
         scm = generator.generate_scm_for_repo_type(
-            url=url,
-            repo_type=repo_type
+            url=self.url,
+            repo_type=self.repo_type
         )
         root.append(scm)
         root.append(generator.generate_roam())
@@ -103,7 +97,7 @@ class JenkinsJobManager:
         root.append(generator.generate_downstream())
 
         triggers = Element('triggers')
-        if enable_build is True:
+        if self.enable_build is True:
             timer_trigger = Element('hudson.triggers.TimerTrigger')
             timer_spec = Element('spec')
             # end of week, friday mornings
@@ -124,7 +118,7 @@ class JenkinsJobManager:
         root.append(generator.generate_concurrent())
 
         builders = Element('builders')
-        if enable_build is True:
+        if self.enable_build is True:
             shell = Element('hudson.tasks.Shell')
             command = Element('command')
             command.text = "export PYTHONHOME=/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.4\n./build.sh"
@@ -134,11 +128,12 @@ class JenkinsJobManager:
         root.append(builders)
         root.append(Element('publishers'))
         root.append(Element('buildWrappers'))
-        return JenkinsJobManager.serialize_xml(root)
 
-    @staticmethod
-    def serialize_xml(element: Element):
-        return etree.tostring(element, encoding='unicode', pretty_print=True)
+        return root
+
+    def generate_serialized_xml(self) -> str:
+        xml = self.generate_xml()
+        return serialize_element(xml)
 
 
 class GenericXmlGenerator:

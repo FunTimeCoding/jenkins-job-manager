@@ -17,7 +17,7 @@ while true; do
             ;;
         -h|--help)
             echo "Usage: [-h][-c|--clean][-w|--workspace WORKSPACE][-p|--pythonhome PYTHONHOME]"
-            exit
+            exit 0
             ;;
         -c|--clean)
             CLEAN=1

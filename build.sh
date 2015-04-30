@@ -44,30 +44,40 @@ if [ "${WORKSPACE}" = "" ]; then
     SCRIPT_DIR=$(cd $(dirname ${0}); pwd)
     WORKSPACE="${SCRIPT_DIR}"
 fi
+
 echo "WORKSPACE: ${WORKSPACE}"
 
 if [ ! "${PYTHONHOME}" = "" ]; then
     export PATH="${PYTHONHOME}/bin:${PATH}"
 fi
+
 echo "PATH: ${PATH}"
 
 BUILD_DIR="${WORKSPACE}/build"
+
 if [ -d "${BUILD_DIR}" ]; then
     rm -rf "${BUILD_DIR}"
 fi
+
 mkdir -p "${BUILD_DIR}/log"
 
 PYVENV_HOME="${WORKSPACE}/.pyvenv"
+
 if [ "${CLEAN}" = "1" ]; then
     rm -rf "${PYVENV_HOME}"
 fi
+
+echo "Creating pyvenv."
+
 if [ ! -d "${PYVENV_HOME}" ]; then
     pyvenv "${PYVENV_HOME}"
 fi
+
+echo "Installing requirements."
 source "${PYVENV_HOME}/bin/activate"
 pip3 install -U -r "${WORKSPACE}/requirements.txt" &> "${BUILD_DIR}/log/pip.log"
 
-"${WORKSPACE}"/run-lint-check.sh --ci-mode
-"${WORKSPACE}"/run-style-check.sh --ci-mode
-"${WORKSPACE}"/run-metrics.sh --ci-mode
-"${WORKSPACE}"/run-tests.sh --ci-mode
+"${WORKSPACE}/run-lint-check.sh" --ci-mode
+"${WORKSPACE}/run-style-check.sh" --ci-mode
+"${WORKSPACE}/run-metrics.sh" --ci-mode
+"${WORKSPACE}/run-tests.sh" --ci-mode

@@ -4,8 +4,8 @@ from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 
 
 def main():
-    manager = JenkinsJobManager(sys.argv[1:])
-    return manager.run()
+    application = JenkinsJobManager(sys.argv[1:])
+    return application.run()
 
 
 if __name__ == '__main__':

@@ -64,7 +64,9 @@ def compare_text(element_a, element_b, reporter=None) -> bool:
         result = False
 
         if reporter:
-            reporter.report('text: %r != %r' % (element_a.text, element_b.text))
+            reporter.report(
+                'text: %r != %r' % (element_a.text, element_b.text)
+            )
 
     return result
 

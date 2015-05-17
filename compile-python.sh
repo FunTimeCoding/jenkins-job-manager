@@ -1,4 +1,5 @@
 #!/bin/sh
+
 # On Debian Wheezy systems, make sure you're on the staff group.
 # To uninstall, simply delete the PREFIX directory.
 export VERSION=3.4.3

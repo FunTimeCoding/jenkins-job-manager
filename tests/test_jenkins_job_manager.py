@@ -11,17 +11,17 @@ SVN_FIXTURE_URL = 'http://example.org/my_svn_repo'
 
 
 def test_plain_run_returns_zero():
-    jjm = JenkinsJobManager([])
-    assert jjm.run() == 0
+    application = JenkinsJobManager([])
+    assert application.run() == 0
 
 
 def test_create_xml_without_repo():
     fixture = load_fixture('tests/fixture/bare-job.xml')
     fixture_serialized = serialize_element(fixture)
 
-    jjm = JenkinsJobManager([])
-    generated = jjm.generate_xml()
-    generated_serialized = jjm.generate_serialized_xml()
+    application = JenkinsJobManager([])
+    generated = application.generate_xml()
+    generated_serialized = application.generate_serialized_xml()
 
     print('fixture_serialized: ' + fixture_serialized)
     print('generated_serialized: ' + generated_serialized)
@@ -34,9 +34,9 @@ def test_create_xml_with_git_repo():
     fixture = load_fixture('tests/fixture/git-job.xml')
     fixture_serialized = serialize_element(fixture)
 
-    jjm = JenkinsJobManager(['--url', GIT_FIXTURE_URL])
-    generated = jjm.generate_xml()
-    generated_serialized = jjm.generate_serialized_xml()
+    application = JenkinsJobManager(['--url', GIT_FIXTURE_URL])
+    generated = application.generate_xml()
+    generated_serialized = application.generate_serialized_xml()
 
     print('fixture_serialized: ' + fixture_serialized)
     print('generated_serialized: ' + generated_serialized)
@@ -65,9 +65,9 @@ def test_create_xml_with_svn_repo():
     fixture = load_fixture('tests/fixture/svn-job.xml')
     fixture_serialized = serialize_element(fixture)
 
-    jjm = JenkinsJobManager(['--url', SVN_FIXTURE_URL])
-    generated = jjm.generate_xml()
-    generated_serialized = jjm.generate_serialized_xml()
+    application = JenkinsJobManager(['--url', SVN_FIXTURE_URL])
+    generated = application.generate_xml()
+    generated_serialized = application.generate_serialized_xml()
 
     print('fixture_serialized: ' + fixture_serialized)
     print('generated_serialized: ' + generated_serialized)
@@ -80,9 +80,9 @@ def test_create_xml_build_command():
     fixture = load_fixture('tests/fixture/python-build-job.xml')
     fixture_serialized = serialize_element(fixture)
 
-    jjm = JenkinsJobManager(['--url', GIT_FIXTURE_URL, '--build'])
-    generated_serialized = jjm.generate_serialized_xml()
-    generated = jjm.generate_xml()
+    application = JenkinsJobManager(['--url', GIT_FIXTURE_URL, '--build'])
+    generated_serialized = application.generate_serialized_xml()
+    generated = application.generate_xml()
 
     print('fixture_serialized: ' + fixture_serialized)
     print('generated_serialized: ' + generated_serialized)
@@ -99,20 +99,18 @@ def clear_properties_node(xml):
 
 def test_return_types():
     fixture = load_fixture('tests/fixture/bare-job.xml')
-    jjm = JenkinsJobManager([])
+    application = JenkinsJobManager([])
 
     assert type(fixture).__name__ == '_Element'
-    assert type(jjm.generate_xml()).__name__ == '_Element'
-    assert type(serialize_element(fixture)) == str
-    assert type(jjm.generate_serialized_xml()) == str
+    assert type(application.generate_xml()).__name__ == '_Element'
+    assert isinstance(serialize_element(fixture), str) == True
+    assert isinstance(application.generate_serialized_xml(), str) == True
 
 
-def test_repo_type():
+def test_guess_repo_type():
+    for repo_type in JenkinsJobManager.get_valid_repo_types():
+        assert isinstance(repo_type, str) == True
+
     assert JenkinsJobManager.guess_repo_type(GIT_FIXTURE_URL) == 'git'
     assert JenkinsJobManager.guess_repo_type(SVN_FIXTURE_URL) == 'svn'
     assert JenkinsJobManager.guess_repo_type('') == ''
-
-
-def test_repo_types():
-    for repo_type in JenkinsJobManager.get_valid_repo_types():
-        assert type(repo_type) == str

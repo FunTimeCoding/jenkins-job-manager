@@ -121,7 +121,9 @@ class JenkinsJobManager:
         if self.enable_build is True:
             shell = Element('hudson.tasks.Shell')
             command = Element('command')
-            command.text = "export PYTHONHOME=/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.4\n./build.sh"
+            command.text = "export PYTHONHOME=/usr/local/opt/python3/" \
+                           "Frameworks/Python.framework/Versions" \
+                           "/3.4\n./build.sh"
             shell.append(command)
             builders.append(shell)
 

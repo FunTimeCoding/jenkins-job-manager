@@ -6,7 +6,7 @@
 Install the project from a local clone.
 
 ```sh
-pip3 install -e ../jenkins-job-manager
+pip3 install --user --editable ../jenkins-job-manager
 ```
 
 Install the project from GitHub.

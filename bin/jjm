@@ -6,8 +6,7 @@ from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 
 def main():
     application = JenkinsJobManager(sys.argv[1:])
-
-    return application.run()
+    application.run()
 
 
 if __name__ == '__main__':

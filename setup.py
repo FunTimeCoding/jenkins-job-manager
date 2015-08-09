@@ -13,6 +13,6 @@ setup(
     author_email='funtimecoding@gmail.com',
     version='0.1',
     install_requires=['lxml'],
-    packages=[],
+    packages=['jenkins_job_manager'],
     scripts=['bin/jjm']
 )

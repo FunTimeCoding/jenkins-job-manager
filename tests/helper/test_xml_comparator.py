@@ -1,5 +1,6 @@
 from lxml import etree
 from lxml.etree import Element
+
 from tests.helper.xml_comparator import xml_compare
 from tests.helper.xml_comparator import Reporter
 

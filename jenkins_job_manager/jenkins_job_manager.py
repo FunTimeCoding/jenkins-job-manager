@@ -1,5 +1,7 @@
 import argparse
+
 from lxml.etree import Element
+
 from jenkins_job_manager.lxml_helper import serialize_element
 
 
@@ -21,7 +23,6 @@ class JenkinsJobManager:
 
     def run(self) -> int:
         print(self.generate_serialized_xml())
-        return 0
 
     @staticmethod
     def get_valid_repo_types() -> list:
@@ -49,14 +50,12 @@ class JenkinsJobManager:
 
         required_group = parser.add_argument_group('required named arguments')
         required_group.add_argument(
-            '-u',
             '--url',
             help='URL to the repository to check out on Jenkins',
             default=''
         )
 
         parser.add_argument(
-            '-t',
             '--type',
             help='Repository type.',
             choices=JenkinsJobManager.get_valid_repo_types(),
@@ -64,14 +63,12 @@ class JenkinsJobManager:
         )
 
         parser.add_argument(
-            '-v',
             '--verbose',
             help='Enable verbose messages.',
             action='store_true'
         )
 
         parser.add_argument(
-            '-b',
             '--build',
             help='Generate the build command.',
             action='store_true'

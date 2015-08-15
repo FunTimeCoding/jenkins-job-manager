@@ -1,10 +1,22 @@
 #!/bin/sh -e
 
-getopt -o w:p:hcv -l workspace:,pythonhome:,help,clean,verbose --name "${0}" -- "$@" > /dev/null
 CLEAN=0
 
 while true; do
     case ${1} in
+        -h|--help)
+            echo "Usage: [-h|--help][-v|--verbose][-c|--clean][-w|--workspace WORKSPACE][-p|--pythonhome PYTHONHOME]"
+
+            exit 0
+            ;;
+        -v|--verbose)
+            set -x
+            shift
+            ;;
+        -c|--clean)
+            CLEAN=1
+            shift
+            ;;
         -w|--workspace)
             WORKSPACE="${2-}"
             shift 2
@@ -13,26 +25,16 @@ while true; do
             PYTHONHOME="${2-}"
             shift 2
             ;;
-        -h|--help)
-            echo "Usage: [-h][-c|--clean][-w|--workspace WORKSPACE][-p|--pythonhome PYTHONHOME]"
-            exit 0
-            ;;
-        -c|--clean)
-            CLEAN=1
-            shift
-            ;;
-        -v|--verbose)
-            set -x
-            shift
-            ;;
         --)
             shift
+
             break
             ;;
         *)
             if [ ! "${1}" = "" ]; then
-                echo "Unknown option: $1"
+                echo "Unknown option: ${1}"
             fi
+
             break
             ;;
     esac

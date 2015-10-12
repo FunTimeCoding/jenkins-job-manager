@@ -1,6 +1,6 @@
 *.pyc
 *.egg-info
 .coverage
-build
 .pyvenv
-.sonar
+.cache
+build

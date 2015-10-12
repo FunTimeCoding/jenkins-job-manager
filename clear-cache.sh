@@ -3,7 +3,7 @@
 echo "Deleting cached and generated files."
 DIR=$(dirname "${0}")
 SCRIPT_DIR=$(cd "${DIR}"; pwd)
-FILES="build .pyvenv .coverage"
+FILES="build .pyvenv .coverage .cache"
 
 for FILE in ${FILES}; do
     if [ -e "${FILE}" ]; then
@@ -12,4 +12,4 @@ for FILE in ${FILES}; do
     fi
 done
 
-find "${SCRIPT_DIR}" \( -name '__pycache__' -o -name '*.egg-info' -o -name '*.pyc' \) -exec rm -rf {} +
+find "${SCRIPT_DIR}" \( -name '__pycache__' -o -name '*.pyc' -o -name '*.egg-info' \) -delete

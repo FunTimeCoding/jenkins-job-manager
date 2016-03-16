@@ -33,7 +33,7 @@ PYTHONPATH=. bin/jjm
 Install development tools.
 
 ```sh
-pip3 install -U -r requirements.txt
+pip3 install --upgrade --user --requirement requirements.txt
 ```
 
 Run code style check, lint check and tests.

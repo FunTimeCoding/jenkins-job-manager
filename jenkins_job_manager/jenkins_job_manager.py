@@ -1,25 +1,25 @@
-import argparse
-
 from lxml.etree import Element
 
+from jenkins_job_manager.custom_argument_parser import CustomArgumentParser
 from jenkins_job_manager.lxml_helper import serialize_element
 
 
 class JenkinsJobManager:
     def __init__(self, arguments: list):
-        args = self.parse_args(arguments)
-        self.verbose = args.verbose
-        self.repo_type = args.type
-        self.url = args.url
-        self.enable_build = args.build
+        parser = self.get_parser()
+        parsed_arguments = parser.parse_args(arguments)
+        self.verbose = parsed_arguments.verbose
+        self.repo_type = parsed_arguments.type
+        self.locator = parsed_arguments.locator
+        self.enable_build = parsed_arguments.build
 
         if self.is_valid_repo_type(self.repo_type) is False:
-            self.repo_type = self.guess_repo_type(self.url)
+            self.repo_type = self.guess_repo_type(self.locator)
 
         if self.verbose is True:
             print('Repository type: ' + self.repo_type)
             print('Enable build: ' + str(self.enable_build))
-            print('URL: ' + self.url)
+            print('locator: ' + self.locator)
 
     def run(self) -> int:
         print(self.generate_serialized_xml())
@@ -33,48 +33,45 @@ class JenkinsJobManager:
         return repo_type in JenkinsJobManager.get_valid_repo_types()
 
     @staticmethod
-    def guess_repo_type(url: str) -> str:
+    def guess_repo_type(locator: str) -> str:
         repo_type = ''
 
         for valid_type in JenkinsJobManager.get_valid_repo_types():
-            if valid_type in url:
+            if valid_type in locator:
                 repo_type = valid_type
                 break
 
         return repo_type
 
     @staticmethod
-    def parse_args(arguments: list=None) -> argparse.Namespace:
+    def get_parser() -> CustomArgumentParser:
         description = 'Generate a config.xml for Jenkins jobs.'
-        parser = argparse.ArgumentParser(description=description)
+        parser = CustomArgumentParser(description=description)
 
         required_group = parser.add_argument_group('required named arguments')
         required_group.add_argument(
-            '--url',
-            help='URL to the repository to check out on Jenkins',
-            default=''
+            '--locator',
+            help='locator to the repository to check out on Jenkins',
+            required=True
         )
 
         parser.add_argument(
             '--type',
             help='Repository type.',
-            choices=JenkinsJobManager.get_valid_repo_types(),
-            default=''
+            choices=JenkinsJobManager.get_valid_repo_types()
         )
-
         parser.add_argument(
             '--verbose',
             help='Enable verbose messages.',
             action='store_true'
         )
-
         parser.add_argument(
             '--build',
             help='Generate the build command.',
             action='store_true'
         )
 
-        return parser.parse_args(arguments)
+        return parser
 
     def generate_xml(self) -> Element:
         root = Element('project')
@@ -84,7 +81,7 @@ class JenkinsJobManager:
         root.append(generator.generate_dependencies())
         root.append(Element('properties'))
         scm = generator.generate_scm_for_repo_type(
-            url=self.url,
+            locator=self.locator,
             repo_type=self.repo_type
         )
         root.append(scm)
@@ -173,7 +170,7 @@ class GenericXmlGenerator:
         return concurrent
 
     @staticmethod
-    def generate_scm_for_repo_type(url: str, repo_type: str) -> Element:
+    def generate_scm_for_repo_type(locator: str, repo_type: str) -> Element:
         scm = Element('scm')
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
@@ -181,7 +178,7 @@ class GenericXmlGenerator:
 
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())
-            scm.append(git_generator.generate_remote_config(url))
+            scm.append(git_generator.generate_remote_config(locator))
             scm.append(git_generator.generate_branches())
             scm.append(git_generator.generate_do_submodules())
             scm.append(git_generator.generate_submodule_configs())
@@ -191,7 +188,7 @@ class GenericXmlGenerator:
             scm.set('plugin', 'subversion@2.4.5')
 
             svn_generator = SvnXmlGenerator()
-            scm.append(svn_generator.generate_locations(url))
+            scm.append(svn_generator.generate_locations(locator))
             scm.append(Element('excludedRegions'))
             scm.append(Element('includedRegions'))
             scm.append(Element('excludedUsers'))
@@ -208,13 +205,13 @@ class GenericXmlGenerator:
 
 class GitXmlGenerator:
     @staticmethod
-    def generate_remote_config(url: str) -> Element:
+    def generate_remote_config(locator: str) -> Element:
         remote_config = Element('userRemoteConfigs')
         git_remote_config_tag = 'hudson.plugins.git.UserRemoteConfig'
         git_remote_config = Element(git_remote_config_tag)
-        url_element = Element('url')
-        url_element.text = url
-        git_remote_config.append(url_element)
+        locator_element = Element('url')
+        locator_element.text = locator
+        git_remote_config.append(locator_element)
         remote_config.append(git_remote_config)
         return remote_config
 
@@ -250,14 +247,14 @@ class GitXmlGenerator:
 
 class SvnXmlGenerator:
     @staticmethod
-    def generate_locations(url: str) -> Element:
+    def generate_locations(locator: str) -> Element:
         locations = Element('locations')
 
         module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
         module_location = Element(module_tag)
 
         remote = Element('remote')
-        remote.text = url
+        remote.text = locator
         module_location.append(remote)
 
         module_location.append(Element('credentialsId'))

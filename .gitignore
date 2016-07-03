@@ -1,6 +1,9 @@
 *.pyc
 *.egg-info
-.coverage
 .pyvenv
-.cache
+.tox
 build
+
+# pytest
+.coverage
+.cache

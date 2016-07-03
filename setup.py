@@ -1,18 +1,15 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+#!/usr/bin/env python3
+from setuptools import setup
 
 setup(
     name='jenkins-job-manager',
-    description='Stub description for jenkins-job-manager.',
-    author='Alexander Reitzel',
-    url='http://funtimecoding.org',
-    download_url='http://funtimecoding.org/download/'
-                 'jenkins-job-manager.tar.gz',
-    author_email='funtimecoding@gmail.com',
     version='0.1',
+    description='Stub description for jenkins-job-manager.',
     install_requires=['lxml'],
+    scripts=['bin/jjm'],
     packages=['jenkins_job_manager'],
-    scripts=['bin/jjm']
+    author='Alexander Reitzel',
+    author_email='funtimecoding@gmail.com',
+    url='http://example.org',
+    download_url='http://example.org/jenkins-job-manager.tar.gz'
 )

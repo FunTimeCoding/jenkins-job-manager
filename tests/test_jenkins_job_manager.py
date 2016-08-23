@@ -43,7 +43,21 @@ def test_generate_with_build_command() -> None:
     fixture = serialize_element(
         load_fixture('tests/fixture/build-command.xml')
     )
-    application = JenkinsJobManager(['--locator', GIT_LOCATOR, '--build'])
+    application = JenkinsJobManager(
+        ['--locator', GIT_LOCATOR, '--build', './build.sh']
+    )
+    assert fixture == application.generate_serialized_xml()
+
+
+def test_generate_with_multi_line_build_command() -> None:
+    fixture = serialize_element(
+        load_fixture('tests/fixture/multi-line-build-command.xml')
+    )
+    command = 'export PATH="${HOME}/opt/python-3.5.1/bin:${PATH}"' + "\n" \
+              './build.sh'
+    application = JenkinsJobManager(
+        ['--locator', GIT_LOCATOR, '--build', command]
+    )
     assert fixture == application.generate_serialized_xml()
 
 

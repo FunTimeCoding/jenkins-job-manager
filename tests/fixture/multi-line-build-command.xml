@@ -36,7 +36,8 @@
     <concurrentBuild>false</concurrentBuild>
     <builders>
         <hudson.tasks.Shell>
-            <command>./build.sh</command>
+            <command>export PATH="${HOME}/opt/python-3.5.1/bin:${PATH}"
+./build.sh</command>
         </hudson.tasks.Shell>
     </builders>
     <publishers/>

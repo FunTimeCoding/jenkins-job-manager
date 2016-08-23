@@ -8,19 +8,13 @@ class JenkinsJobManager:
     def __init__(self, arguments: list):
         parser = self.get_parser()
         parsed_arguments = parser.parse_args(arguments)
-        self.verbose = parsed_arguments.verbose
         self.repo_type = parsed_arguments.type
         self.locator = parsed_arguments.locator
-        self.enable_build = parsed_arguments.build
+        self.build_command = parsed_arguments.build_command
         self.description = parsed_arguments.description
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
-
-        if self.verbose is True:
-            print('Repository type: ' + self.repo_type)
-            print('Enable build: ' + str(self.enable_build))
-            print('locator: ' + self.locator)
 
     def run(self) -> int:
         print("<?xml version='1.0' encoding='UTF-8'?>")
@@ -63,18 +57,13 @@ class JenkinsJobManager:
             choices=JenkinsJobManager.get_valid_repo_types()
         )
         parser.add_argument(
-            '--verbose',
-            help='Enable verbose messages.',
-            action='store_true'
-        )
-        parser.add_argument(
-            '--build',
-            help='Generate the build command.',
-            action='store_true'
+            '--build-command',
+            help='Set the build command.',
+            default=''
         )
         parser.add_argument(
             '--description',
-            help='Add a job description.',
+            help='Set the job description.',
             default=''
         )
 
@@ -103,7 +92,7 @@ class JenkinsJobManager:
         root.append(generator.generate_downstream())
 
         triggers = Element('triggers')
-        if self.enable_build is True:
+        if self.build_command != '':
             timer_trigger = Element('hudson.triggers.TimerTrigger')
             timer_spec = Element('spec')
             # end of week, friday mornings
@@ -124,12 +113,10 @@ class JenkinsJobManager:
         root.append(generator.generate_concurrent())
 
         builders = Element('builders')
-        if self.enable_build is True:
+        if self.build_command != '':
             shell = Element('hudson.tasks.Shell')
             command = Element('command')
-            command.text = "export PYTHONHOME=/usr/local/opt/python3/" \
-                           "Frameworks/Python.framework/Versions" \
-                           "/3.4\n./build.sh"
+            command.text = self.build_command
             shell.append(command)
             builders.append(shell)
 

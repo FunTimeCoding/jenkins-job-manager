@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
   <actions/>
   <description/>
   <keepDependencies>false</keepDependencies>
@@ -35,7 +36,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>export PATH="${HOME}/opt/python-3.5.1/bin:${PATH}"
+      <command>export PATH="${HOME}/opt/python-3.5.1/bin:${HOME}/.cabal/bin:${HOME}/.local/bin:/usr/local/bin:${PATH}"
 ./build.sh</command>
     </hudson.tasks.Shell>
   </builders>

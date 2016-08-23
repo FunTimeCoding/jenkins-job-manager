@@ -4,7 +4,7 @@ DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 MARKDOWN_FILES=$(find doc -name '*.md')
 BLACKLIST=""
-DICTIONARY="en_US"
+DICTIONARY=en_US
 
 for FILE in ${MARKDOWN_FILES}; do
     WORDS=$(hunspell -d "${DICTIONARY}" -p "${SCRIPT_DIRECTORY}/custom.dic" -l "${FILE}" | sort | uniq)

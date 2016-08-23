@@ -2,7 +2,7 @@
 
 configure_virtual_environment()
 {
-    if [ ! -d ".pyvenv" ]; then
+    if [ ! -d .pyvenv ]; then
         pyvenv .pyvenv
     fi
 

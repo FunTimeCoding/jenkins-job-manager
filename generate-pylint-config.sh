@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-LAST_VERSION=1.6.3
+LAST_VERSION=1.6.4
 VERSION=$(pylint --version 2>&1 | grep pylint | sed 's/[^0-9.]*\([0-9.]*\).*/\1/')
 
 if [ "${LAST_VERSION}" = "${VERSION}" ]; then

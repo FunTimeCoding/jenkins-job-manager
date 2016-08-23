@@ -1,26 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
     <actions/>
-    <description></description>
+    <description/>
     <keepDependencies>false</keepDependencies>
-    <properties>
-        <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.24"/>
-    </properties>
+    <properties/>
     <scm class="hudson.scm.SubversionSCM" plugin="subversion@2.4.5">
         <locations>
             <hudson.scm.SubversionSCM_-ModuleLocation>
                 <remote>http://example.org/my_svn_repo</remote>
-                <credentialsId></credentialsId>
+                <credentialsId/>
                 <local>.</local>
                 <depthOption>infinity</depthOption>
                 <ignoreExternalsOption>true</ignoreExternalsOption>
             </hudson.scm.SubversionSCM_-ModuleLocation>
         </locations>
-        <excludedRegions></excludedRegions>
-        <includedRegions></includedRegions>
-        <excludedUsers></excludedUsers>
-        <excludedRevprop></excludedRevprop>
-        <excludedCommitMessages></excludedCommitMessages>
+        <excludedRegions/>
+        <includedRegions/>
+        <excludedUsers/>
+        <excludedRevprop/>
+        <excludedCommitMessages/>
         <workspaceUpdater class="hudson.scm.subversion.UpdateUpdater"/>
         <ignoreDirPropChanges>false</ignoreDirPropChanges>
         <filterChangelog>false</filterChangelog>

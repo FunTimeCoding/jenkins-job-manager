@@ -12,6 +12,7 @@ class JenkinsJobManager:
         self.repo_type = parsed_arguments.type
         self.locator = parsed_arguments.locator
         self.enable_build = parsed_arguments.build
+        self.description = parsed_arguments.description
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
@@ -22,6 +23,7 @@ class JenkinsJobManager:
             print('locator: ' + self.locator)
 
     def run(self) -> int:
+        print("<?xml version='1.0' encoding='UTF-8'?>")
         print(self.generate_serialized_xml().strip())
 
     @staticmethod
@@ -70,13 +72,23 @@ class JenkinsJobManager:
             help='Generate the build command.',
             action='store_true'
         )
+        parser.add_argument(
+            '--description',
+            help='Add a job description.',
+            default=''
+        )
 
         return parser
 
     def generate_xml(self) -> Element:
         root = Element('project')
         root.append(Element('actions'))
-        root.append(Element('description'))
+        description = Element('description')
+
+        if self.description != '':
+            description.text = self.description
+
+        root.append(description)
         generator = GenericXmlGenerator()
         root.append(generator.generate_dependencies())
         root.append(Element('properties'))
@@ -174,7 +186,7 @@ class GenericXmlGenerator:
         scm = Element('scm')
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@2.3.5')
+            scm.set('plugin', 'git@2.5.3')
 
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())

@@ -1,12 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
     <actions/>
-    <description></description>
+    <description/>
     <keepDependencies>false</keepDependencies>
-    <properties>
-        <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.24"/>
-    </properties>
-    <scm class="hudson.plugins.git.GitSCM" plugin="git@2.3.5">
+    <properties/>
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@2.5.3">
         <configVersion>2</configVersion>
         <userRemoteConfigs>
             <hudson.plugins.git.UserRemoteConfig>

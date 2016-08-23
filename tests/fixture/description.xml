@@ -1,12 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
     <actions/>
-    <description></description>
+    <description>example</description>
     <keepDependencies>false</keepDependencies>
-    <properties>
-        <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.25"/>
-    </properties>
-    <scm class="hudson.plugins.git.GitSCM" plugin="git@2.3.5">
+    <properties/>
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@2.5.3">
         <configVersion>2</configVersion>
         <userRemoteConfigs>
             <hudson.plugins.git.UserRemoteConfig>
@@ -26,22 +24,9 @@
     <disabled>false</disabled>
     <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
     <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-    <triggers>
-        <hudson.triggers.TimerTrigger>
-            <spec>H 6 * * 5</spec>
-        </hudson.triggers.TimerTrigger>
-        <hudson.triggers.SCMTrigger>
-            <spec>H/30 * * * *</spec>
-            <ignorePostCommitHooks>false</ignorePostCommitHooks>
-        </hudson.triggers.SCMTrigger>
-    </triggers>
+    <triggers/>
     <concurrentBuild>false</concurrentBuild>
-    <builders>
-        <hudson.tasks.Shell>
-            <command>export PYTHONHOME=/usr/local/opt/python3/Frameworks/Python.framework/Versions/3.4
-./build.sh</command>
-        </hudson.tasks.Shell>
-    </builders>
+    <builders/>
     <publishers/>
     <buildWrappers/>
 </project>

@@ -65,7 +65,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=cmp-builtin,missing-docstring,dict-view-method,using-cmp-argument,old-ne-operator,backtick,nonzero-method,hex-method,import-star-module-level,long-builtin,standarderror-builtin,unicode-builtin,delslice-method,useless-suppression,buffer-builtin,old-octal-literal,reduce-builtin,no-absolute-import,intern-builtin,old-division,zip-builtin-not-iterating,getslice-method,map-builtin-not-iterating,oct-method,parameter-unpacking,long-suffix,indexing-exception,input-builtin,suppressed-message,metaclass-assignment,raw_input-builtin,basestring-builtin,old-raise-syntax,unichr-builtin,file-builtin,coerce-method,unpacking-in-except,print-statement,dict-iter-method,setslice-method,reload-builtin,apply-builtin,execfile-builtin,raising-string,filter-builtin-not-iterating,xrange-builtin,coerce-builtin,next-method-called,cmp-method,redefined-variable-type,round-builtin,range-builtin-not-iterating
+disable=setslice-method,standarderror-builtin,coerce-builtin,redefined-variable-type,execfile-builtin,hex-method,map-builtin-not-iterating,long-suffix,no-absolute-import,reload-builtin,missing-docstring,old-octal-literal,using-cmp-argument,import-star-module-level,round-builtin,filter-builtin-not-iterating,xrange-builtin,coerce-method,long-builtin,useless-suppression,old-raise-syntax,apply-builtin,range-builtin-not-iterating,unicode-builtin,file-builtin,delslice-method,old-division,next-method-called,unichr-builtin,backtick,cmp-method,intern-builtin,suppressed-message,zip-builtin-not-iterating,reduce-builtin,old-ne-operator,nonzero-method,basestring-builtin,oct-method,getslice-method,print-statement,parameter-unpacking,cmp-builtin,indexing-exception,dict-iter-method,raw_input-builtin,dict-view-method,raising-string,input-builtin,buffer-builtin,unpacking-in-except,metaclass-assignment
 
 
 [REPORTS]
@@ -115,11 +115,11 @@ include-naming-hint=no
 # to this list to register other decorators that produce valid properties.
 property-classes=abc.abstractproperty
 
-# Regular expression matching correct inline iteration names
-inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
+# Regular expression matching correct argument names
+argument-rgx=[a-z_][a-z0-9_]{2,30}$
 
-# Naming hint for inline iteration names
-inlinevar-name-hint=[A-Za-z_][A-Za-z0-9_]*$
+# Naming hint for argument names
+argument-name-hint=[a-z_][a-z0-9_]{2,30}$
 
 # Regular expression matching correct class attribute names
 class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
@@ -127,17 +127,11 @@ class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
 # Naming hint for class attribute names
 class-attribute-name-hint=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
 
-# Regular expression matching correct constant names
-const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+# Regular expression matching correct method names
+method-rgx=[a-z_][a-z0-9_]{2,30}$
 
-# Naming hint for constant names
-const-name-hint=(([A-Z_][A-Z0-9_]*)|(__.*__))$
-
-# Regular expression matching correct module names
-module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
-
-# Naming hint for module names
-module-name-hint=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+# Naming hint for method names
+method-name-hint=[a-z_][a-z0-9_]{2,30}$
 
 # Regular expression matching correct variable names
 variable-rgx=[a-z_][a-z0-9_]{2,30}$
@@ -145,11 +139,11 @@ variable-rgx=[a-z_][a-z0-9_]{2,30}$
 # Naming hint for variable names
 variable-name-hint=[a-z_][a-z0-9_]{2,30}$
 
-# Regular expression matching correct function names
-function-rgx=[a-z_][a-z0-9_]{2,30}$
+# Regular expression matching correct module names
+module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
 
-# Naming hint for function names
-function-name-hint=[a-z_][a-z0-9_]{2,30}$
+# Naming hint for module names
+module-name-hint=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
 
 # Regular expression matching correct attribute names
 attr-rgx=[a-z_][a-z0-9_]{2,30}$
@@ -157,23 +151,29 @@ attr-rgx=[a-z_][a-z0-9_]{2,30}$
 # Naming hint for attribute names
 attr-name-hint=[a-z_][a-z0-9_]{2,30}$
 
-# Regular expression matching correct method names
-method-rgx=[a-z_][a-z0-9_]{2,30}$
-
-# Naming hint for method names
-method-name-hint=[a-z_][a-z0-9_]{2,30}$
-
-# Regular expression matching correct argument names
-argument-rgx=[a-z_][a-z0-9_]{2,30}$
-
-# Naming hint for argument names
-argument-name-hint=[a-z_][a-z0-9_]{2,30}$
-
 # Regular expression matching correct class names
 class-rgx=[A-Z_][a-zA-Z0-9]+$
 
 # Naming hint for class names
 class-name-hint=[A-Z_][a-zA-Z0-9]+$
+
+# Regular expression matching correct constant names
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Naming hint for constant names
+const-name-hint=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+# Regular expression matching correct function names
+function-rgx=[a-z_][a-z0-9_]{2,30}$
+
+# Naming hint for function names
+function-name-hint=[a-z_][a-z0-9_]{2,30}$
+
+# Regular expression matching correct inline iteration names
+inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+# Naming hint for inline iteration names
+inlinevar-name-hint=[A-Za-z_][A-Za-z0-9_]*$
 
 # Regular expression which should only match function or class names that do
 # not require a docstring.
@@ -252,15 +252,15 @@ ignore-imports=no
 
 [SPELLING]
 
-# Spelling dictionary name. Available dictionaries: none. To make it working
-# install python-enchant package.
-spelling-dict=
+# Spelling dictionary name. Available dictionaries: de_DE (myspell), en_AU
+# (myspell), en_GB (myspell), en_US (myspell), fr_FR (myspell).
+spelling-dict=en_US
 
 # List of comma separated words that should not be checked.
 spelling-ignore-words=
 
 # A path to a file that contains private dictionary; one word per line.
-spelling-private-dict-file=
+spelling-private-dict-file=custom.dic
 
 # Tells whether to store unknown words to indicated private dictionary in
 # --spelling-private-dict-file option instead of raising a message.

@@ -22,7 +22,7 @@ class JenkinsJobManager:
             print('locator: ' + self.locator)
 
     def run(self) -> int:
-        print(self.generate_serialized_xml())
+        print(self.generate_serialized_xml().strip())
 
     @staticmethod
     def get_valid_repo_types() -> list:

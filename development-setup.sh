@@ -6,7 +6,7 @@ wget --quiet --output-document - cfg.shiin.org/shellcheck.sh | sh -e
 OPERATING_SYSTEM=$(uname)
 
 if [ "${OPERATING_SYSTEM}" = Linux ]; then
-    apt-get -qq install libxml2-dev libxslt1-dev
+    sudo apt-get -qq install libxml2-dev libxslt1-dev
 fi
 
 pip3 install --upgrade --user --requirement requirements.txt

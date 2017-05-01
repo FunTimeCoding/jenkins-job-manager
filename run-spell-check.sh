@@ -2,12 +2,12 @@
 
 DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
-MARKDOWN_FILES=$(find doc -name '*.md')
+MARKDOWN_FILES=$(find . -name '*.md')
 BLACKLIST=""
 DICTIONARY=en_US
 
 for FILE in ${MARKDOWN_FILES}; do
-    WORDS=$(hunspell -d "${DICTIONARY}" -p "${SCRIPT_DIRECTORY}/custom.dic" -l "${FILE}" | sort | uniq)
+    WORDS=$(hunspell -d "${DICTIONARY}" -p "${SCRIPT_DIRECTORY}/dict/jenkins-job-manager.dic" -l "${FILE}" | sort | uniq)
 
     if [ ! "${WORDS}" = "" ]; then
         echo "${FILE}"
@@ -26,7 +26,7 @@ for FILE in ${MARKDOWN_FILES}; do
     fi
 done
 
-TEX_FILES=$(find doc -name '*.tex')
+TEX_FILES=$(find . -name '*.tex')
 
 for FILE in ${TEX_FILES}; do
     WORDS=$(hunspell -d "${DICTIONARY}" -p "${SCRIPT_DIRECTORY}/custom.dic" -l -t "${FILE}")

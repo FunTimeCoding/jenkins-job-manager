@@ -1,8 +1,8 @@
 build
-*.pyc
-*.egg-info
-.pyvenv
+.venv
 .tox
+jenkins_job_manager.egg-info
+*.pyc
 
 # pytest
 .coverage

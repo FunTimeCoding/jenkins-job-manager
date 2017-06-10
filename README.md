@@ -24,7 +24,7 @@ This section explains how to use this project.
 Run the main program.
 
 ```sh
-PYTHONPATH=. bin/jjm
+bin/jjm
 ```
 
 

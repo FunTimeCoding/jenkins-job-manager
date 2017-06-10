@@ -24,6 +24,24 @@ if [ "${SYSTEM}" = Linux ]; then
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install hunspell
     fi
+
+    dpkg --list | grep --quiet 'ii  libyaml-dev' && FOUND=true || FOUND=false
+
+    if [ "${FOUND}" = false ]; then
+        sudo apt-get --quiet 2 install libyaml-dev
+    fi
+
+    dpkg --list | grep --quiet 'ii  libxml2-dev' && FOUND=true || FOUND=false
+
+    if [ "${FOUND}" = false ]; then
+        sudo apt-get --quiet 2 install libxml2-dev
+    fi
+
+    dpkg --list | grep --quiet 'ii  libxslt-dev' && FOUND=true || FOUND=false
+
+    if [ "${FOUND}" = false ]; then
+        sudo apt-get --quiet 2 install libxslt-dev
+    fi
 fi
 
 if [ "${USE_VENV}" = true ]; then

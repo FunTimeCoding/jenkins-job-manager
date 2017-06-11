@@ -164,7 +164,8 @@ class JenkinsJobManager:
             threshold.text = 'low'
             checkstyle.append(threshold)
             name = Element('pluginName')
-            name.text = '[CHECKSTYLE]'
+            # This space belongs here.
+            name.text = '[CHECKSTYLE] '
             checkstyle.append(name)
             checkstyle.append(Element('defaultEncoding'))
             run_on_failed = Element('canRunOnFailed')

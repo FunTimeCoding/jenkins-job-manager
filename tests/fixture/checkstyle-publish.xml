@@ -32,7 +32,7 @@
             <healthy></healthy>
             <unHealthy></unHealthy>
             <thresholdLimit>low</thresholdLimit>
-            <pluginName>[CHECKSTYLE]</pluginName>
+            <pluginName>[CHECKSTYLE] </pluginName>
             <defaultEncoding></defaultEncoding>
             <canRunOnFailed>false</canRunOnFailed>
             <usePreviousBuildAsReference>false</usePreviousBuildAsReference>

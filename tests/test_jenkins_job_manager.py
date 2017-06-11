@@ -54,7 +54,7 @@ def test_generate_with_multi_line_build_command() -> None:
         load_fixture('tests/fixture/multi-line-build-command.xml')
     )
     command = 'export PATH="${HOME}/opt/python-3.5.1/bin:${PATH}"' + "\n" \
-              './build.sh'
+                                                                     './build.sh'
     application = JenkinsJobManager(
         ['--locator', GIT_LOCATOR, '--build', command]
     )
@@ -71,12 +71,22 @@ def test_generate_with_description() -> None:
     assert fixture == application.generate_serialized_xml()
 
 
-def test_generate_with_junit_file() -> None:
+def test_generate_with_junit_publish() -> None:
     fixture = serialize_element(
-        load_fixture('tests/fixture/junit-file.xml')
+        load_fixture('tests/fixture/junit-publish.xml')
     )
     application = JenkinsJobManager(
         ['--locator', GIT_LOCATOR, '--junit', 'build/junit.xml']
+    )
+    assert fixture == application.generate_serialized_xml()
+
+
+def test_generate_with_checkstyle_publish() -> None:
+    fixture = serialize_element(
+        load_fixture('tests/fixture/checkstyle-publish.xml')
+    )
+    application = JenkinsJobManager(
+        ['--locator', GIT_LOCATOR, '--checkstyle', 'build/log/checkstyle-*.xml']
     )
     assert fixture == application.generate_serialized_xml()
 

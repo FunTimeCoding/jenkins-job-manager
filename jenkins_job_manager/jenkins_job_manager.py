@@ -13,6 +13,7 @@ class JenkinsJobManager:
         self.build_command = parsed_arguments.build_command
         self.description = parsed_arguments.description
         self.junit = parsed_arguments.junit
+        self.checkstyle = parsed_arguments.checkstyle
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
@@ -68,6 +69,11 @@ class JenkinsJobManager:
             default=''
         )
         parser.add_argument(
+            '--checkstyle',
+            help='Set the checkstyle output to publish.',
+            default=''
+        )
+        parser.add_argument(
             '--description',
             help='Set the job description.',
             default=''
@@ -82,6 +88,8 @@ class JenkinsJobManager:
 
         if self.description != '':
             description.text = self.description
+        # else:
+        #     description.text = ''
 
         root.append(description)
         generator = GenericXmlGenerator()
@@ -96,8 +104,8 @@ class JenkinsJobManager:
         root.append(generator.generate_disabled())
         root.append(generator.generate_upstream())
         root.append(generator.generate_downstream())
-
         triggers = Element('triggers')
+
         if self.build_command != '':
             timer_trigger = Element('hudson.triggers.TimerTrigger')
             timer_spec = Element('spec')
@@ -115,10 +123,11 @@ class JenkinsJobManager:
             hooks.text = 'false'
             scm_trigger.append(hooks)
             triggers.append(scm_trigger)
+
         root.append(triggers)
         root.append(generator.generate_concurrent())
-
         builders = Element('builders')
+
         if self.build_command != '':
             shell = Element('hudson.tasks.Shell')
             command = Element('command')
@@ -130,21 +139,112 @@ class JenkinsJobManager:
         publishers = Element('publishers')
 
         if self.junit != '':
-            archiver = Element('hudson.tasks.junit.JUnitResultArchiver')
-            archiver.set('plugin', 'junit@1.20')
+            junit = Element('hudson.tasks.junit.JUnitResultArchiver')
+            junit.set('plugin', 'junit@1.20')
             results = Element('testResults')
             results.text = self.junit
-            archiver.append(results)
+            junit.append(results)
             keep_long_output = Element('keepLongStdio')
             keep_long_output.text = 'false'
-            archiver.append(keep_long_output)
+            junit.append(keep_long_output)
             health_factor = Element('healthScaleFactor')
             health_factor.text = '1.0'
-            archiver.append(health_factor)
+            junit.append(health_factor)
             allow_empty = Element('allowEmptyResults')
             allow_empty.text = 'false'
-            archiver.append(allow_empty)
-            publishers.append(archiver)
+            junit.append(allow_empty)
+            publishers.append(junit)
+
+        if self.checkstyle != '':
+            checkstyle = Element(
+                'hudson.plugins.checkstyle.CheckStylePublisher'
+            )
+            checkstyle.set('plugin', 'checkstyle@3.48')
+            checkstyle.append(Element('healthy'))
+            checkstyle.append(Element('unHealthy'))
+            threshold = Element('thresholdLimit')
+            threshold.text = 'low'
+            checkstyle.append(threshold)
+            name = Element('pluginName')
+            name.text = '[CHECKSTYLE]'
+            checkstyle.append(name)
+            checkstyle.append(Element('defaultEncoding'))
+            run_on_failed = Element('canRunOnFailed')
+            run_on_failed.text = 'false'
+            checkstyle.append(run_on_failed)
+            previous_build_reference = Element('usePreviousBuildAsReference')
+            previous_build_reference.text = 'false'
+            checkstyle.append(previous_build_reference)
+            stable_build_reference = Element('useStableBuildAsReference')
+            stable_build_reference.text = 'false'
+            checkstyle.append(stable_build_reference)
+            delta_values = Element('useDeltaValues')
+            delta_values.text = 'false'
+            checkstyle.append(delta_values)
+            thresholds = Element('thresholds')
+            thresholds.set('plugin', 'analysis-core@1.87')
+            unstable_total_all = Element('unstableTotalAll')
+            # unstable_total_all.text = ''
+            thresholds.append(unstable_total_all)
+            unstable_total_high = Element('unstableTotalHigh')
+            # unstable_total_high.text = ''
+            thresholds.append(unstable_total_high)
+            unstable_total_normal = Element('unstableTotalNormal')
+            # unstable_total_normal.text = ''
+            thresholds.append(unstable_total_normal)
+            unstable_total_low = Element('unstableTotalLow')
+            # unstable_total_low.text = ''
+            thresholds.append(unstable_total_low)
+            unstable_new_all = Element('unstableNewAll')
+            # unstable_new_all.text = ''
+            thresholds.append(unstable_new_all)
+            unstable_new_high = Element('unstableNewHigh')
+            # unstable_new_high.text = ''
+            thresholds.append(unstable_new_high)
+            unstable_new_normal = Element('unstableNewNormal')
+            # unstable_new_normal.text = ''
+            thresholds.append(unstable_new_normal)
+            unstable_new_low = Element('unstableNewLow')
+            # unstable_new_low.text = ''
+            thresholds.append(unstable_new_low)
+            failed_total_all = Element('failedTotalAll')
+            # failed_total_all.text = ''
+            thresholds.append(failed_total_all)
+            failed_total_high = Element('failedTotalHigh')
+            # failed_total_high.text = ''
+            thresholds.append(failed_total_high)
+            failed_total_normal = Element('failedTotalNormal')
+            # failed_total_normal.text = ''
+            thresholds.append(failed_total_normal)
+            failed_total_low = Element('failedTotalLow')
+            # failed_total_low.text = ''
+            thresholds.append(failed_total_low)
+            failed_new_all = Element('failedNewAll')
+            # failed_new_all.text = ''
+            thresholds.append(failed_new_all)
+            failed_new_high = Element('failedNewHigh')
+            # failed_new_high.text = ''
+            thresholds.append(failed_new_high)
+            failed_new_normal = Element('failedNewNormal')
+            # failed_new_normal.text = ''
+            thresholds.append(failed_new_normal)
+            failed_new_low = Element('failedNewLow')
+            # failed_new_low.text = ''
+            thresholds.append(failed_new_low)
+            checkstyle.append(thresholds)
+            detect_modules = Element('shouldDetectModules')
+            detect_modules.text = 'false'
+            checkstyle.append(detect_modules)
+            compute = Element('dontComputeNew')
+            compute.text = 'true'
+            checkstyle.append(compute)
+            relative_paths = Element('doNotResolveRelativePaths')
+            relative_paths.text = 'false'
+            checkstyle.append(relative_paths)
+            pattern = Element('pattern')
+            pattern.text = self.checkstyle
+            checkstyle.append(pattern)
+            publishers.append(checkstyle)
 
         root.append(publishers)
         root.append(Element('buildWrappers'))
@@ -153,6 +253,7 @@ class JenkinsJobManager:
 
     def generate_serialized_xml(self) -> str:
         xml = self.generate_xml()
+
         return serialize_element(xml)
 
 
@@ -161,45 +262,51 @@ class GenericXmlGenerator:
     def generate_dependencies() -> Element:
         dependencies = Element('keepDependencies')
         dependencies.text = 'false'
+
         return dependencies
 
     @staticmethod
     def generate_roam() -> Element:
         roam = Element('canRoam')
         roam.text = 'true'
+
         return roam
 
     @staticmethod
     def generate_disabled() -> Element:
         disabled = Element('disabled')
         disabled.text = 'false'
+
         return disabled
 
     @staticmethod
     def generate_upstream() -> Element:
         upstream = Element('blockBuildWhenDownstreamBuilding')
         upstream.text = 'false'
+
         return upstream
 
     @staticmethod
     def generate_downstream() -> Element:
         downstream = Element('blockBuildWhenUpstreamBuilding')
         downstream.text = 'false'
+
         return downstream
 
     @staticmethod
     def generate_concurrent() -> Element:
         concurrent = Element('concurrentBuild')
         concurrent.text = 'false'
+
         return concurrent
 
     @staticmethod
     def generate_scm_for_repo_type(locator: str, repo_type: str) -> Element:
         scm = Element('scm')
+
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
             scm.set('plugin', 'git@3.3.0')
-
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())
             scm.append(git_generator.generate_remote_config(locator))
@@ -210,7 +317,6 @@ class GenericXmlGenerator:
         elif repo_type == 'svn':
             scm.set('class', 'hudson.scm.SubversionSCM')
             scm.set('plugin', 'subversion@2.4.5')
-
             svn_generator = SvnXmlGenerator()
             scm.append(svn_generator.generate_locations(locator))
             scm.append(Element('excludedRegions'))
@@ -237,6 +343,7 @@ class GitXmlGenerator:
         locator_element.text = locator
         git_remote_config.append(locator_element)
         remote_config.append(git_remote_config)
+
         return remote_config
 
     @staticmethod
@@ -247,12 +354,14 @@ class GitXmlGenerator:
         branch_spec_name.text = '*/master'
         branch_spec.append(branch_spec_name)
         branches.append(branch_spec)
+
         return branches
 
     @staticmethod
     def generate_version() -> Element:
         version = Element('configVersion')
         version.text = '2'
+
         return version
 
     @staticmethod
@@ -260,12 +369,14 @@ class GitXmlGenerator:
         generate_tag = 'doGenerateSubmoduleConfigurations'
         generate_submodule_configs = Element(generate_tag)
         generate_submodule_configs.text = 'false'
+
         return generate_submodule_configs
 
     @staticmethod
     def generate_submodule_configs() -> Element:
         submodule_configs = Element('submoduleCfg')
         submodule_configs.set('class', 'list')
+
         return submodule_configs
 
 
@@ -273,45 +384,42 @@ class SvnXmlGenerator:
     @staticmethod
     def generate_locations(locator: str) -> Element:
         locations = Element('locations')
-
         module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
         module_location = Element(module_tag)
-
         remote = Element('remote')
         remote.text = locator
         module_location.append(remote)
-
         module_location.append(Element('credentialsId'))
-
         local = Element('local')
         local.text = '.'
         module_location.append(local)
-
         depth = Element('depthOption')
         depth.text = 'infinity'
         module_location.append(depth)
-
         ignore_externals = Element('ignoreExternalsOption')
         ignore_externals.text = 'true'
         module_location.append(ignore_externals)
-
         locations.append(module_location)
+
         return locations
 
     @staticmethod
     def generate_updater() -> Element:
         updater = Element('workspaceUpdater')
         updater.set('class', 'hudson.scm.subversion.UpdateUpdater')
+
         return updater
 
     @staticmethod
     def generate_ignore_changes() -> Element:
         ignore_changes = Element('ignoreDirPropChanges')
         ignore_changes.text = 'false'
+
         return ignore_changes
 
     @staticmethod
     def generate_filter_changes() -> Element:
         filter_changes = Element('filterChangelog')
         filter_changes.text = 'false'
+
         return filter_changes

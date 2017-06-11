@@ -88,8 +88,6 @@ class JenkinsJobManager:
 
         if self.description != '':
             description.text = self.description
-        # else:
-        #     description.text = ''
 
         root.append(description)
         generator = GenericXmlGenerator()
@@ -184,52 +182,36 @@ class JenkinsJobManager:
             thresholds = Element('thresholds')
             thresholds.set('plugin', 'analysis-core@1.87')
             unstable_total_all = Element('unstableTotalAll')
-            # unstable_total_all.text = ''
             thresholds.append(unstable_total_all)
             unstable_total_high = Element('unstableTotalHigh')
-            # unstable_total_high.text = ''
             thresholds.append(unstable_total_high)
             unstable_total_normal = Element('unstableTotalNormal')
-            # unstable_total_normal.text = ''
             thresholds.append(unstable_total_normal)
             unstable_total_low = Element('unstableTotalLow')
-            # unstable_total_low.text = ''
             thresholds.append(unstable_total_low)
             unstable_new_all = Element('unstableNewAll')
-            # unstable_new_all.text = ''
             thresholds.append(unstable_new_all)
             unstable_new_high = Element('unstableNewHigh')
-            # unstable_new_high.text = ''
             thresholds.append(unstable_new_high)
             unstable_new_normal = Element('unstableNewNormal')
-            # unstable_new_normal.text = ''
             thresholds.append(unstable_new_normal)
             unstable_new_low = Element('unstableNewLow')
-            # unstable_new_low.text = ''
             thresholds.append(unstable_new_low)
             failed_total_all = Element('failedTotalAll')
-            # failed_total_all.text = ''
             thresholds.append(failed_total_all)
             failed_total_high = Element('failedTotalHigh')
-            # failed_total_high.text = ''
             thresholds.append(failed_total_high)
             failed_total_normal = Element('failedTotalNormal')
-            # failed_total_normal.text = ''
             thresholds.append(failed_total_normal)
             failed_total_low = Element('failedTotalLow')
-            # failed_total_low.text = ''
             thresholds.append(failed_total_low)
             failed_new_all = Element('failedNewAll')
-            # failed_new_all.text = ''
             thresholds.append(failed_new_all)
             failed_new_high = Element('failedNewHigh')
-            # failed_new_high.text = ''
             thresholds.append(failed_new_high)
             failed_new_normal = Element('failedNewNormal')
-            # failed_new_normal.text = ''
             thresholds.append(failed_new_normal)
             failed_new_low = Element('failedNewLow')
-            # failed_new_low.text = ''
             thresholds.append(failed_new_low)
             checkstyle.append(thresholds)
             detect_modules = Element('shouldDetectModules')

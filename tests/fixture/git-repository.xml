@@ -27,6 +27,12 @@
     <triggers/>
     <concurrentBuild>false</concurrentBuild>
     <builders/>
-    <publishers/>
+    <publishers>
+        <hudson.tasks.Mailer plugin="mailer@1.20">
+            <recipients/>
+            <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+            <sendToIndividuals>true</sendToIndividuals>
+        </hudson.tasks.Mailer>
+    </publishers>
     <buildWrappers/>
 </project>

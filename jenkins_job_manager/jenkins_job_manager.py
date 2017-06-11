@@ -228,6 +228,18 @@ class JenkinsJobManager:
             checkstyle.append(pattern)
             publishers.append(checkstyle)
 
+        mailer = Element(
+            'hudson.tasks.Mailer'
+        )
+        mailer.set('plugin', 'mailer@1.20')
+        mailer.append(Element('recipients'))
+        every_unstable_build = Element('dontNotifyEveryUnstableBuild')
+        every_unstable_build.text = 'false'
+        mailer.append(every_unstable_build)
+        individuals = Element('sendToIndividuals')
+        individuals.text = 'true'
+        mailer.append(individuals)
+        publishers.append(mailer)
         root.append(publishers)
         root.append(Element('buildWrappers'))
 

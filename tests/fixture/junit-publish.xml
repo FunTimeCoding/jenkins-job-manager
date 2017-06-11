@@ -34,6 +34,11 @@
             <healthScaleFactor>1.0</healthScaleFactor>
             <allowEmptyResults>false</allowEmptyResults>
         </hudson.tasks.junit.JUnitResultArchiver>
+        <hudson.tasks.Mailer plugin="mailer@1.20">
+            <recipients/>
+            <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+            <sendToIndividuals>true</sendToIndividuals>
+        </hudson.tasks.Mailer>
     </publishers>
     <buildWrappers/>
 </project>

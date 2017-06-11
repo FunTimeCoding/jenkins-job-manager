@@ -12,6 +12,7 @@ class JenkinsJobManager:
         self.locator = parsed_arguments.locator
         self.build_command = parsed_arguments.build_command
         self.description = parsed_arguments.description
+        self.junit = parsed_arguments.junit
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
@@ -59,6 +60,11 @@ class JenkinsJobManager:
         parser.add_argument(
             '--build-command',
             help='Set the build command.',
+            default=''
+        )
+        parser.add_argument(
+            '--junit',
+            help='Set the JUnit output to publish.',
             default=''
         )
         parser.add_argument(
@@ -121,7 +127,26 @@ class JenkinsJobManager:
             builders.append(shell)
 
         root.append(builders)
-        root.append(Element('publishers'))
+        publishers = Element('publishers')
+
+        if self.junit != '':
+            archiver = Element('hudson.tasks.junit.JUnitResultArchiver')
+            archiver.set('plugin', 'junit@1.20')
+            results = Element('testResults')
+            results.text = self.junit
+            archiver.append(results)
+            keep_long_output = Element('keepLongStdio')
+            keep_long_output.text = 'false'
+            archiver.append(keep_long_output)
+            health_factor = Element('healthScaleFactor')
+            health_factor.text = '1.0'
+            archiver.append(health_factor)
+            allow_empty = Element('allowEmptyResults')
+            allow_empty.text = 'false'
+            archiver.append(allow_empty)
+            publishers.append(archiver)
+
+        root.append(publishers)
         root.append(Element('buildWrappers'))
 
         return root
@@ -173,7 +198,7 @@ class GenericXmlGenerator:
         scm = Element('scm')
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@2.5.3')
+            scm.set('plugin', 'git@3.3.0')
 
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())

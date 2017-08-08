@@ -13,31 +13,32 @@ fi
 SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Linux ]; then
-    dpkg --list | grep --quiet 'ii  libenchant-dev' && FOUND=true || FOUND=false
+    LIST=$(dpkg --list)
+    echo "${LIST}" | grep --quiet 'ii  libenchant-dev' && FOUND=true || FOUND=false
 
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install libenchant-dev
     fi
 
-    dpkg --list | grep --quiet 'ii  hunspell' && FOUND=true || FOUND=false
+    echo "${LIST}" | grep --quiet 'ii  hunspell' && FOUND=true || FOUND=false
 
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install hunspell
     fi
 
-    dpkg --list | grep --quiet 'ii  libyaml-dev' && FOUND=true || FOUND=false
+    echo "${LIST}"  | grep --quiet 'ii  libyaml-dev' && FOUND=true || FOUND=false
 
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install libyaml-dev
     fi
 
-    dpkg --list | grep --quiet 'ii  libxml2-dev' && FOUND=true || FOUND=false
+    echo "${LIST}"  | grep --quiet 'ii  libxml2-dev' && FOUND=true || FOUND=false
 
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install libxml2-dev
     fi
 
-    dpkg --list | grep --quiet 'ii  libxslt-dev' && FOUND=true || FOUND=false
+    echo "${LIST}"  | grep --quiet 'ii  libxslt-dev' && FOUND=true || FOUND=false
 
     if [ "${FOUND}" = false ]; then
         sudo apt-get --quiet 2 install libxslt-dev

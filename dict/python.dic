@@ -1,1 +1,10 @@
 pycache
+pyyaml
+shyaml
+pylint
+venv
+htmlcov
+pyenchant
+pygtk
+optparse
+contextlib

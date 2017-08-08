@@ -1,3 +1,5 @@
+from sys import argv as argument_vector, exit as system_exit
+
 from lxml.etree import Element
 from python_utility.custom_argument_parser import CustomArgumentParser
 
@@ -6,8 +8,7 @@ from jenkins_job_manager.lxml_helper import serialize_element
 
 class JenkinsJobManager:
     def __init__(self, arguments: list):
-        parser = self.get_parser()
-        parsed_arguments = parser.parse_args(arguments)
+        parsed_arguments = self.get_parser().parse_args(arguments)
         self.repo_type = parsed_arguments.type
         self.locator = parsed_arguments.locator
         self.build_command = parsed_arguments.build_command
@@ -18,9 +19,15 @@ class JenkinsJobManager:
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
 
+    @staticmethod
+    def main():
+        system_exit(JenkinsJobManager(argument_vector[1:]).run())
+
     def run(self) -> int:
         print("<?xml version='1.0' encoding='UTF-8'?>")
         print(self.generate_serialized_xml().strip())
+
+        return 0
 
     @staticmethod
     def get_valid_repo_types() -> list:

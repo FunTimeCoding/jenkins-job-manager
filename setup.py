@@ -18,8 +18,14 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    install_requires=['lxml'],
-    scripts=['bin/jjm'],
+    keywords='jenkins continuous integration config generator',
     packages=['jenkins_job_manager'],
-    download_url='http://funtimecoding.org/jenkins-job-manager.tar.gz',
+    install_requires=['lxml'],
+    python_requires='>=3.4',
+    entry_points={
+        'console_scripts': [
+            'jjm=jenkins_job_manager.jenkins_job_manager:'
+            'JenkinsJobManager.main',
+        ],
+    },
 )

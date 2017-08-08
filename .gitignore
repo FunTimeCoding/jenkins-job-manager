@@ -1,4 +1,5 @@
 build
+dist
 .venv
 .tox
 jenkins_job_manager.egg-info

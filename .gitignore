@@ -1,9 +1,11 @@
 build
 dist
+tmp
 .venv
 .tox
 jenkins_job_manager.egg-info
 *.pyc
+*.deb
 
 # pytest
 .coverage

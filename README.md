@@ -8,6 +8,7 @@ Install the project.
 
 ```sh
 pip3 install git+https://git@github.com/FunTimeCoding/jenkins-job-manager.git#egg=jenkins-job-manager
+pip3 install -i https://testpypi.python.org/pypi jenkins-job-manager
 ```
 
 Uninstall the project.

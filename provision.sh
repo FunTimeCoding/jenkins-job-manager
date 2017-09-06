@@ -12,4 +12,5 @@ elif [ "${CODENAME}" = stretch ]; then
     apt-get --quiet 2 install neovim multitail htop
 fi
 
+# python3 is already installed
 #apt-get --quiet 2 install python3

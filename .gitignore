@@ -1,6 +1,7 @@
 build
 dist
 tmp
+.vagrant
 .venv
 .tox
 jenkins_job_manager.egg-info

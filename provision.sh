@@ -12,5 +12,14 @@ elif [ "${CODENAME}" = stretch ]; then
     apt-get --quiet 2 install neovim multitail htop
 fi
 
-# python3 is already installed
-#apt-get --quiet 2 install python3
+sudo -u vagrant touch /home/vagrant/.pypirc
+chmod 600 /home/vagrant/.pypirc
+cat /vagrant/tmp/pypirc > /home/vagrant/.pypirc
+
+apt-get --quiet 2 install twine ruby
+
+sudo -u vagrant touch /home/vagrant/.gemrc
+chmod 600 /home/vagrant/.gemrc
+cat /vagrant/tmp/gemrc > /home/vagrant/.gemrc
+
+sudo -u vagrant gem install fpm

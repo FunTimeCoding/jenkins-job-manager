@@ -12,11 +12,13 @@ elif [ "${CODENAME}" = stretch ]; then
     apt-get --quiet 2 install neovim multitail htop
 fi
 
+echo 'PATH="${HOME}/.gem/ruby/2.3.0/bin:${PATH}"' >> /home/vagrant/.profile
+
 sudo -u vagrant touch /home/vagrant/.pypirc
 chmod 600 /home/vagrant/.pypirc
 cat /vagrant/tmp/pypirc > /home/vagrant/.pypirc
 
-apt-get --quiet 2 install twine ruby
+apt-get --quiet 2 install twine ruby-dev
 
 sudo -u vagrant touch /home/vagrant/.gemrc
 chmod 600 /home/vagrant/.gemrc

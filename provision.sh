@@ -18,7 +18,7 @@ sudo -u vagrant touch /home/vagrant/.pypirc
 chmod 600 /home/vagrant/.pypirc
 cat /vagrant/tmp/pypirc > /home/vagrant/.pypirc
 
-apt-get --quiet 2 install twine ruby-dev
+apt-get --quiet 2 install twine ruby-dev build-essentials
 
 sudo -u vagrant touch /home/vagrant/.gemrc
 chmod 600 /home/vagrant/.gemrc

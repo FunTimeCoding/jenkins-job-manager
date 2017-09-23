@@ -114,7 +114,7 @@ class JenkinsJobManager:
         if self.build_command != '':
             timer_trigger = Element('hudson.triggers.TimerTrigger')
             timer_spec = Element('spec')
-            # end of week, friday mornings
+            # end of week, Friday mornings
             timer_spec.text = 'H 6 * * 5'
             # end of day, mornings
             # timer_spec.text = 'H 6 * * 1-5'

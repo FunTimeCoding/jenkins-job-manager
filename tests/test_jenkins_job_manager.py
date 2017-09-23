@@ -86,7 +86,10 @@ def test_generate_with_checkstyle_publish() -> None:
         load_fixture('tests/fixture/checkstyle-publish.xml')
     )
     application = JenkinsJobManager(
-        ['--locator', GIT_LOCATOR, '--checkstyle', 'build/log/checkstyle-*.xml']
+        [
+            '--locator', GIT_LOCATOR,
+            '--checkstyle', 'build/log/checkstyle-*.xml'
+        ]
     )
     assert fixture == application.generate_serialized_xml()
 

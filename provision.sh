@@ -3,6 +3,7 @@
 export DEBIAN_FRONTEND=noninteractive
 apt-get --quiet 2 install neovim multitail htop git tree twine ruby-dev build-essential python3-dev python3-venv libyaml-dev libxml2-dev libxslt-dev libenchant-dev hunspell shellcheck
 
+# shellcheck disable=SC2016
 echo 'PATH="${HOME}/.gem/ruby/2.3.0/bin:${PATH}"' >> /home/vagrant/.profile
 
 sudo -u vagrant touch /home/vagrant/.pypirc

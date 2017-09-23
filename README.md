@@ -2,7 +2,7 @@
 
 ## Setup
 
-This section explains how to install and uninstall this project.
+This section explains how to install and uninstall the project.
 
 Install the project.
 
@@ -20,35 +20,29 @@ pip3 uninstall jenkins-job-manager
 
 ## Usage
 
-This section explains how to use this project.
+This section explains how to use the project.
 
-Run the main program.
+Run the program.
 
 ```sh
-bin/jjm
+jjm
 ```
 
 
 ## Development
 
-This section explains commands to help the development of this project.
+This section explains how to improve the project.
 
-Install the project from a clone.
-
-```sh
-./setup.sh
-```
-
-Run tests, style check and metrics.
-
-```sh
-./run-tests.sh
-./run-style-check.sh
-./run-metrics.sh
-```
-
-Build the project.
+Build the project. This installs dependencies.
 
 ```sh
 ./build.sh
+```
+
+Run tests, style check and spell check.
+
+```sh
+./spell-check.sh
+./style-check.sh
+./tests.sh
 ```

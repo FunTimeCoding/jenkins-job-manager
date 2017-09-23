@@ -1,18 +1,15 @@
 #!/bin/sh -e
 
-if [ ! "${VIRTUAL_ENV}" = "" ]; then
-    # Cannot run the deactivate command here.
-    echo "Virtual environment must not be activated."
+rm -rf build
 
-    exit 1
+if [ ! -d .venv ]; then
+    python3 -m venv .venv
 fi
 
-# To guarantee a reproducible build, the virtual environment and build directories must be deleted.
-rm -rf build .venv
-# The Debian package must be deleted before fpm is run.
-rm -f *.deb
-
-./setup.sh
+. .venv/bin/activate
+pip3 install wheel
+pip3 install --requirement requirements.txt
+pip3 install --editable .
 # shellcheck source=/dev/null
 . .venv/bin/activate
 ./spell-check.sh --ci-mode

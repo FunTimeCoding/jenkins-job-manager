@@ -16,6 +16,7 @@ for FILE in ${MARKDOWN_FILES}; do
             BLACKLISTED=$(echo "${BLACKLIST}" | grep "${WORD}") || BLACKLISTED=false
 
             if [ "${BLACKLISTED}" = false ]; then
+                # The equals character is required.
                 grep --line-number --color=always "${WORD}" "${FILE}"
             else
                 echo "Blacklisted word: ${WORD}"
@@ -46,7 +47,7 @@ for FILE in ${TEX_FILES}; do
                     echo "Skip blacklisted: ${WORD}"
                 fi
             else
-                echo "Skip illegal: ${WORD}"
+                echo "Skip invalid: ${WORD}"
             fi
         done
 

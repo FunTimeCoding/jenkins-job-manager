@@ -7,15 +7,14 @@ if [ ! "${VIRTUAL_ENV}" = "" ]; then
 fi
 
 FILES="build
+dist
 .venv
 .coverage
 .cache
 .tox"
 
 for FILE in ${FILES}; do
-    if [ -e "${FILE}" ]; then
-        rm -rf "${FILE}"
-    fi
+    rm -rf "${FILE}"
 done
 
 find . \( -name '__pycache__' -or -name '*.pyc' \) -delete

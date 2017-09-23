@@ -1,20 +1,15 @@
 #!/bin/sh -e
 
-if [ ! -d .venv ]; then
-    python3 -m venv .venv
-fi
-
+./setup.sh
 # shellcheck source=/dev/null
 . .venv/bin/activate
+./spell-check.sh
+./style-check.sh --ci-mode
+#./metrics.sh --ci-mode
+./tests.sh --ci-mode
+./setup.py bdist_wheel
+SYSTEM=$(uname)
 
-PACKAGES=$(pip3 list --outdated --format legacy 2> /dev/null | awk '{ print $1 }')
-
-for PACKAGE in ${PACKAGES}; do
-    pip3 install --upgrade "${PACKAGE}"
-done
-
-pip3 install --upgrade --requirement requirements.txt
-pip3 install --upgrade .
-./run-style-check.sh --ci-mode
-#./run-metrics.sh --ci-mode
-./run-tests.sh --ci-mode
+if [ "${SYSTEM}" = Linux ]; then
+    fpm --input-type python --output-type deb --python-pip /usr/bin/pip3 --python-bin /usr/bin/python3 .
+fi

@@ -5,6 +5,7 @@ pyenchant # pylint spell check plugin
 pytest # test framework
 pytest-cov # pytest coverage plugin
 lxml # parse XML
+wheel # packaging extension
 
 # helper classes
 git+https://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility

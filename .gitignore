@@ -1,5 +1,4 @@
 build
-dist
 tmp
 .vagrant
 .venv
@@ -10,4 +9,3 @@ jenkins_job_manager.egg-info
 
 # pytest
 .coverage
-.cache

@@ -5,5 +5,6 @@ if [ ! -d .venv ]; then
 fi
 
 . .venv/bin/activate
+pip3 install wheel
 pip3 install --requirement requirements.txt
 pip3 install --editable .

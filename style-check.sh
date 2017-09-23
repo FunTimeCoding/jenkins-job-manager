@@ -1,11 +1,5 @@
 #!/bin/sh -e
 
-if [ "$(command -v shellcheck || true)" = "" ]; then
-    echo "Command not found: shellcheck"
-
-    exit 1
-fi
-
 if [ "${1}" = --help ]; then
     echo "Usage: ${0} [--ci-mode]"
 

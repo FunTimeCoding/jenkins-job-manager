@@ -3,7 +3,7 @@
 ./setup.sh
 # shellcheck source=/dev/null
 . .venv/bin/activate
-./spell-check.sh
+./spell-check.sh --ci-mode
 ./style-check.sh --ci-mode
 #./metrics.sh --ci-mode
 ./tests.sh --ci-mode

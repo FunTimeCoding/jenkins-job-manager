@@ -94,6 +94,19 @@ def test_generate_with_checkstyle_publish() -> None:
     assert fixture == application.generate_serialized_xml()
 
 
+def test_generate_with_recipients() -> None:
+    fixture = serialize_element(
+        load_fixture('tests/fixture/recipients.xml')
+    )
+    application = JenkinsJobManager(
+        [
+            '--locator', GIT_LOCATOR,
+            '--recipients', 'example1@example.org'
+        ]
+    )
+    assert fixture == application.generate_serialized_xml()
+
+
 def test_serialize_element_return_type() -> None:
     fixture = load_fixture('tests/fixture/git-repository.xml')
     assert isinstance(serialize_element(fixture), str) is True

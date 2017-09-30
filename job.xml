@@ -80,7 +80,7 @@
       <pattern>build/log/checkstyle-*</pattern>
     </hudson.plugins.checkstyle.CheckStylePublisher>
     <hudson.tasks.Mailer plugin="mailer@1.20">
-      <recipients/>
+      <recipients>funtimecoding@gmail.com</recipients>
       <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
       <sendToIndividuals>true</sendToIndividuals>
     </hudson.tasks.Mailer>

@@ -7,7 +7,7 @@
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://github.com/FunTimeCoding/jenkins-job-manager.git</url>
+        <url>http://example.org/my_git_repo.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>

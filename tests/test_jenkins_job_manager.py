@@ -101,7 +101,7 @@ def test_generate_with_recipients() -> None:
     application = JenkinsJobManager(
         [
             '--locator', GIT_LOCATOR,
-            '--recipients', 'example1@example.org'
+            '--recipients', 'example@example.org'
         ]
     )
     assert fixture == application.generate_serialized_xml()

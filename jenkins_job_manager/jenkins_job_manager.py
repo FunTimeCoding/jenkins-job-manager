@@ -15,6 +15,7 @@ class JenkinsJobManager:
         self.description = parsed_arguments.description
         self.junit = parsed_arguments.junit
         self.checkstyle = parsed_arguments.checkstyle
+        self.recipients = parsed_arguments.recipients
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
@@ -83,6 +84,12 @@ class JenkinsJobManager:
         parser.add_argument(
             '--description',
             help='Set the job description.',
+            default=''
+        )
+        parser.add_argument(
+            '--recipients',
+            help='Set mail recipients in case of build failure, '
+                 'whitespace-separated.',
             default=''
         )
 
@@ -240,7 +247,12 @@ class JenkinsJobManager:
             'hudson.tasks.Mailer'
         )
         mailer.set('plugin', 'mailer@1.20')
-        mailer.append(Element('recipients'))
+        recipients = Element('recipients')
+
+        if self.recipients != '':
+            recipients.text = self.recipients
+
+        mailer.append(recipients)
         every_unstable_build = Element('dontNotifyEveryUnstableBuild')
         every_unstable_build.text = 'false'
         mailer.append(every_unstable_build)

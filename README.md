@@ -46,3 +46,21 @@ Run tests, style check and spell check.
 ./style-check.sh
 ./tests.sh
 ```
+
+Build the package.
+
+```sh
+./package.sh
+```
+
+Install the experimental Debian package.
+
+```sh
+sudo dpkg --install build/python3-jenkins-job-manager_0.1.0-1_all.deb
+```
+
+Show files the package installed.
+
+```sh
+dpkg-query --listfiles python3-jenkins-job-manager
+```

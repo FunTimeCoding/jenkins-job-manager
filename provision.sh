@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 export DEBIAN_FRONTEND=noninteractive
-apt-get --quiet 2 install neovim multitail htop git tree twine ruby-dev build-essential python3-dev python3-venv libyaml-dev libxml2-dev libxslt-dev libenchant-dev hunspell shellcheck
+apt-get --quiet 2 install neovim multitail htop git tree twine ruby-dev build-essential devscripts python3-dev python3-venv libyaml-dev libxml2-dev libxslt-dev libenchant-dev hunspell shellcheck python3-all python3-lxml
 
 # shellcheck disable=SC2016
 echo 'PATH="${HOME}/.gem/ruby/2.3.0/bin:${PATH}"' >> /home/vagrant/.profile

@@ -6,5 +6,6 @@ pytest # test framework
 pytest-cov # pytest coverage plugin
 lxml # parse XML
 
+# TODO: Create pip and Debian packages of this project and use those instead.
 # helper classes
-git+https://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility
+#git+https://git@github.com/FunTimeCoding/python-utility.git#egg=python-utility

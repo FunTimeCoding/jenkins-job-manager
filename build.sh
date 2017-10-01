@@ -19,6 +19,5 @@ pip3 install --editable .
 SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Linux ]; then
-    fpm --input-type python --output-type deb --python-pip /usr/bin/pip3 --python-bin /usr/bin/python3 .
-    mv ./*.deb build
+    ./package.sh
 fi

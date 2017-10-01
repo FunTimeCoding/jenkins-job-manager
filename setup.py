@@ -14,6 +14,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
@@ -21,7 +22,7 @@ setup(
     keywords='jenkins continuous integration config generator',
     packages=['jenkins_job_manager'],
     install_requires=['lxml'],
-    python_requires='>=3.4',
+    python_requires='>=3.2',
     entry_points={
         'console_scripts': [
             'jjm=jenkins_job_manager.jenkins_job_manager:'

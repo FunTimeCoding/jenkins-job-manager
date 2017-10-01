@@ -1,8 +1,8 @@
 from sys import argv as argument_vector, exit as system_exit
 
 from lxml.etree import Element
-from python_utility.custom_argument_parser import CustomArgumentParser
 
+from jenkins_job_manager.custom_argument_parser import CustomArgumentParser
 from jenkins_job_manager.lxml_helper import serialize_element
 
 

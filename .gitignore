@@ -1,10 +1,11 @@
 build
 tmp
 .vagrant
+
+# Python
+.coverage
+.cache
 .venv
 .tox
-jenkins_job_manager.egg-info
+*.egg-info
 *.pyc
-
-# pytest
-.coverage

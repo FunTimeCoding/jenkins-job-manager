@@ -5,7 +5,6 @@ tmp
 .tox
 jenkins_job_manager.egg-info
 *.pyc
-*.deb
 
 # pytest
 .coverage

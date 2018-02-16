@@ -9,3 +9,4 @@ tmp
 .tox
 *.egg-info
 *.pyc
+.pytest_cache

@@ -152,7 +152,7 @@ class JenkinsJobManager:
 
         if self.junit != '':
             junit = Element('hudson.tasks.junit.JUnitResultArchiver')
-            junit.set('plugin', 'junit@1.20')
+            junit.set('plugin', 'junit@1.24')
             results = Element('testResults')
             results.text = self.junit
             junit.append(results)
@@ -171,7 +171,7 @@ class JenkinsJobManager:
             checkstyle = Element(
                 'hudson.plugins.checkstyle.CheckStylePublisher'
             )
-            checkstyle.set('plugin', 'checkstyle@3.48')
+            checkstyle.set('plugin', 'checkstyle@3.50')
             checkstyle.append(Element('healthy'))
             checkstyle.append(Element('unHealthy'))
             threshold = Element('thresholdLimit')
@@ -183,7 +183,7 @@ class JenkinsJobManager:
             checkstyle.append(name)
             checkstyle.append(Element('defaultEncoding'))
             run_on_failed = Element('canRunOnFailed')
-            run_on_failed.text = 'false'
+            run_on_failed.text = 'true'
             checkstyle.append(run_on_failed)
             previous_build_reference = Element('usePreviousBuildAsReference')
             previous_build_reference.text = 'false'
@@ -195,7 +195,7 @@ class JenkinsJobManager:
             delta_values.text = 'false'
             checkstyle.append(delta_values)
             thresholds = Element('thresholds')
-            thresholds.set('plugin', 'analysis-core@1.87')
+            thresholds.set('plugin', 'analysis-core@1.94')
             unstable_total_all = Element('unstableTotalAll')
             thresholds.append(unstable_total_all)
             unstable_total_high = Element('unstableTotalHigh')
@@ -320,7 +320,7 @@ class GenericXmlGenerator:
 
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@3.3.0')
+            scm.set('plugin', 'git@3.7.0')
             git_generator = GitXmlGenerator()
             scm.append(git_generator.generate_version())
             scm.append(git_generator.generate_remote_config(locator))

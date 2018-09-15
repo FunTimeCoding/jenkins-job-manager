@@ -81,6 +81,19 @@ def test_generate_with_junit_publish() -> None:
     assert fixture == application.generate_serialized_xml()
 
 
+def test_generate_with_hypertext_report() -> None:
+    fixture = serialize_element(
+        load_fixture('tests/fixture/hypertext-report.xml')
+    )
+    application = JenkinsJobManager(
+        [
+            '--locator', GIT_LOCATOR,
+            '--hypertext-report', 'mess_detector'
+        ]
+    )
+    assert fixture == application.generate_serialized_xml()
+
+
 def test_generate_with_checkstyle_publish() -> None:
     fixture = serialize_element(
         load_fixture('tests/fixture/checkstyle-publish.xml')

@@ -6,3 +6,5 @@ pybuild
 buildsystem
 libyaml
 libxslt
+listfiles
+dpkg

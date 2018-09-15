@@ -11,3 +11,5 @@ libenchant
 hunspell
 wget
 myspell
+python3
+pip3

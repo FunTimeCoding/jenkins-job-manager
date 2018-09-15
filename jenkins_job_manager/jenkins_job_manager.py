@@ -249,7 +249,6 @@ class JenkinsJobManager:
             checkstyle.append(pattern)
             publishers.append(checkstyle)
 
-        # --hypertext-report mess_detector
         if self.hypertext_report != '':
             hypertext_report = PublisherMarkupGenerator.generate_hypertext(
                 hypertext_report=self.hypertext_report

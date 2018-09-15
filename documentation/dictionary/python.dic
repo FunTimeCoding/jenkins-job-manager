@@ -1,0 +1,33 @@
+pycache
+pyyaml
+shyaml
+venv
+htmlcov
+pyenchant
+pygtk
+optparse
+contextlib
+asctime
+levelname
+pycodestyle
+
+# pytest
+pytest
+exitfirst
+capsys
+
+# pylint
+pylint
+msvs
+rdiv
+asdict
+
+# pylint typos
+reenable
+parseable
+typecheck
+mypackage
+mymodule
+inlinevar
+regexes
+classmethod

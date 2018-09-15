@@ -4,14 +4,25 @@
 
 This section explains how to install and uninstall the project.
 
-Install the project.
+Install project dependencies.
+
+```sh
+script/setup.sh
+```
+
+Install pip package from GitHub.
 
 ```sh
 pip3 install git+https://git@github.com/FunTimeCoding/jenkins-job-manager.git#egg=jenkins-job-manager
+```
+
+Install pip package from DevPi.
+
+```sh
 pip3 install -i https://testpypi.python.org/pypi jenkins-job-manager
 ```
 
-Uninstall the project.
+Uninstall package.
 
 ```sh
 pip3 uninstall jenkins-job-manager
@@ -22,7 +33,7 @@ pip3 uninstall jenkins-job-manager
 
 This section explains how to use the project.
 
-Run the program.
+Run the main program.
 
 ```sh
 jjm
@@ -33,27 +44,39 @@ jjm
 
 This section explains how to improve the project.
 
-Build the project. This installs dependencies.
+Configure Git on Windows before cloning. This avoids problems with Vagrant and VirtualBox.
 
 ```sh
-./build.sh
+git config --global core.autocrlf input
 ```
 
-Run tests, style check and spell check.
+Create the development virtual machine on Linux and Darwin.
 
 ```sh
-./spell-check.sh
-./style-check.sh
-./tests.sh
+script/vagrant/create.sh
 ```
 
-Build the package.
+Create the development virtual machine on Windows.
+
+```bat
+script\vagrant\create.bat
+```
+
+Run tests, style check and metrics.
 
 ```sh
-./package.sh
+script/test.sh
+script/check.sh [--check]
+script/measure.sh
 ```
 
-Install the experimental Debian package.
+Build project.
+
+```sh
+script/build.sh
+```
+
+Install Debian package.
 
 ```sh
 sudo dpkg --install build/python3-jenkins-job-manager_0.1.0-1_all.deb

@@ -1,7 +1,7 @@
 Source: jenkins-job-manager
 Priority: optional
 Maintainer: Alexander Reitzel <funtimecoding@gmail.com>
-Build-Depends: debhelper (>= 9), dh-python, python3-all, python3-setuptools, python3-lxml
+Build-Depends: debhelper (>= 9), dh-python, python3-all, python3-setuptools, python3-mccabe, python3-lxml
 Standards-Version: 3.9.8
 Homepage: https://github.com/FunTimeCoding/jenkins-job-manager
 X-Python3-Version: >= 3.2

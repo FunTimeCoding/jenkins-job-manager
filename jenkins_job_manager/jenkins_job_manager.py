@@ -110,7 +110,7 @@ class JenkinsJobManager:
             description.text = self.description
 
         root.append(description)
-        generator = GenericXmlGenerator()
+        generator = GeneralMarkupGenerator()
         root.append(generator.generate_dependencies())
         root.append(Element('properties'))
         scm = generator.generate_scm_for_repo_type(
@@ -251,52 +251,9 @@ class JenkinsJobManager:
 
         # --hypertext-report mess_detector
         if self.hypertext_report != '':
-            hypertext_report = Element(
-                'htmlpublisher.HtmlPublisher'
+            hypertext_report = PublisherMarkupGenerator.generate_hypertext(
+                hypertext_report=self.hypertext_report
             )
-            hypertext_report.set('plugin', 'htmlpublisher@1.16')
-
-            report_targets = Element('reportTargets')
-            hypertext_publisher_target = Element(
-                'htmlpublisher.HtmlPublisherTarget'
-            )
-
-            report_name = Element('reportName')
-            report_name.text = self.hypertext_report.replace(
-                '_',
-                ' '
-            ).title() + ' Report'
-            hypertext_publisher_target.append(report_name)
-
-            report_directory = Element('reportDir')
-            report_directory.text = 'build/log/' + self.hypertext_report
-            hypertext_publisher_target.append(report_directory)
-
-            report_files = Element('reportFiles')
-            report_files.text = 'index.html'
-            hypertext_publisher_target.append(report_files)
-
-            always_link_to_last_build = Element('alwaysLinkToLastBuild')
-            always_link_to_last_build.text = 'false'
-            hypertext_publisher_target.append(always_link_to_last_build)
-
-            hypertext_publisher_target.append(Element('reportTitles'))
-
-            keep_all = Element('keepAll')
-            keep_all.text = 'false'
-            hypertext_publisher_target.append(keep_all)
-
-            allow_missing = Element('allowMissing')
-            allow_missing.text = 'false'
-            hypertext_publisher_target.append(allow_missing)
-
-            includes = Element('includes')
-            includes.text = '**/*'
-            hypertext_publisher_target.append(includes)
-
-            report_targets.append(hypertext_publisher_target)
-            hypertext_report.append(report_targets)
-
             publishers.append(hypertext_report)
 
         mailer = Element(
@@ -327,7 +284,59 @@ class JenkinsJobManager:
         return serialize_element(xml)
 
 
-class GenericXmlGenerator:
+class PublisherMarkupGenerator:
+    @staticmethod
+    def generate_hypertext(hypertext_report: str) -> Element:
+        hypertext_report_element = Element(
+            'htmlpublisher.HtmlPublisher'
+        )
+        hypertext_report_element.set('plugin', 'htmlpublisher@1.16')
+
+        report_targets = Element('reportTargets')
+        hypertext_publisher_target = Element(
+            'htmlpublisher.HtmlPublisherTarget'
+        )
+
+        report_name = Element('reportName')
+        report_name.text = hypertext_report.replace(
+            '_',
+            ' '
+        ).title() + ' Report'
+        hypertext_publisher_target.append(report_name)
+
+        report_directory = Element('reportDir')
+        report_directory.text = 'build/log/' + hypertext_report
+        hypertext_publisher_target.append(report_directory)
+
+        report_files = Element('reportFiles')
+        report_files.text = 'index.html'
+        hypertext_publisher_target.append(report_files)
+
+        always_link_to_last_build = Element('alwaysLinkToLastBuild')
+        always_link_to_last_build.text = 'false'
+        hypertext_publisher_target.append(always_link_to_last_build)
+
+        hypertext_publisher_target.append(Element('reportTitles'))
+
+        keep_all = Element('keepAll')
+        keep_all.text = 'false'
+        hypertext_publisher_target.append(keep_all)
+
+        allow_missing = Element('allowMissing')
+        allow_missing.text = 'false'
+        hypertext_publisher_target.append(allow_missing)
+
+        includes = Element('includes')
+        includes.text = '**/*'
+        hypertext_publisher_target.append(includes)
+
+        report_targets.append(hypertext_publisher_target)
+        hypertext_report_element.append(report_targets)
+
+        return hypertext_report_element
+
+
+class GeneralMarkupGenerator:
     @staticmethod
     def generate_dependencies() -> Element:
         dependencies = Element('keepDependencies')
@@ -377,7 +386,7 @@ class GenericXmlGenerator:
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
             scm.set('plugin', 'git@3.9.1')
-            git_generator = GitXmlGenerator()
+            git_generator = GitMarkupGenerator()
             scm.append(git_generator.generate_version())
             scm.append(git_generator.generate_remote_config(locator))
             scm.append(git_generator.generate_branches())
@@ -387,7 +396,7 @@ class GenericXmlGenerator:
         elif repo_type == 'svn':
             scm.set('class', 'hudson.scm.SubversionSCM')
             scm.set('plugin', 'subversion@2.4.5')
-            svn_generator = SvnXmlGenerator()
+            svn_generator = SubversionMarkupGenerator()
             scm.append(svn_generator.generate_locations(locator))
             scm.append(Element('excludedRegions'))
             scm.append(Element('includedRegions'))
@@ -403,7 +412,7 @@ class GenericXmlGenerator:
         return scm
 
 
-class GitXmlGenerator:
+class GitMarkupGenerator:
     @staticmethod
     def generate_remote_config(locator: str) -> Element:
         remote_config = Element('userRemoteConfigs')
@@ -450,7 +459,7 @@ class GitXmlGenerator:
         return submodule_configs
 
 
-class SvnXmlGenerator:
+class SubversionMarkupGenerator:
     @staticmethod
     def generate_locations(locator: str) -> Element:
         locations = Element('locations')

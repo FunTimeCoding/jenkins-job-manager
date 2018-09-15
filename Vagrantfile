@@ -1,21 +1,42 @@
 Vagrant.configure('2') do |config|
   config.vm.box = 'debian/stretch64'
-  config.vm.network :public_network, bridge: File.read('tmp/ethernet-device.txt').chomp
+  Dir.mkdir('tmp') unless File.exist?('tmp')
+
+  if File.exist?('tmp/ethernet-device.txt')
+    bridge = File.read('tmp/ethernet-device.txt').chomp
+  else
+    if RbConfig::CONFIG['host_os'] =~ /mswin32|mingw32/
+      bridge = 'Ethernet'
+    else
+      bridge = 'eth0'
+    end
+
+    File.write('tmp/ethernet-device.txt', bridge + "\n")
+  end
+
+  if not File.exist?('tmp/hostname.txt')
+    # Use separate variable to make replacing easier for skeleton scripts.
+    hostname = 'jjm'
+    File.write('tmp/hostname.txt', hostname + "\n")
+  end
+
+  config.vm.network :public_network, bridge: bridge
   config.vm.network :private_network, ip: '192.168.42.3'
 
-  if RbConfig::CONFIG['host_os'] =~ /mswin32/
+  if RbConfig::CONFIG['host_os'] =~ /mswin32|mingw32/
     config.vm.synced_folder '.', '/vagrant', type: 'virtualbox'
   else
     config.vm.synced_folder '.', '/vagrant', type: 'nfs'
   end
 
   config.vm.provider :virtualbox do |v|
+    v.name = 'jenkins-job-manager'
     v.cpus = 1
     v.memory = 1024
   end
 
-  config.vm.provision :shell, path: 'update-system.sh'
-  config.vm.provision :shell, path: 'provision.sh'
+  config.vm.provision :shell, path: 'script/vagrant/update-system.sh'
+  config.vm.provision :shell, path: 'script/vagrant/provision.sh'
 end
 
 # vim: ft=ruby

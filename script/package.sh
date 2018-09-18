@@ -8,7 +8,9 @@ PACKAGE_VERSION=1
 COMBINED_VERSION="${PROJECT_VERSION}-${PACKAGE_VERSION}"
 
 if [ -f debian/changelog ]; then
-    dch --newversion "${COMBINED_VERSION}" --package "${NAME}"
+    echo "TODO: Release sooner than here? Can it be done non-interactively?"
+    #dch --release
+    #dch --newversion "${COMBINED_VERSION}"
 else
     dch --create --newversion "${COMBINED_VERSION}" --package "${NAME}"
 fi

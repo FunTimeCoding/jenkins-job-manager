@@ -1,5 +1,11 @@
-jenkins-job-manager (0.1.0-1) UNRELEASED; urgency=medium
+jenkins-job-manager (0.2.0-1) unstable; urgency=medium
 
-  * Initial release. (Closes: #XXXXXX)
+  * Add --hypertext-report argument.
 
- -- Vagrant Default User <vagrant@stretch.localdomain>  Sun, 01 Oct 2017 14:31:06 +0000
+ -- Alexander Reitzel <funtimecoding@gmail.com>  Tue, 18 Sep 2018 16:09:59 +0200
+
+jenkins-job-manager (0.1.0-1) unstable; urgency=medium
+
+  * Initial release.
+
+ -- Alexander Reitzel <funtimecoding@gmail.com>  Tue, 18 Sep 2018 16:08:04 +0200

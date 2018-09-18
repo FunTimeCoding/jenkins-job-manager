@@ -17,6 +17,7 @@ class JenkinsJobManager:
         self.hypertext_report = parsed_arguments.hypertext_report
         self.checkstyle = parsed_arguments.checkstyle
         self.recipients = parsed_arguments.recipients
+        self.labels = parsed_arguments.labels
 
         if self.is_valid_repo_type(self.repo_type) is False:
             self.repo_type = self.guess_repo_type(self.locator)
@@ -93,6 +94,11 @@ class JenkinsJobManager:
             default=''
         )
         parser.add_argument(
+            '--labels',
+            help='Set the job labels.',
+            default=''
+        )
+        parser.add_argument(
             '--recipients',
             help='Set mail recipients in case of build failure, '
                  'whitespace-separated.',
@@ -118,7 +124,13 @@ class JenkinsJobManager:
             repo_type=self.repo_type
         )
         root.append(scm)
-        root.append(generator.generate_roam())
+
+        if self.labels == '':
+            root.append(generator.generate_roam(True))
+        else:
+            root.append(generator.generate_assigned_node(self.labels))
+            root.append(generator.generate_roam(False))
+
         root.append(generator.generate_disabled())
         root.append(generator.generate_upstream())
         root.append(generator.generate_downstream())
@@ -344,11 +356,22 @@ class GeneralMarkupGenerator:
         return dependencies
 
     @staticmethod
-    def generate_roam() -> Element:
+    def generate_roam(enabled: bool) -> Element:
         roam = Element('canRoam')
-        roam.text = 'true'
+
+        if enabled:
+            roam.text = 'true'
+        else:
+            roam.text = 'false'
 
         return roam
+
+    @staticmethod
+    def generate_assigned_node(labels: str) -> Element:
+        assigned_node = Element('assignedNode')
+        assigned_node.text = labels
+
+        return assigned_node
 
     @staticmethod
     def generate_disabled() -> Element:

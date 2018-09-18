@@ -1,3 +1,9 @@
+jenkins-job-manager (0.3.0-1) unstable; urgency=medium
+
+  * Add --labels argument.
+
+ -- Alexander Reitzel <funtimecoding@gmail.com>  Tue, 18 Sep 2018 17:35:40 +0200
+
 jenkins-job-manager (0.2.0-1) unstable; urgency=medium
 
   * Add --hypertext-report argument.

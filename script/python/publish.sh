@@ -1,6 +1,5 @@
 #!/bin/sh -e
 
-# TODO: Publish to Debian repository as well.
 ENVIRONMENT="${1}"
 
 if [ "${ENVIRONMENT}" = "" ]; then

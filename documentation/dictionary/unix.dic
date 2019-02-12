@@ -1,6 +1,7 @@
 OPTIND
 mkdir
 tmp
+uname
 sudo
 netmask
 nameservers
@@ -11,5 +12,3 @@ libenchant
 hunspell
 wget
 myspell
-python3
-pip3

@@ -4,10 +4,12 @@ ENVIRONMENT="${1}"
 
 if [ "${ENVIRONMENT}" = "" ]; then
     echo "Usage: ${0} ENVIRONMENT"
-    echo "Environments: development, staging, production"
+    echo 'Environments: development, staging, production'
 
     exit 1
 fi
+
+# TODO: Check if already published: curl https://pypi.shiin.org/simple/jenkins-job-manager/
 
 if [ "${ENVIRONMENT}" = development ]; then
     twine upload build/*.whl --repository development

@@ -1,7 +1,7 @@
 Source: jenkins-job-manager
 Priority: optional
 Maintainer: Alexander Reitzel <funtimecoding@gmail.com>
-Build-Depends: debhelper (>= 9), dh-python, python3-all, python3-setuptools, python3-mccabe, python3-lxml
+Build-Depends: debhelper (>= 9), dh-python, python3-all, python3-setuptools, python3-mccabe, python3-yaml, python3-lxml
 Standards-Version: 3.9.8
 Homepage: https://github.com/FunTimeCoding/jenkins-job-manager
 X-Python3-Version: >= 3.2
@@ -11,6 +11,6 @@ Vcs-Git: https://github.com/FunTimeCoding/jenkins-job-manager.git
 Package: python3-jenkins-job-manager
 Section: python
 Architecture: amd64
-Depends: ${python3:Depends}, ${misc:Depends}, python3-lxml
+Depends: ${python3:Depends}, ${misc:Depends}, python3-yaml, python3-lxml
 Description: generator for jenkins job configurations
  Generator for Jenkins job configurations.

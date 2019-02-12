@@ -24,6 +24,9 @@ export COMBINED_VERSION
 VENDOR_NAME_LOWER=$(echo "${VENDOR_NAME}" | tr '[:upper:]' '[:lower:]')
 export VENDOR_NAME_LOWER
 
+PROJECT_NAME_UNDERSCORE=$(echo "${PROJECT_NAME}" | tr - _)
+export PROJECT_NAME_UNDERSCORE
+
 # vendor is in here to not break php-skeleton based projects when synchronizing with them.
 # .venv is for jenkins-job-manager.
 # node_modules is for java-script-skeleton

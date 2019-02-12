@@ -12,7 +12,7 @@ if [ ! -f debian/changelog ]; then
 fi
 
 mkdir -p build
-tar --create --gzip --transform "s,^,${PROJECT_ROOT}/," --exclude='./build' --exclude './.venv' --exclude './.tmp' --exclude './.idea' --exclude './.git' --exclude './.vagrant' --exclude './jenkins_job_manager.egg-info' --file "build/${ARCHIVE}" .
+tar --create --gzip --transform "s,^,${PROJECT_ROOT}/," --exclude='./build' --exclude './.venv' --exclude './.tmp' --exclude './.idea' --exclude './.git' --exclude './.vagrant' --exclude "./${PROJECT_NAME_UNDERSCORE}.egg-info" --file "build/${ARCHIVE}" .
 cd build
 tar --extract --file "${ARCHIVE}"
 cd "${PROJECT_ROOT}"

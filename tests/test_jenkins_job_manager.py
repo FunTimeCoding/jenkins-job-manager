@@ -4,7 +4,7 @@ from tests.helper import load_fixture
 
 GIT_LOCATOR = 'http://example.org/my_git_repo.git'
 GITHUB_LOCATOR = 'http://github.com/username/my_git_repo'
-UNKNOWN_LOCATOR = 'http://example.org/no_known_repo_type'
+UNKNOWN_LOCATOR = 'http://example.org/no_known_repository_type'
 SUBVERSION_LOCATOR = 'http://example.org/my_svn_repo'
 
 
@@ -25,10 +25,10 @@ def test_generate_with_git_repository() -> None:
 
 
 def test_guess_repository_type() -> None:
-    assert JenkinsJobManager.guess_repo_type(GIT_LOCATOR) == 'git'
-    assert JenkinsJobManager.guess_repo_type(SUBVERSION_LOCATOR) == 'svn'
-    assert JenkinsJobManager.guess_repo_type(GITHUB_LOCATOR) == 'git'
-    assert JenkinsJobManager.guess_repo_type(UNKNOWN_LOCATOR) == ''
+    assert JenkinsJobManager.guess_repository_type(GIT_LOCATOR) == 'git'
+    assert JenkinsJobManager.guess_repository_type(SUBVERSION_LOCATOR) == 'svn'
+    assert JenkinsJobManager.guess_repository_type(GITHUB_LOCATOR) == 'git'
+    assert JenkinsJobManager.guess_repository_type(UNKNOWN_LOCATOR) == ''
 
 
 def test_generate_with_subversion_repository() -> None:
@@ -149,5 +149,5 @@ def test_generate_serialized_xml_return_type() -> None:
 
 
 def test_valid_repository_types_are_strings() -> None:
-    for repository_type in JenkinsJobManager.get_valid_repo_types():
+    for repository_type in JenkinsJobManager.get_valid_repository_types():
         assert isinstance(repository_type, str) is True

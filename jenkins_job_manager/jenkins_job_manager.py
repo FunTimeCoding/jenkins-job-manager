@@ -139,6 +139,8 @@ class JenkinsJobManager:
     def generate_xml(self) -> Element:
         if self.job_type is JenkinsJobManager.FREESTYLE_JOB_TYPE:
             freestyle_builder = FreestyleProjectBuilder()
+            freestyle_builder.repository_locator = self.repository_locator
+            freestyle_builder.description = self.description
             freestyle_builder.repository_type = self.repository_type
             freestyle_builder.labels = self.labels
             freestyle_builder.build_command = self.build_command
@@ -150,6 +152,8 @@ class JenkinsJobManager:
             return freestyle_builder.build()
         elif self.job_type is JenkinsJobManager.WORKFLOW_JOB_TYPE:
             workflow_builder = WorkflowProjectBuilder()
+            workflow_builder.repository_locator = self.repository_locator
+            workflow_builder.description = self.description
 
             return workflow_builder.build()
         else:

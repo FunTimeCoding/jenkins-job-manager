@@ -39,29 +39,57 @@ class FreestyleProjectBuilder(ProjectBuilder):
     def repository_type(self, value: str) -> None:
         self._repository_type = value
 
+    @repository_type.getter
+    def repository_type(self) -> str:
+        return self._repository_type
+
     @labels.setter
     def labels(self, value: str) -> None:
         self._labels = value
+
+    @labels.getter
+    def labels(self) -> str:
+        return self._labels
 
     @build_command.setter
     def build_command(self, value: str) -> None:
         self._build_command = value
 
+    @build_command.getter
+    def build_command(self) -> str:
+        return self._build_command
+
     @junit.setter
     def junit(self, value: str) -> None:
         self._junit = value
+
+    @junit.getter
+    def junit(self) -> str:
+        return self._junit
 
     @checkstyle.setter
     def checkstyle(self, value: str) -> None:
         self._checkstyle = value
 
+    @checkstyle.getter
+    def checkstyle(self) -> str:
+        return self._checkstyle
+
     @hypertext_report.setter
     def hypertext_report(self, value: str) -> None:
         self._hypertext_report = value
 
+    @hypertext_report.getter
+    def hypertext_report(self) -> str:
+        return self._hypertext_report
+
     @recipients.setter
     def recipients(self, value: str) -> None:
         self._recipients = value
+
+    @recipients.getter
+    def recipients(self) -> str:
+        return self._recipients
 
     def __init__(self):
         super().__init__()

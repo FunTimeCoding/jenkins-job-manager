@@ -16,6 +16,7 @@ class JenkinsJobManager:
         self.junit = parsed_arguments.junit
         self.hypertext_report = parsed_arguments.hypertext_report
         self.checkstyle = parsed_arguments.checkstyle
+        self.jacoco = parsed_arguments.jacoco
         self.recipients = parsed_arguments.recipients
         self.labels = parsed_arguments.labels
 
@@ -89,6 +90,11 @@ class JenkinsJobManager:
             default=''
         )
         parser.add_argument(
+            '--jacoco',
+            help='Enable publishing JaCoCo output.',
+            action='store_true'
+        )
+        parser.add_argument(
             '--description',
             help='Set the job description.',
             default=''
@@ -111,10 +117,7 @@ class JenkinsJobManager:
         root = Element('project')
         root.append(Element('actions'))
         description = Element('description')
-
-        if self.description != '':
-            description.text = self.description
-
+        description.text = self.description
         root.append(description)
         generator = GeneralMarkupGenerator()
         root.append(generator.generate_dependencies())
@@ -170,7 +173,7 @@ class JenkinsJobManager:
 
         if self.junit != '':
             junit = Element('hudson.tasks.junit.JUnitResultArchiver')
-            junit.set('plugin', 'junit@1.24')
+            junit.set('plugin', 'junit@1.29')
             results = Element('testResults')
             results.text = self.junit
             junit.append(results)
@@ -186,80 +189,173 @@ class JenkinsJobManager:
             publishers.append(junit)
 
         if self.checkstyle != '':
-            checkstyle = Element(
-                'hudson.plugins.checkstyle.CheckStylePublisher'
+            issues_recorder = Element(
+                'io.jenkins.plugins.analysis.core.steps.IssuesRecorder'
             )
-            checkstyle.set('plugin', 'checkstyle@3.50')
-            checkstyle.append(Element('healthy'))
-            checkstyle.append(Element('unHealthy'))
-            threshold = Element('thresholdLimit')
-            threshold.text = 'low'
-            checkstyle.append(threshold)
-            name = Element('pluginName')
-            # This space belongs here.
-            name.text = '[CHECKSTYLE] '
-            checkstyle.append(name)
-            checkstyle.append(Element('defaultEncoding'))
-            run_on_failed = Element('canRunOnFailed')
-            run_on_failed.text = 'true'
-            checkstyle.append(run_on_failed)
-            previous_build_reference = Element('usePreviousBuildAsReference')
-            previous_build_reference.text = 'false'
-            checkstyle.append(previous_build_reference)
-            stable_build_reference = Element('useStableBuildAsReference')
-            stable_build_reference.text = 'false'
-            checkstyle.append(stable_build_reference)
-            delta_values = Element('useDeltaValues')
-            delta_values.text = 'false'
-            checkstyle.append(delta_values)
-            thresholds = Element('thresholds')
-            thresholds.set('plugin', 'analysis-core@1.95')
-            unstable_total_all = Element('unstableTotalAll')
-            thresholds.append(unstable_total_all)
-            unstable_total_high = Element('unstableTotalHigh')
-            thresholds.append(unstable_total_high)
-            unstable_total_normal = Element('unstableTotalNormal')
-            thresholds.append(unstable_total_normal)
-            unstable_total_low = Element('unstableTotalLow')
-            thresholds.append(unstable_total_low)
-            unstable_new_all = Element('unstableNewAll')
-            thresholds.append(unstable_new_all)
-            unstable_new_high = Element('unstableNewHigh')
-            thresholds.append(unstable_new_high)
-            unstable_new_normal = Element('unstableNewNormal')
-            thresholds.append(unstable_new_normal)
-            unstable_new_low = Element('unstableNewLow')
-            thresholds.append(unstable_new_low)
-            failed_total_all = Element('failedTotalAll')
-            thresholds.append(failed_total_all)
-            failed_total_high = Element('failedTotalHigh')
-            thresholds.append(failed_total_high)
-            failed_total_normal = Element('failedTotalNormal')
-            thresholds.append(failed_total_normal)
-            failed_total_low = Element('failedTotalLow')
-            thresholds.append(failed_total_low)
-            failed_new_all = Element('failedNewAll')
-            thresholds.append(failed_new_all)
-            failed_new_high = Element('failedNewHigh')
-            thresholds.append(failed_new_high)
-            failed_new_normal = Element('failedNewNormal')
-            thresholds.append(failed_new_normal)
-            failed_new_low = Element('failedNewLow')
-            thresholds.append(failed_new_low)
-            checkstyle.append(thresholds)
-            detect_modules = Element('shouldDetectModules')
-            detect_modules.text = 'false'
-            checkstyle.append(detect_modules)
-            compute = Element('dontComputeNew')
-            compute.text = 'true'
-            checkstyle.append(compute)
-            relative_paths = Element('doNotResolveRelativePaths')
-            relative_paths.text = 'false'
-            checkstyle.append(relative_paths)
+            issues_recorder.set('plugin', 'warnings-ng@8.1.0')
+            analysis_tools = Element('analysisTools')
+            check_style = Element(
+                'io.jenkins.plugins.analysis.warnings.checkstyle.CheckStyle'
+            )
+            identifier = Element('id')
+            identifier.text = ''
+            check_style.append(identifier)
+            name = Element('name')
+            name.text = ''
+            check_style.append(name)
             pattern = Element('pattern')
             pattern.text = self.checkstyle
-            checkstyle.append(pattern)
-            publishers.append(checkstyle)
+            check_style.append(pattern)
+            report_encoding = Element('reportEncoding')
+            report_encoding.text = ''
+            check_style.append(report_encoding)
+            skip_symbolic_links = Element('skipSymbolicLinks')
+            skip_symbolic_links.text = 'false'
+            check_style.append(skip_symbolic_links)
+            analysis_tools.append(check_style)
+            issues_recorder.append(analysis_tools)
+            source_code_encoding = Element('sourceCodeEncoding')
+            source_code_encoding.text = ''
+            issues_recorder.append(source_code_encoding)
+            source_directory = Element('sourceDirectory')
+            source_directory.text = ''
+            issues_recorder.append(source_directory)
+            ignore_quality_gate = Element('ignoreQualityGate')
+            ignore_quality_gate.text = 'false'
+            issues_recorder.append(ignore_quality_gate)
+            ignore_failed_builds = Element('ignoreFailedBuilds')
+            ignore_failed_builds.text = 'true'
+            issues_recorder.append(ignore_failed_builds)
+            reference_job_name = Element('referenceJobName')
+            reference_job_name.text = ''
+            issues_recorder.append(reference_job_name)
+            fail_on_error = Element('failOnError')
+            fail_on_error.text = 'false'
+            issues_recorder.append(fail_on_error)
+            healthy = Element('healthy')
+            healthy.text = '0'
+            issues_recorder.append(healthy)
+            unhealthy = Element('unhealthy')
+            unhealthy.text = '0'
+            issues_recorder.append(unhealthy)
+            minimum_severity = Element('minimumSeverity')
+            minimum_severity.set('plugin', 'analysis-model-api@8.1.3')
+            name = Element('name')
+            name.text = 'LOW'
+            minimum_severity.append(name)
+            issues_recorder.append(minimum_severity)
+            issues_recorder.append(Element('filters'))
+            is_enabled_for_failure = Element('isEnabledForFailure')
+            is_enabled_for_failure.text = 'false'
+            issues_recorder.append(is_enabled_for_failure)
+            is_aggregating_results = Element('isAggregatingResults')
+            is_aggregating_results.text = 'false'
+            issues_recorder.append(is_aggregating_results)
+            is_blame_disabled = Element('isBlameDisabled')
+            is_blame_disabled.text = 'false'
+            issues_recorder.append(is_blame_disabled)
+            is_forensics_disabled = Element('isForensicsDisabled')
+            is_forensics_disabled.text = 'false'
+            issues_recorder.append(is_forensics_disabled)
+            issues_recorder.append(Element('qualityGates'))
+            trend_chart_type = Element('trendChartType')
+            trend_chart_type.text = 'AGGREGATION_TOOLS'
+            issues_recorder.append(trend_chart_type)
+            publishers.append(issues_recorder)
+
+        if self.jacoco:
+            jacoco_publisher = Element(
+                'hudson.plugins.jacoco.JacocoPublisher'
+            )
+            jacoco_publisher.set('plugin', 'jacoco@3.0.5')
+            exec_pattern = Element('execPattern')
+            exec_pattern.text = '**/**.exec'
+            jacoco_publisher.append(exec_pattern)
+            class_pattern = Element('classPattern')
+            class_pattern.text = '**/classes'
+            jacoco_publisher.append(class_pattern)
+            source_pattern = Element('sourcePattern')
+            source_pattern.text = '**/src/main/java'
+            jacoco_publisher.append(source_pattern)
+            source_inclusion_pattern = Element('sourceInclusionPattern')
+            source_inclusion_pattern.text = '**/*.java,**/*.groovy,**/*.kt,**/*.kts'
+            jacoco_publisher.append(source_inclusion_pattern)
+            source_exclusion_pattern = Element('sourceExclusionPattern')
+            source_exclusion_pattern.text = ''
+            jacoco_publisher.append(source_exclusion_pattern)
+            inclusion_pattern = Element('inclusionPattern')
+            inclusion_pattern.text = ''
+            jacoco_publisher.append(inclusion_pattern)
+            exclusion_pattern = Element('exclusionPattern')
+            exclusion_pattern.text = ''
+            jacoco_publisher.append(exclusion_pattern)
+            skip_copy_of_source_files = Element('skipCopyOfSrcFiles')
+            skip_copy_of_source_files.text = 'false'
+            jacoco_publisher.append(skip_copy_of_source_files)
+            minimum_instruction_coverage = Element('minimumInstructionCoverage')
+            minimum_instruction_coverage.text = '0'
+            jacoco_publisher.append(minimum_instruction_coverage)
+            minimum_branch_coverage = Element('minimumBranchCoverage')
+            minimum_branch_coverage.text = '0'
+            jacoco_publisher.append(minimum_branch_coverage)
+            minimum_complexity_coverage = Element('minimumComplexityCoverage')
+            minimum_complexity_coverage.text = '0'
+            jacoco_publisher.append(minimum_complexity_coverage)
+            minimum_line_coverage = Element('minimumLineCoverage')
+            minimum_line_coverage.text = '0'
+            jacoco_publisher.append(minimum_line_coverage)
+            minimum_method_coverage = Element('minimumMethodCoverage')
+            minimum_method_coverage.text = '0'
+            jacoco_publisher.append(minimum_method_coverage)
+            minimum_class_coverage = Element('minimumClassCoverage')
+            minimum_class_coverage.text = '0'
+            jacoco_publisher.append(minimum_class_coverage)
+            maximum_instruction_coverage = Element('maximumInstructionCoverage')
+            maximum_instruction_coverage.text = '0'
+            jacoco_publisher.append(maximum_instruction_coverage)
+            maximum_branch_coverage = Element('maximumBranchCoverage')
+            maximum_branch_coverage.text = '0'
+            jacoco_publisher.append(maximum_branch_coverage)
+            maximum_complexity_coverage = Element('maximumComplexityCoverage')
+            maximum_complexity_coverage.text = '0'
+            jacoco_publisher.append(maximum_complexity_coverage)
+            maximum_line_coverage = Element('maximumLineCoverage')
+            maximum_line_coverage.text = '0'
+            jacoco_publisher.append(maximum_line_coverage)
+            maximum_method_coverage = Element('maximumMethodCoverage')
+            maximum_method_coverage.text = '0'
+            jacoco_publisher.append(maximum_method_coverage)
+            maximum_class_coverage = Element('maximumClassCoverage')
+            maximum_class_coverage.text = '0'
+            jacoco_publisher.append(maximum_class_coverage)
+            change_build_status = Element('changeBuildStatus')
+            change_build_status.text = 'false'
+            jacoco_publisher.append(change_build_status)
+            run_always = Element('runAlways')
+            run_always.text = 'false'
+            jacoco_publisher.append(run_always)
+            delta_instruction_coverage = Element('deltaInstructionCoverage')
+            delta_instruction_coverage.text = '0'
+            jacoco_publisher.append(delta_instruction_coverage)
+            delta_branch_coverage = Element('deltaBranchCoverage')
+            delta_branch_coverage.text = '0'
+            jacoco_publisher.append(delta_branch_coverage)
+            delta_complexity_coverage = Element('deltaComplexityCoverage')
+            delta_complexity_coverage.text = '0'
+            jacoco_publisher.append(delta_complexity_coverage)
+            delta_line_coverage = Element('deltaLineCoverage')
+            delta_line_coverage.text = '0'
+            jacoco_publisher.append(delta_line_coverage)
+            delta_method_coverage = Element('deltaMethodCoverage')
+            delta_method_coverage.text = '0'
+            jacoco_publisher.append(delta_method_coverage)
+            delta_class_coverage = Element('deltaClassCoverage')
+            delta_class_coverage.text = '0'
+            jacoco_publisher.append(delta_class_coverage)
+            build_over_build = Element('buildOverBuild')
+            build_over_build.text = 'false'
+            jacoco_publisher.append(build_over_build)
+            publishers.append(jacoco_publisher)
 
         if self.hypertext_report != '':
             hypertext_report = PublisherMarkupGenerator.generate_hypertext(
@@ -270,7 +366,7 @@ class JenkinsJobManager:
         mailer = Element(
             'hudson.tasks.Mailer'
         )
-        mailer.set('plugin', 'mailer@1.21')
+        mailer.set('plugin', 'mailer@1.32')
         recipients = Element('recipients')
 
         if self.recipients != '':
@@ -407,7 +503,7 @@ class GeneralMarkupGenerator:
 
         if repo_type == 'git':
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@3.9.1')
+            scm.set('plugin', 'git@4.2.2')
             git_generator = GitMarkupGenerator()
             scm.append(git_generator.generate_version())
             scm.append(git_generator.generate_remote_config(locator))

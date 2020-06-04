@@ -193,5 +193,5 @@ def test_generate_serialized_xml_return_type() -> None:
 
 
 def test_valid_repository_types_are_strings() -> None:
-    for repository_type in JenkinsJobManager.get_valid_repository_types():
+    for repository_type in JenkinsJobManager.get_repository_types():
         assert isinstance(repository_type, str) is True

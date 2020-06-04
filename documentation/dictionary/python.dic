@@ -17,6 +17,7 @@ pip3
 python3
 gitpython
 mypy
+lxml
 
 # pytest
 pytest

@@ -192,9 +192,8 @@ class FreestyleProjectBuilder(ProjectBuilder):
             publishers.append(junit)
 
         if self.checkstyle != '':
-            issues_recorder_generator = IssuesRecorderGenerator()
             publishers.append(
-                issues_recorder_generator.generate_issues_recorder(
+                IssuesRecorderGenerator.generate_issues_recorder(
                     checkstyle=self.checkstyle
                 )
             )

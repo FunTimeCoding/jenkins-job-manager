@@ -1,8 +1,15 @@
 build
 tmp
 .vagrant
+debian/files
+debian/debhelper-build-stamp
+debian/jenkins-job-manager
+debian/jenkins-job-manager.substvars
+documentation/man/*.1
+.scannerwork
 
 # Python
+dist
 .coverage
 .cache
 .venv

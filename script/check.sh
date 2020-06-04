@@ -3,7 +3,7 @@
 DIRECTORY=$(dirname "${0}")
 SCRIPT_DIRECTORY=$(cd "${DIRECTORY}" || exit 1; pwd)
 # shellcheck source=/dev/null
-. "${SCRIPT_DIRECTORY}/../lib/common.sh"
+. "${SCRIPT_DIRECTORY}/../lib/project.sh"
 
 if [ "${1}" = --help ]; then
     echo "Usage: ${0} [--ci-mode]"
@@ -24,9 +24,13 @@ SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Darwin ]; then
     FIND='gfind'
+    UNIQ='guniq'
+    SED='gsed'
     TEE='gtee'
 else
     FIND='find'
+    UNIQ='uniq'
+    SED='sed'
     TEE='tee'
 fi
 
@@ -42,7 +46,7 @@ else
 fi
 
 for FILE in ${MARKDOWN_FILES}; do
-    WORDS=$(hunspell -d "${DICTIONARY}" -p tmp/combined.dic -l "${FILE}" | sort | uniq)
+    WORDS=$(hunspell -d "${DICTIONARY}" -p tmp/combined.dic -l "${FILE}" | sort | ${UNIQ})
 
     if [ ! "${WORDS}" = '' ]; then
         echo "${FILE}"
@@ -144,6 +148,20 @@ if [ ! "${TO_DOS}" = '' ]; then
         echo "(NOTICE) To dos:"
         echo
         echo "${TO_DOS}"
+    fi
+fi
+
+DUPLICATE_WORDS=$(cat documentation/dictionary/** | ${SED} '/^$/d' | sort | ${UNIQ} -cd)
+
+if [ ! "${DUPLICATE_WORDS}" = '' ]; then
+    CONCERN_FOUND=true
+
+    if [ "${CONTINUOUS_INTEGRATION_MODE}" = true ]; then
+        echo "${DUPLICATE_WORDS}" > build/log/duplicate-words.txt
+    else
+        echo
+        echo "(WARNING) Duplicate words:"
+        echo "${DUPLICATE_WORDS}"
     fi
 fi
 

@@ -25,7 +25,7 @@ setup(
     ],
     keywords='jenkins continuous integration config generator',
     packages=['jenkins_job_manager'],
-    install_requires=['lxml'],
+    install_requires=['pyyaml', 'lxml'],
     python_requires='>=3.2',
     entry_points={
         'console_scripts': [

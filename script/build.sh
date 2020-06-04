@@ -1,12 +1,12 @@
 #!/bin/sh -e
 
 rm -rf build
-id -u vagrant > /dev/null && VAGRANT_ENVIRONMENT=true || VAGRANT_ENVIRONMENT=false
+id -u vagrant > /dev/null 2>&1 && VAGRANT_ENVIRONMENT='true' || VAGRANT_ENVIRONMENT='false'
 
 if [ "${VAGRANT_ENVIRONMENT}" = true ]; then
-    VIRTUAL_ENVIRONMENT_PATH=/home/vagrant/venv
+    VIRTUAL_ENVIRONMENT_PATH='/home/vagrant/venv'
 else
-    VIRTUAL_ENVIRONMENT_PATH=.venv
+    VIRTUAL_ENVIRONMENT_PATH='.venv'
 fi
 
 if [ ! -d "${VIRTUAL_ENVIRONMENT_PATH}" ]; then
@@ -15,6 +15,7 @@ fi
 
 # shellcheck source=/dev/null
 . "${VIRTUAL_ENVIRONMENT_PATH}/bin/activate"
+pip3 install --upgrade pip
 pip3 install wheel
 pip3 install --requirement requirements.txt
 pip3 install --editable .
@@ -25,8 +26,9 @@ script/test.sh --ci-mode
 SYSTEM=$(uname)
 
 if [ "${SYSTEM}" = Linux ]; then
-    script/package.sh
+    script/debian/package.sh
 fi
 
-# TODO: Finish implementation, then uncomment.
+script/publish.sh --ci-mode
+# TODO: Finish implementation.
 #script/docker/build.sh

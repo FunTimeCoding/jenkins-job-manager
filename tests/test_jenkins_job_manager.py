@@ -4,7 +4,7 @@ from tests.helper import load_fixture
 
 GIT_LOCATOR = 'http://example.org/my_git_repo.git'
 GITHUB_LOCATOR = 'http://github.com/username/my_git_repo'
-UNKNOWN_LOCATOR = 'http://example.org/no_known_repo_type'
+UNKNOWN_LOCATOR = 'http://example.org/no_known_repository_type'
 SUBVERSION_LOCATOR = 'http://example.org/my_svn_repo'
 
 
@@ -20,22 +20,30 @@ def test_generate_with_git_repository() -> None:
     fixture = serialize_element(
         load_fixture('tests/fixture/git-repository.xml')
     )
-    application = JenkinsJobManager(['--locator', GIT_LOCATOR])
+    application = JenkinsJobManager(
+        [
+            '--locator', GIT_LOCATOR
+        ]
+    )
     assert fixture == application.generate_serialized_xml()
 
 
 def test_guess_repository_type() -> None:
-    assert JenkinsJobManager.guess_repo_type(GIT_LOCATOR) == 'git'
-    assert JenkinsJobManager.guess_repo_type(SUBVERSION_LOCATOR) == 'svn'
-    assert JenkinsJobManager.guess_repo_type(GITHUB_LOCATOR) == 'git'
-    assert JenkinsJobManager.guess_repo_type(UNKNOWN_LOCATOR) == ''
+    assert JenkinsJobManager.guess_repository_type(GIT_LOCATOR) == 'git'
+    assert JenkinsJobManager.guess_repository_type(SUBVERSION_LOCATOR) == 'svn'
+    assert JenkinsJobManager.guess_repository_type(GITHUB_LOCATOR) == 'git'
+    assert JenkinsJobManager.guess_repository_type(UNKNOWN_LOCATOR) == ''
 
 
 def test_generate_with_subversion_repository() -> None:
     fixture = serialize_element(
         load_fixture('tests/fixture/subversion-repository.xml')
     )
-    application = JenkinsJobManager(['--locator', SUBVERSION_LOCATOR])
+    application = JenkinsJobManager(
+        [
+            '--locator', SUBVERSION_LOCATOR,
+        ]
+    )
     assert fixture == application.generate_serialized_xml()
 
 
@@ -44,7 +52,10 @@ def test_generate_with_build_command() -> None:
         load_fixture('tests/fixture/build-command.xml')
     )
     application = JenkinsJobManager(
-        ['--locator', GIT_LOCATOR, '--build', './build.sh']
+        [
+            '--locator', GIT_LOCATOR,
+            '--build', './build.sh',
+        ]
     )
     assert fixture == application.generate_serialized_xml()
 
@@ -53,10 +64,11 @@ def test_generate_with_multi_line_build_command() -> None:
     fixture = serialize_element(
         load_fixture('tests/fixture/multi-line-build-command.xml')
     )
-    command = 'export PATH="${HOME}/opt/python-3.5.1/bin:${PATH}"' \
-              + "\n./build.sh"
     application = JenkinsJobManager(
-        ['--locator', GIT_LOCATOR, '--build', command]
+        [
+            '--locator', GIT_LOCATOR,
+            '--build', './example.sh\n./build.sh',
+        ]
     )
     assert fixture == application.generate_serialized_xml()
 
@@ -66,7 +78,10 @@ def test_generate_with_description() -> None:
         load_fixture('tests/fixture/description.xml')
     )
     application = JenkinsJobManager(
-        ['--locator', GIT_LOCATOR, '--description', 'example']
+        [
+            '--locator', GIT_LOCATOR,
+            '--description', 'example',
+        ]
     )
     assert fixture == application.generate_serialized_xml()
 
@@ -76,7 +91,10 @@ def test_generate_with_junit_publish() -> None:
         load_fixture('tests/fixture/junit-publish.xml')
     )
     application = JenkinsJobManager(
-        ['--locator', GIT_LOCATOR, '--junit', 'build/junit.xml']
+        [
+            '--locator', GIT_LOCATOR,
+            '--junit', 'build/junit.xml',
+        ]
     )
     assert fixture == application.generate_serialized_xml()
 
@@ -88,7 +106,7 @@ def test_generate_with_hypertext_report() -> None:
     application = JenkinsJobManager(
         [
             '--locator', GIT_LOCATOR,
-            '--hypertext-report', 'mess_detector'
+            '--hypertext-report', 'mess_detector',
         ]
     )
     assert fixture == application.generate_serialized_xml()
@@ -101,7 +119,7 @@ def test_generate_with_checkstyle_publish() -> None:
     application = JenkinsJobManager(
         [
             '--locator', GIT_LOCATOR,
-            '--checkstyle', 'build/log/checkstyle-*.xml'
+            '--checkstyle', 'build/log/checkstyle-*.xml',
         ]
     )
     assert fixture == application.generate_serialized_xml()
@@ -114,7 +132,7 @@ def test_generate_with_recipients() -> None:
     application = JenkinsJobManager(
         [
             '--locator', GIT_LOCATOR,
-            '--recipients', 'example@example.org'
+            '--recipients', 'example@example.org',
         ]
     )
     assert fixture == application.generate_serialized_xml()
@@ -127,7 +145,20 @@ def test_generate_with_labels() -> None:
     application = JenkinsJobManager(
         [
             '--locator', GIT_LOCATOR,
-            '--labels', 'label1 && label2'
+            '--labels', 'label1 && label2',
+        ]
+    )
+    assert fixture == application.generate_serialized_xml()
+
+
+def test_generate_workflow() -> None:
+    fixture = serialize_element(
+        load_fixture('tests/fixture/workflow/workflow.xml')
+    )
+    application = JenkinsJobManager(
+        [
+            '--job-type', 'workflow',
+            '--locator', GIT_LOCATOR,
         ]
     )
     assert fixture == application.generate_serialized_xml()
@@ -162,5 +193,5 @@ def test_generate_serialized_xml_return_type() -> None:
 
 
 def test_valid_repository_types_are_strings() -> None:
-    for repository_type in JenkinsJobManager.get_valid_repo_types():
+    for repository_type in JenkinsJobManager.get_valid_repository_types():
         assert isinstance(repository_type, str) is True

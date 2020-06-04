@@ -38,7 +38,10 @@ class WorkflowProjectBuilder(ProjectBuilder):
 
     def append_folder_views(self, parent: Element) -> None:
         folder_views = Element('folderViews')
-        folder_views.set('class', 'jenkins.branch.MultiBranchProjectViewHolder')
+        folder_views.set(
+            'class',
+            'jenkins.branch.MultiBranchProjectViewHolder'
+        )
         folder_views.set('plugin', 'branch-api@2.1.2')
         folder_views.append(self.create_owner())
         parent.append(folder_views)

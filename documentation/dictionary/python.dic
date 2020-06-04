@@ -1,5 +1,6 @@
 venv
 pycache
+jinja
 pyyaml
 shyaml
 htmlcov
@@ -10,11 +11,22 @@ contextlib
 asctime
 levelname
 pycodestyle
+getsockname
+DevPi
+pip3
+python3
+gitpython
+mypy
+lxml
 
 # pytest
 pytest
 exitfirst
 capsys
+xunit
+addopts
+junitxml
+coveragerc
 
 # pylint
 pylint

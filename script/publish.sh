@@ -11,7 +11,7 @@ if [ "${GIT_BRANCH}" = '' ]; then
 fi
 
 if [ "${GIT_BRANCH}" = master ]; then
-    echo "TODO: When to not host projects publically? Introduce a setting in project.sh?"
+    echo "TODO: When to not host projects publicly? Introduce a setting in project.sh?"
 
     #if [ ! "${1}" = --ci-mode ]; then
     #    script/python/publish.sh production

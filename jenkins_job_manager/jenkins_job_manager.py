@@ -45,10 +45,10 @@ class JenkinsJobManager:
         return 0
 
     @staticmethod
-    def get_valid_repository_types() -> list:
+    def get_repository_types() -> list:
         return [
-            VersionControlConstants.GIT_REPOSITORY_TYPE,
-            VersionControlConstants.SUBVERSION_REPOSITORY_TYPE
+            VersionControlConstants.GIT_TYPE,
+            VersionControlConstants.SUBVERSION_TYPE
         ]
 
     @staticmethod
@@ -60,13 +60,13 @@ class JenkinsJobManager:
 
     @staticmethod
     def is_valid_repository_type(repository_type: str) -> bool:
-        return repository_type in JenkinsJobManager.get_valid_repository_types()
+        return repository_type in JenkinsJobManager.get_repository_types()
 
     @staticmethod
     def guess_repository_type(locator: str) -> str:
         repository_type = ''
 
-        for valid_type in JenkinsJobManager.get_valid_repository_types():
+        for valid_type in JenkinsJobManager.get_repository_types():
             if valid_type in locator:
                 repository_type = valid_type
 
@@ -90,7 +90,7 @@ class JenkinsJobManager:
         parser.add_argument(
             '--type',
             help='Repository type.',
-            choices=JenkinsJobManager.get_valid_repository_types(),
+            choices=JenkinsJobManager.get_repository_types(),
         )
         parser.add_argument(
             '--build-command',

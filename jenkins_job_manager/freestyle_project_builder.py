@@ -279,7 +279,13 @@ class FreestyleProjectBuilder(ProjectBuilder):
             source_pattern.text = '**/src/main/java'
             jacoco_publisher.append(source_pattern)
             source_inclusion_pattern = Element('sourceInclusionPattern')
-            source_inclusion_pattern.text = '**/*.java,**/*.groovy,**/*.kt,**/*.kts'
+            source_inclusions = [
+                '**/*.java',
+                '**/*.groovy',
+                '**/*.kt',
+                '**/*.kts',
+            ]
+            source_inclusion_pattern.text = ','.join(source_inclusions)
             jacoco_publisher.append(source_inclusion_pattern)
             source_exclusion_pattern = Element('sourceExclusionPattern')
             source_exclusion_pattern.text = ''
@@ -293,7 +299,9 @@ class FreestyleProjectBuilder(ProjectBuilder):
             skip_copy_of_source_files = Element('skipCopyOfSrcFiles')
             skip_copy_of_source_files.text = 'false'
             jacoco_publisher.append(skip_copy_of_source_files)
-            minimum_instruction_coverage = Element('minimumInstructionCoverage')
+            minimum_instruction_coverage = Element(
+                'minimumInstructionCoverage'
+            )
             minimum_instruction_coverage.text = '0'
             jacoco_publisher.append(minimum_instruction_coverage)
             minimum_branch_coverage = Element('minimumBranchCoverage')
@@ -311,7 +319,9 @@ class FreestyleProjectBuilder(ProjectBuilder):
             minimum_class_coverage = Element('minimumClassCoverage')
             minimum_class_coverage.text = '0'
             jacoco_publisher.append(minimum_class_coverage)
-            maximum_instruction_coverage = Element('maximumInstructionCoverage')
+            maximum_instruction_coverage = Element(
+                'maximumInstructionCoverage'
+            )
             maximum_instruction_coverage.text = '0'
             jacoco_publisher.append(maximum_instruction_coverage)
             maximum_branch_coverage = Element('maximumBranchCoverage')

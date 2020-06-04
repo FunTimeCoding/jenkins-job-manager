@@ -68,7 +68,7 @@ class GeneralMarkupGenerator:
     ) -> Element:
         scm = Element('scm')
 
-        if repository_type == VersionControlConstants.GIT_REPOSITORY_TYPE:
+        if repository_type == VersionControlConstants.GIT_TYPE:
             scm.set('class', 'hudson.plugins.git.GitSCM')
             scm.set('plugin', 'git@4.2.2')
             git_generator = GitMarkupGenerator()
@@ -78,7 +78,7 @@ class GeneralMarkupGenerator:
             scm.append(git_generator.generate_do_submodules())
             scm.append(git_generator.generate_submodule_configs())
             scm.append(Element('extensions'))
-        elif repository_type == VersionControlConstants.SUBVERSION_REPOSITORY_TYPE:
+        elif repository_type == VersionControlConstants.SUBVERSION_TYPE:
             scm.set('class', 'hudson.scm.SubversionSCM')
             scm.set('plugin', 'subversion@2.4.5')
             svn_generator = SubversionMarkupGenerator()

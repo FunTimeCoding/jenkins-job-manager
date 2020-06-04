@@ -70,7 +70,7 @@ class GeneralMarkupGenerator:
 
         if repository_type == VersionControlConstants.GIT_REPOSITORY_TYPE:
             scm.set('class', 'hudson.plugins.git.GitSCM')
-            scm.set('plugin', 'git@3.9.1')
+            scm.set('plugin', 'git@4.2.2')
             git_generator = GitMarkupGenerator()
             scm.append(git_generator.generate_version())
             scm.append(git_generator.generate_remote_configuration(locator))

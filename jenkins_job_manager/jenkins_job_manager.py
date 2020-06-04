@@ -24,6 +24,7 @@ class JenkinsJobManager:
         self.junit = parsed_arguments.junit
         self.hypertext_report = parsed_arguments.hypertext_report
         self.checkstyle = parsed_arguments.checkstyle
+        self.jacoco = parsed_arguments.jacoco
         self.recipients = parsed_arguments.recipients
         self.labels = parsed_arguments.labels
         self.job_type = parsed_arguments.job_type
@@ -112,6 +113,11 @@ class JenkinsJobManager:
             default='',
         )
         parser.add_argument(
+            '--jacoco',
+            help='Enable publishing JaCoCo output.',
+            action='store_true'
+        )
+        parser.add_argument(
             '--description',
             help='Set the job description.',
             default='',
@@ -148,6 +154,7 @@ class JenkinsJobManager:
             freestyle_builder.checkstyle = self.checkstyle
             freestyle_builder.hypertext_report = self.hypertext_report
             freestyle_builder.recipients = self.recipients
+            freestyle_builder.jacoco = self.jacoco
 
             return freestyle_builder.build()
         elif self.job_type is JenkinsJobManager.WORKFLOW_JOB_TYPE:

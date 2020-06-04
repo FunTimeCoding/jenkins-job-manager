@@ -1,0 +1,69 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+    <actions/>
+    <description></description>
+    <keepDependencies>false</keepDependencies>
+    <properties/>
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@4.2.2">
+        <configVersion>2</configVersion>
+        <userRemoteConfigs>
+            <hudson.plugins.git.UserRemoteConfig>
+                <url>http://example.org/my_git_repo.git</url>
+            </hudson.plugins.git.UserRemoteConfig>
+        </userRemoteConfigs>
+        <branches>
+            <hudson.plugins.git.BranchSpec>
+                <name>*/master</name>
+            </hudson.plugins.git.BranchSpec>
+        </branches>
+        <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+        <submoduleCfg class="list"/>
+        <extensions/>
+    </scm>
+    <canRoam>true</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <triggers/>
+    <concurrentBuild>false</concurrentBuild>
+    <builders/>
+    <publishers>
+        <hudson.plugins.jacoco.JacocoPublisher plugin="jacoco@3.0.5">
+            <execPattern>**/**.exec</execPattern>
+            <classPattern>**/classes</classPattern>
+            <sourcePattern>**/src/main/java</sourcePattern>
+            <sourceInclusionPattern>**/*.java,**/*.groovy,**/*.kt,**/*.kts</sourceInclusionPattern>
+            <sourceExclusionPattern></sourceExclusionPattern>
+            <inclusionPattern></inclusionPattern>
+            <exclusionPattern></exclusionPattern>
+            <skipCopyOfSrcFiles>false</skipCopyOfSrcFiles>
+            <minimumInstructionCoverage>0</minimumInstructionCoverage>
+            <minimumBranchCoverage>0</minimumBranchCoverage>
+            <minimumComplexityCoverage>0</minimumComplexityCoverage>
+            <minimumLineCoverage>0</minimumLineCoverage>
+            <minimumMethodCoverage>0</minimumMethodCoverage>
+            <minimumClassCoverage>0</minimumClassCoverage>
+            <maximumInstructionCoverage>0</maximumInstructionCoverage>
+            <maximumBranchCoverage>0</maximumBranchCoverage>
+            <maximumComplexityCoverage>0</maximumComplexityCoverage>
+            <maximumLineCoverage>0</maximumLineCoverage>
+            <maximumMethodCoverage>0</maximumMethodCoverage>
+            <maximumClassCoverage>0</maximumClassCoverage>
+            <changeBuildStatus>false</changeBuildStatus>
+            <runAlways>false</runAlways>
+            <deltaInstructionCoverage>0</deltaInstructionCoverage>
+            <deltaBranchCoverage>0</deltaBranchCoverage>
+            <deltaComplexityCoverage>0</deltaComplexityCoverage>
+            <deltaLineCoverage>0</deltaLineCoverage>
+            <deltaMethodCoverage>0</deltaMethodCoverage>
+            <deltaClassCoverage>0</deltaClassCoverage>
+            <buildOverBuild>false</buildOverBuild>
+        </hudson.plugins.jacoco.JacocoPublisher>
+        <hudson.tasks.Mailer plugin="mailer@1.32">
+            <recipients/>
+            <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+            <sendToIndividuals>true</sendToIndividuals>
+        </hudson.tasks.Mailer>
+    </publishers>
+    <buildWrappers/>
+</project>

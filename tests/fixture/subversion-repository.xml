@@ -31,7 +31,7 @@
     <concurrentBuild>false</concurrentBuild>
     <builders/>
     <publishers>
-        <hudson.tasks.Mailer plugin="mailer@1.21">
+        <hudson.tasks.Mailer plugin="mailer@1.32">
             <recipients/>
             <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
             <sendToIndividuals>true</sendToIndividuals>

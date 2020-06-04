@@ -24,7 +24,11 @@ setup(
         'Topic :: Software Development :: Build Tools',
     ],
     keywords='jenkins continuous integration config generator',
-    packages=['jenkins_job_manager'],
+    packages=[
+        'jenkins_job_manager',
+        'jenkins_job_manager.freestyle_project_builder',
+        'jenkins_job_manager.workflow_project_builder',
+    ],
     install_requires=['pyyaml', 'lxml'],
     python_requires='>=3.2',
     entry_points={

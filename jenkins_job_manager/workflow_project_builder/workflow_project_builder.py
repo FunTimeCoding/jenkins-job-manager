@@ -1,5 +1,8 @@
 from lxml.etree import Element
 
+from jenkins_job_manager.helper import Helper
+from jenkins_job_manager.workflow_project_builder.orphaned_item_strategy \
+    import OrphanedItemStrategy
 from jenkins_job_manager.project_builder import ProjectBuilder
 
 
@@ -15,11 +18,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
 
     def __init__(self):
         super().__init__()
-        self.domain = WorkflowProjectBuilder.join(self.PROJECT_DOMAIN)
-
-    @staticmethod
-    def join(elements: list) -> str:
-        return '.'.join(elements)
+        self.domain = Helper.join(self.PROJECT_DOMAIN)
 
     def append_description(self, parent: Element) -> None:
         description = Element('description')
@@ -50,7 +49,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
     def append_health_metrics(parent: Element) -> None:
         health_metrics = Element('healthMetrics')
         worst_child_health_metric = Element(
-            WorkflowProjectBuilder.join(
+            Helper.join(
                 [
                     'com',
                     'cloudbees',
@@ -75,35 +74,6 @@ class WorkflowProjectBuilder(ProjectBuilder):
         icon.set('plugin', 'branch-api@2.1.2')
         icon.append(self.create_owner())
         parent.append(icon)
-
-    @staticmethod
-    def append_orphaned_item_strategy(parent: Element) -> None:
-        orphaned_item_strategy = Element('orphanedItemStrategy')
-        orphaned_item_strategy.set(
-            'class',
-            WorkflowProjectBuilder.join(
-                [
-                    'com',
-                    'cloudbees',
-                    'hudson',
-                    'plugins',
-                    'folder',
-                    'computed',
-                    'DefaultOrphanedItemStrategy'
-                ]
-            )
-        )
-        orphaned_item_strategy.set('plugin', 'cloudbees-folder@6.7')
-        prune_dead_branches = Element('pruneDeadBranches')
-        prune_dead_branches.text = 'true'
-        orphaned_item_strategy.append(prune_dead_branches)
-        days_to_keep = Element('daysToKeep')
-        days_to_keep.text = '-1'
-        orphaned_item_strategy.append(days_to_keep)
-        number_to_keep = Element('numToKeep')
-        number_to_keep.text = '-1'
-        orphaned_item_strategy.append(number_to_keep)
-        parent.append(orphaned_item_strategy)
 
     def append_disabled(
             self,
@@ -168,7 +138,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
         factory = Element('factory')
         factory.set(
             'class',
-            WorkflowProjectBuilder.join(
+            Helper.join(
                 [
                     'org',
                     'jenkinsci',
@@ -196,7 +166,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
         self.append_folder_views(project)
         self.append_health_metrics(project)
         self.append_icon(project)
-        self.append_orphaned_item_strategy(project)
+        OrphanedItemStrategy.append_orphaned_item_strategy(project)
         project.append(Element('triggers'))
         self.append_disabled(project)
         self.append_sources(project)

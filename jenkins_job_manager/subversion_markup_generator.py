@@ -3,23 +3,56 @@ from lxml.etree import Element
 
 class SubversionMarkupGenerator:
     @staticmethod
-    def generate_locations(locator: str) -> Element:
-        locations = Element('locations')
-        module_tag = 'hudson.scm.SubversionSCM_-ModuleLocation'
-        module_location = Element(module_tag)
+    def create_remote(locator: str):
         remote = Element('remote')
         remote.text = locator
-        module_location.append(remote)
-        module_location.append(Element('credentialsId'))
+
+        return remote
+
+    @staticmethod
+    def create_local():
         local = Element('local')
         local.text = '.'
-        module_location.append(local)
-        depth = Element('depthOption')
-        depth.text = 'infinity'
-        module_location.append(depth)
+
+        return local
+
+    @staticmethod
+    def create_depth_option(depth: str):
+        depth_option = Element('depthOption')
+        depth_option.text = depth
+
+        return depth_option
+
+    @staticmethod
+    def create_ignore_externals(ignore: bool):
         ignore_externals = Element('ignoreExternalsOption')
-        ignore_externals.text = 'true'
-        module_location.append(ignore_externals)
+
+        if ignore:
+            ignore_externals.text = 'true'
+        else:
+            ignore_externals.text = 'false'
+
+        return ignore_externals
+
+    @staticmethod
+    def generate_locations(locator: str) -> Element:
+        locations = Element('locations')
+        module_location = Element(
+            'hudson.scm.SubversionSCM_-ModuleLocation'
+        )
+        module_location.append(
+            SubversionMarkupGenerator.create_remote(locator=locator)
+        )
+        module_location.append(Element('credentialsId'))
+        module_location.append(
+            SubversionMarkupGenerator.create_local()
+        )
+        module_location.append(
+            SubversionMarkupGenerator.create_depth_option('infinity')
+        )
+        module_location.append(
+            SubversionMarkupGenerator.create_ignore_externals(True)
+        )
         locations.append(module_location)
 
         return locations

@@ -3,12 +3,13 @@ from sys import argv as argument_vector, exit as system_exit
 from lxml.etree import Element
 
 from jenkins_job_manager.custom_argument_parser import CustomArgumentParser
-from jenkins_job_manager.freestyle_project_builder import \
-    FreestyleProjectBuilder
+from jenkins_job_manager.freestyle_project_builder.freestyle_project_builder \
+    import FreestyleProjectBuilder
 from jenkins_job_manager.lxml_helper import serialize_element
 from jenkins_job_manager.version_control_constants import \
     VersionControlConstants
-from jenkins_job_manager.workflow_project_builder import WorkflowProjectBuilder
+from jenkins_job_manager.workflow_project_builder.workflow_project_builder \
+    import WorkflowProjectBuilder
 
 
 class JenkinsJobManager:

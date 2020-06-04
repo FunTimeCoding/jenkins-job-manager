@@ -7,12 +7,13 @@ if [ ! -f tmp/bootstrap-salt.sh ]; then
     wget --output-document tmp/bootstrap-salt.sh https://bootstrap.saltstack.com
 fi
 
-touch tmp/gemrc
-chmod 600 tmp/gemrc
-cat "${HOME}/.gemrc" > tmp/gemrc
+if [ -f "${HOME}/.gitconfig" ]; then
+    cp "${HOME}/.gitconfig" tmp/gitconfig.txt
+fi
 
-touch tmp/pypirc
-chmod 600 tmp/pypirc
-cat "${HOME}/.pypirc" > tmp/pypirc
+if [ -f "${HOME}/.gitignore_global" ]; then
+    cp "${HOME}/.gitignore_global" tmp/gitignore_global.txt
+fi
 
 vagrant up
+vagrant ssh --command /vagrant/script/vagrant/vagrant.sh

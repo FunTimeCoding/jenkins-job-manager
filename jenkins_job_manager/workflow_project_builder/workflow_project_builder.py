@@ -20,44 +20,40 @@ class WorkflowProjectBuilder(ProjectBuilder):
         super().__init__()
         self.domain = Helper.join(self.PROJECT_DOMAIN)
 
-    def append_description(self, parent: Element) -> None:
-        description = Element('description')
+    @staticmethod
+    def _append_description(parent: Element, description: str) -> None:
+        description_element = Element('description')
 
-        if self.description != '':
-            description.text = self.description
+        if description:
+            description_element.text = description
 
-        parent.append(description)
+        parent.append(description_element)
 
-    def create_owner(self) -> Element:
+    def _create_owner(self) -> Element:
         owner = Element('owner')
         owner.set('class', self.domain)
         owner.set('reference', '../..')
 
         return owner
 
-    def append_folder_views(self, parent: Element) -> None:
+    def _append_folder_views(self, parent: Element) -> None:
         folder_views = Element('folderViews')
         folder_views.set(
             'class',
             'jenkins.branch.MultiBranchProjectViewHolder'
         )
         folder_views.set('plugin', 'branch-api@2.1.2')
-        folder_views.append(self.create_owner())
+        folder_views.append(self._create_owner())
         parent.append(folder_views)
 
     @staticmethod
-    def append_health_metrics(parent: Element) -> None:
+    def _append_health_metrics(parent: Element) -> None:
         health_metrics = Element('healthMetrics')
         worst_child_health_metric = Element(
             Helper.join(
-                [
-                    'com',
-                    'cloudbees',
-                    'hudson',
-                    'plugins',
-                    'folder',
+                Helper.folder_domain + [
                     'health',
-                    'WorstChildHealthMetric'
+                    'WorstChildHealthMetric',
                 ]
             )
         )
@@ -68,77 +64,96 @@ class WorkflowProjectBuilder(ProjectBuilder):
         health_metrics.append(worst_child_health_metric)
         parent.append(health_metrics)
 
-    def append_icon(self, parent: Element) -> None:
+    def _append_icon(self, parent: Element) -> None:
         icon = Element('icon')
         icon.set('class', 'jenkins.branch.MetadataActionFolderIcon')
         icon.set('plugin', 'branch-api@2.1.2')
-        icon.append(self.create_owner())
+        icon.append(self._create_owner())
         parent.append(icon)
 
-    def append_disabled(
+    def _append_source(
             self,
             parent: Element,
     ) -> None:
-        disabled = Element('disabled')
+        source = Helper.create_element_with_class(
+            tag='source',
+            class_attribute='jenkins.plugins.git.GitSCMSource',
+        )
+        source.set('plugin', 'git@3.9.3')
+        source.append(
+            Helper.create_element_with_text(
+                tag='id',
+                # TODO: Not sure what to put here yet. A UUID?
+                text='example',
+            )
+        )
+        source.append(
+            Helper.create_element_with_text(
+                tag='remote',
+                text=self.repository_locator,
+            )
+        )
+        source.append(Element('credentialsId'))
+        traits = Element('traits')
+        traits.append(
+            Element('jenkins.plugins.git.traits.BranchDiscoveryTrait')
+        )
+        source.append(traits)
+        parent.append(source)
 
-        if self.enabled:
-            disabled.text = 'false'
-        else:
-            disabled.text = 'true'
-
-        parent.append(disabled)
-
-    def append_sources(
+    def _append_branch_source(
             self,
             parent: Element,
     ) -> None:
-        sources = Element('sources')
-        sources.set(
-            'class',
-            'jenkins.branch.MultiBranchProject$BranchSourceList'
+        branch_source = Element('jenkins.branch.BranchSource')
+        self._append_source(parent=branch_source)
+        strategy = Helper.create_element_with_class(
+            tag='strategy',
+            class_attribute='jenkins.branch.DefaultBranchPropertyStrategy',
+        )
+        strategy.append(
+            Helper.create_element_with_class(
+                tag='properties',
+                class_attribute='empty-list',
+            )
+        )
+        branch_source.append(strategy)
+        parent.append(branch_source)
+
+    def _append_data(
+            self,
+            parent: Element,
+    ) -> None:
+        data = Element('data')
+        self._append_branch_source(parent=data)
+        parent.append(data)
+
+    def _append_sources(
+            self,
+            parent: Element,
+    ) -> None:
+        sources = Helper.create_element_with_class(
+            tag='sources',
+            class_attribute=Helper.join(
+                [
+                    'jenkins',
+                    'branch',
+                    'MultiBranchProject$BranchSourceList',
+                ]
+            ),
         )
         sources.set('plugin', 'branch-api@2.1.2')
-        data = Element('data')
-        branch_source = Element('jenkins.branch.BranchSource')
-        source = Element('source')
-        source.set('class', 'jenkins.plugins.git.GitSCMSource')
-        source.set('plugin', 'git@3.9.3')
-        identifier = Element('id')
-        # Not sure what to put here yet. A UUID?
-        identifier.text = 'example'
-        source.append(identifier)
-        remote = Element('remote')
-        remote.text = self.repository_locator
-        source.append(remote)
-        credentials_identifier = Element('credentialsId')
-        source.append(credentials_identifier)
-        traits = Element('traits')
-        branch_discovery_trait = Element(
-            'jenkins.plugins.git.traits.BranchDiscoveryTrait'
-        )
-        traits.append(branch_discovery_trait)
-        source.append(traits)
-        strategy = Element('strategy')
-        strategy.set('class', 'jenkins.branch.DefaultBranchPropertyStrategy')
-        properties = Element('properties')
-        properties.set('class', 'empty-list')
-        strategy.append(properties)
-        branch_source.append(source)
-        branch_source.append(strategy)
-        data.append(branch_source)
-        sources.append(data)
-        sources.append(self.create_owner())
-
+        self._append_data(parent=sources)
+        sources.append(self._create_owner())
         parent.append(sources)
 
-    def append_factory(
+    def _append_factory(
             self,
             parent: Element,
     ) -> None:
-        factory = Element('factory')
-        factory.set(
-            'class',
-            Helper.join(
+        factory = Helper.create_element_with_class(
+            tag='factory',
+            class_attribute=Helper.join(
                 [
                     'org',
                     'jenkinsci',
@@ -147,29 +162,45 @@ class WorkflowProjectBuilder(ProjectBuilder):
                     'multibranch',
                     'WorkflowBranchProjectFactory'
                 ]
+            ),
+        )
+        factory.append(self._create_owner())
+        factory.append(
+            Helper.create_element_with_text(
+                tag='scriptPath',
+                text='Jenkinsfile',
             )
         )
-        factory.append(self.create_owner())
-        script_path = Element('scriptPath')
-        script_path.text = 'Jenkinsfile'
-        factory.append(script_path)
         parent.append(factory)
 
-    def build(self) -> Element:
-        project = Element(self.domain)
-        project.set('plugin', 'workflow-multibranch@2.20')
-
+    @staticmethod
+    def create_project(domain: str, description: str) -> Element:
+        project = Helper.create_plugin_element(
+            tag=domain,
+            plugin='workflow-multibranch',
+            version='2.20'
+        )
         project.append(Element('actions'))
-        self.append_description(project)
+        WorkflowProjectBuilder._append_description(
+            parent=project,
+            description=description,
+        )
         project.append(Element('properties'))
 
-        self.append_folder_views(project)
-        self.append_health_metrics(project)
-        self.append_icon(project)
+        return project
+
+    def build(self) -> Element:
+        project = WorkflowProjectBuilder.create_project(
+            domain=self.domain,
+            description=self.description,
+        )
+        self._append_folder_views(project)
+        self._append_health_metrics(project)
+        self._append_icon(project)
         OrphanedItemStrategy.append_orphaned_item_strategy(project)
         project.append(Element('triggers'))
-        self.append_disabled(project)
-        self.append_sources(project)
-        self.append_factory(project)
+        project.append(Helper.create_false_boolean_element(tag='disabled'))
+        self._append_sources(project)
+        self._append_factory(project)
 
         return project

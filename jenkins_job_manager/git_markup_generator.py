@@ -1,9 +1,31 @@
 from lxml.etree import Element
 
+from jenkins_job_manager.helper import Helper
+
 
 class GitMarkupGenerator:
     @staticmethod
-    def generate_remote_configuration(locator: str) -> Element:
+    def append_git(element: Element, locator: str) -> None:
+        element.append(
+            Helper.create_element_with_integer(
+                tag='configVersion',
+                integer=2
+            )
+        )
+        element.append(
+            GitMarkupGenerator._generate_remote_configuration(locator)
+        )
+        element.append(GitMarkupGenerator._generate_branches())
+        element.append(
+            Helper._create_element_with_boolean(
+                tag='doGenerateSubmoduleConfigurations',
+                boolean=False
+            )
+        )
+        element.append(GitMarkupGenerator._generate_submodule_configs())
+
+    @staticmethod
+    def _generate_remote_configuration(locator: str) -> Element:
         configuration = Element('userRemoteConfigs')
         git_remote_configuration_tag = 'hudson.plugins.git.UserRemoteConfig'
         git_remote_configuration = Element(git_remote_configuration_tag)
@@ -15,7 +37,7 @@ class GitMarkupGenerator:
         return configuration
 
     @staticmethod
-    def generate_branches() -> Element:
+    def _generate_branches() -> Element:
         branches = Element('branches')
         branch_specification = Element('hudson.plugins.git.BranchSpec')
         branch_specification_name = Element('name')
@@ -26,22 +48,7 @@ class GitMarkupGenerator:
         return branches
 
     @staticmethod
-    def generate_version() -> Element:
-        version = Element('configVersion')
-        version.text = '2'
-
-        return version
-
-    @staticmethod
-    def generate_do_submodules() -> Element:
-        generate_tag = 'doGenerateSubmoduleConfigurations'
-        generate_submodule_configs = Element(generate_tag)
-        generate_submodule_configs.text = 'false'
-
-        return generate_submodule_configs
-
-    @staticmethod
-    def generate_submodule_configs() -> Element:
+    def _generate_submodule_configs() -> Element:
         submodule_configs = Element('submoduleCfg')
         submodule_configs.set('class', 'list')
 

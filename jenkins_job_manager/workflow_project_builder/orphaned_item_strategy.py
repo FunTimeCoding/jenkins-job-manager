@@ -10,12 +10,7 @@ class OrphanedItemStrategy:
         orphaned_item_strategy.set(
             'class',
             Helper.join(
-                [
-                    'com',
-                    'cloudbees',
-                    'hudson',
-                    'plugins',
-                    'folder',
+                Helper.folder_domain + [
                     'computed',
                     'DefaultOrphanedItemStrategy'
                 ]
@@ -23,10 +18,7 @@ class OrphanedItemStrategy:
         )
         orphaned_item_strategy.set('plugin', 'cloudbees-folder@6.7')
         orphaned_item_strategy.append(
-            Helper.create_element_with_boolean(
-                tag='pruneDeadBranches',
-                boolean=True
-            )
+            Helper.create_true_boolean_element(tag='pruneDeadBranches')
         )
         orphaned_item_strategy.append(
             Helper.create_element_with_integer(

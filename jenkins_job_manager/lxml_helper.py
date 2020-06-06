@@ -17,8 +17,9 @@ def serialize_element(element: Element) -> str:
     ]
 
     for node in element.iter():
-        if node.tag in tags_to_not_shorten and node.text is None:
-            node.text = ''
+        if node.tag in tags_to_not_shorten:
+            if node.text is None:
+                node.text = ''
 
     return etree.tostring(
         element_or_tree=element,

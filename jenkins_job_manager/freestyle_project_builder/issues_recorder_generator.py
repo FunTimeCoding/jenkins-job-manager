@@ -26,10 +26,7 @@ class IssuesRecorderGenerator:
             Helper.create_empty_text_element(tag='reportEncoding')
         )
         check_style.append(
-            Helper.create_element_with_boolean(
-                tag='skipSymbolicLinks',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='skipSymbolicLinks')
         )
         analysis_tools.append(check_style)
 
@@ -63,16 +60,10 @@ class IssuesRecorderGenerator:
     @staticmethod
     def append_ignores(element: Element) -> None:
         element.append(
-            Helper.create_element_with_boolean(
-                tag='ignoreQualityGate',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='ignoreQualityGate')
         )
         element.append(
-            Helper.create_element_with_boolean(
-                tag='ignoreFailedBuilds',
-                boolean=True
-            )
+            Helper.create_true_boolean_element(tag='ignoreFailedBuilds')
         )
 
     @staticmethod
@@ -93,28 +84,16 @@ class IssuesRecorderGenerator:
     @staticmethod
     def append_boolean_flags(element: Element) -> None:
         element.append(
-            Helper.create_element_with_boolean(
-                tag='isEnabledForFailure',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='isEnabledForFailure')
         )
         element.append(
-            Helper.create_element_with_boolean(
-                tag='isAggregatingResults',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='isAggregatingResults')
         )
         element.append(
-            Helper.create_element_with_boolean(
-                tag='isBlameDisabled',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='isBlameDisabled')
         )
         element.append(
-            Helper.create_element_with_boolean(
-                tag='isForensicsDisabled',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='isForensicsDisabled')
         )
 
     @staticmethod
@@ -125,10 +104,7 @@ class IssuesRecorderGenerator:
             Helper.create_empty_text_element(tag='referenceJobName')
         )
         element.append(
-            Helper.create_element_with_boolean(
-                tag='failOnError',
-                boolean=False
-            )
+            Helper.create_false_boolean_element(tag='failOnError')
         )
 
     @staticmethod
@@ -148,18 +124,18 @@ class IssuesRecorderGenerator:
         )
 
     @staticmethod
-    def generate_issues_recorder(checkstyle: str) -> Element:
-        issues_recorder = Helper.create_plugin_element(
+    def generate(checkstyle: str) -> Element:
+        generator = Helper.create_plugin_element(
             tag='io.jenkins.plugins.analysis.core.steps.IssuesRecorder',
             plugin='warnings-ng',
             version='8.1.0',
         )
-        issues_recorder.append(
+        generator.append(
             IssuesRecorderGenerator.create_analysis_tools(
                 checkstyle=checkstyle
             )
         )
-        IssuesRecorderGenerator.append_nodes(element=issues_recorder)
-        IssuesRecorderGenerator.append_more_nodes(element=issues_recorder)
+        IssuesRecorderGenerator.append_nodes(element=generator)
+        IssuesRecorderGenerator.append_more_nodes(element=generator)
 
-        return issues_recorder
+        return generator

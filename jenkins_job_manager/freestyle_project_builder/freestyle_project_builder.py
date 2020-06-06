@@ -1,7 +1,7 @@
 from lxml.etree import Element
 
-from jenkins_job_manager.freestyle_project_builder.mailer_generator import \
-    MailerGenerator
+from jenkins_job_manager.freestyle_project_builder.publisher_settings import \
+    PublisherSettings
 from jenkins_job_manager.freestyle_project_builder \
     .publishers_generator import PublishersGenerator
 from jenkins_job_manager.freestyle_project_builder.triggers_generator import \
@@ -9,21 +9,10 @@ from jenkins_job_manager.freestyle_project_builder.triggers_generator import \
 from jenkins_job_manager.general_markup_generator import GeneralMarkupGenerator
 from jenkins_job_manager.helper import Helper
 from jenkins_job_manager.project_builder import ProjectBuilder
+from jenkins_job_manager.repository_settings import RepositorySettings
 
 
 class FreestyleProjectBuilder(ProjectBuilder):
-    @property
-    def repository_type(self) -> str:
-        return self._repository_type
-
-    @repository_type.getter
-    def repository_type(self) -> str:
-        return self._repository_type
-
-    @repository_type.setter
-    def repository_type(self, value: str) -> None:
-        self._repository_type = value
-
     @property
     def labels(self) -> str:
         return self._labels
@@ -49,75 +38,27 @@ class FreestyleProjectBuilder(ProjectBuilder):
         self._build_command = value
 
     @property
-    def junit(self) -> str:
-        return self._junit
+    def publisher_settings(self) -> PublisherSettings:
+        return self._publisher_settings
 
-    @junit.getter
-    def junit(self) -> str:
-        return self._junit
+    @publisher_settings.getter
+    def publisher_settings(self) -> PublisherSettings:
+        return self._publisher_settings
 
-    @junit.setter
-    def junit(self, value: str) -> None:
-        self._junit = value
+    @publisher_settings.setter
+    def publisher_settings(self, value: PublisherSettings) -> None:
+        self._publisher_settings = value
 
-    @property
-    def checkstyle(self) -> str:
-        return ''
-
-    @checkstyle.getter
-    def checkstyle(self) -> str:
-        return self._checkstyle
-
-    @checkstyle.setter
-    def checkstyle(self, value: str) -> None:
-        self._checkstyle = value
-
-    @property
-    def hypertext_report(self) -> str:
-        return ''
-
-    @hypertext_report.getter
-    def hypertext_report(self) -> str:
-        return self._hypertext_report
-
-    @hypertext_report.setter
-    def hypertext_report(self, value: str) -> None:
-        self._hypertext_report = value
-
-    @property
-    def recipients(self) -> str:
-        return ''
-
-    @recipients.getter
-    def recipients(self) -> str:
-        return self._recipients
-
-    @recipients.setter
-    def recipients(self, value: str) -> None:
-        self._recipients = value
-
-    @property
-    def jacoco(self) -> bool:
-        return False
-
-    @jacoco.getter
-    def jacoco(self) -> bool:
-        return self._jacoco
-
-    @jacoco.setter
-    def jacoco(self, value: bool) -> None:
-        self._jacoco = value
-
-    def __init__(self):
+    def __init__(
+            self,
+            repository_settings: RepositorySettings,
+            publisher_settings: PublisherSettings
+    ):
         super().__init__()
-        self.repository_type = ''
         self.labels = ''
         self.build_command = ''
-        self.junit = ''
-        self.checkstyle = ''
-        self.hypertext_report = ''
-        self.recipients = ''
-        self.jacoco = ''
+        self.repository_settings = repository_settings
+        self.publisher_settings = publisher_settings
 
     @staticmethod
     def _append_node_labels(element: Element, labels: str):
@@ -144,8 +85,8 @@ class FreestyleProjectBuilder(ProjectBuilder):
         element.append(Element('properties'))
         element.append(
             generator.generate_scm_for_repository_type(
-                locator=self.repository_locator,
-                repository_type=self.repository_type
+                locator=self.repository_settings.repository_locator,
+                repository_type=self.repository_settings.repository_type
             )
         )
         FreestyleProjectBuilder._append_node_labels(
@@ -164,26 +105,29 @@ class FreestyleProjectBuilder(ProjectBuilder):
             )
         )
 
-    def _append_publishers(self, element: Element) -> None:
+    def _append_publishers(self, parent: Element) -> None:
         publishers = Element('publishers')
         PublishersGenerator.append_junit_publisher(
-            element=publishers,
-            junit=self.junit
+            parent=publishers,
+            junit=self.publisher_settings.junit,
         )
         PublishersGenerator.append_checkstyle_publisher(
-            element=publishers,
-            checkstyle=self.checkstyle
+            parent=publishers,
+            checkstyle=self.publisher_settings.checkstyle,
         )
         PublishersGenerator.append_jacoco_publisher(
-            element=publishers,
-            jacoco=self.jacoco
+            parent=publishers,
+            jacoco=self.publisher_settings.jacoco,
         )
         PublishersGenerator.append_hypertext_report(
-            element=publishers,
-            hypertext_report=self.hypertext_report
+            parent=publishers,
+            hypertext_report=self.publisher_settings.hypertext_report,
         )
-        publishers.append(MailerGenerator.generate(recipients=self.recipients))
-        element.append(publishers)
+        PublishersGenerator.append_recipients(
+            parent=publishers,
+            recipients=self.publisher_settings.recipients,
+        )
+        parent.append(publishers)
 
     @staticmethod
     def _append_builders(element: Element, build_command: str) -> None:
@@ -221,7 +165,7 @@ class FreestyleProjectBuilder(ProjectBuilder):
             element=project,
             build_command=self.build_command
         )
-        self._append_publishers(element=project)
+        self._append_publishers(parent=project)
         project.append(Element('buildWrappers'))
 
         return project

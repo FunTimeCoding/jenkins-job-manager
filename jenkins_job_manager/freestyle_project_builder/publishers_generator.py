@@ -6,38 +6,51 @@ from jenkins_job_manager.freestyle_project_builder \
     .java_code_coverage_publisher import JavaCodeCoveragePublisher
 from jenkins_job_manager.freestyle_project_builder.junit_result_archiver \
     import JUnitResultArchiver
+from jenkins_job_manager.freestyle_project_builder.mailer_generator \
+    import MailerGenerator
 from jenkins_job_manager.markup_publisher_generator import \
     MarkupPublisherGenerator
 
 
 class PublishersGenerator:
     @staticmethod
-    def append_junit_publisher(element: Element, junit: str) -> None:
+    def append_junit_publisher(parent: Element, junit: str) -> None:
         if junit:
-            element.append(
+            parent.append(
                 JUnitResultArchiver.generate(result_path=junit)
             )
 
     @staticmethod
-    def append_checkstyle_publisher(element: Element, checkstyle: str) -> None:
+    def append_checkstyle_publisher(parent: Element, checkstyle: str) -> None:
         if checkstyle:
-            element.append(
+            parent.append(
                 IssuesRecorderGenerator.generate(checkstyle=checkstyle)
             )
 
     @staticmethod
-    def append_jacoco_publisher(element: Element, jacoco: bool) -> None:
+    def append_jacoco_publisher(parent: Element, jacoco: bool) -> None:
         if jacoco:
-            element.append(JavaCodeCoveragePublisher.generate())
+            parent.append(JavaCodeCoveragePublisher.generate())
 
     @staticmethod
     def append_hypertext_report(
-            element: Element,
+            parent: Element,
             hypertext_report: str
     ) -> None:
         if hypertext_report:
-            element.append(
+            parent.append(
                 MarkupPublisherGenerator.generate(
-                    hypertext_report=hypertext_report
+                    hypertext_report=hypertext_report,
                 )
             )
+
+    @staticmethod
+    def append_recipients(
+            parent: Element,
+            recipients: str
+    ) -> None:
+        parent.append(
+            MailerGenerator.generate(
+                recipients=recipients,
+            )
+        )

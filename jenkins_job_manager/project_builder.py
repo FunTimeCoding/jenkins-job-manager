@@ -1,18 +1,20 @@
 from lxml.etree import Element
 
+from jenkins_job_manager.repository_settings import RepositorySettings
+
 
 class ProjectBuilder:
     @property
-    def repository_locator(self) -> str:
-        return self._repository_locator
+    def repository_settings(self) -> RepositorySettings:
+        return self._repository_settings
 
-    @repository_locator.getter
-    def repository_locator(self) -> str:
-        return self._repository_locator
+    @repository_settings.getter
+    def repository_settings(self) -> RepositorySettings:
+        return self._repository_settings
 
-    @repository_locator.setter
-    def repository_locator(self, value: str) -> None:
-        self._repository_locator = value
+    @repository_settings.setter
+    def repository_settings(self, value: RepositorySettings) -> None:
+        self._repository_settings = value
 
     @property
     def description(self) -> str:
@@ -39,7 +41,7 @@ class ProjectBuilder:
         self._enabled = value
 
     def __init__(self):
-        self.repository_locator = ''
+        self.repository_settings = None
         self.description = ''
         self.enabled = True
 

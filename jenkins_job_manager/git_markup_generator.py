@@ -17,9 +17,8 @@ class GitMarkupGenerator:
         )
         element.append(GitMarkupGenerator._generate_branches())
         element.append(
-            Helper._create_element_with_boolean(
+            Helper.create_false_boolean_element(
                 tag='doGenerateSubmoduleConfigurations',
-                boolean=False
             )
         )
         element.append(GitMarkupGenerator._generate_submodule_configs())

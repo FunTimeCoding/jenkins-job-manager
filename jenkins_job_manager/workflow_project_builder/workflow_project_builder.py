@@ -1,6 +1,7 @@
 from lxml.etree import Element
 
 from jenkins_job_manager.helper import Helper
+from jenkins_job_manager.repository_settings import RepositorySettings
 from jenkins_job_manager.workflow_project_builder.orphaned_item_strategy \
     import OrphanedItemStrategy
 from jenkins_job_manager.project_builder import ProjectBuilder
@@ -16,8 +17,9 @@ class WorkflowProjectBuilder(ProjectBuilder):
         'WorkflowMultiBranchProject'
     ]
 
-    def __init__(self):
+    def __init__(self, repository_settings: RepositorySettings):
         super().__init__()
+        self.repository_settings = repository_settings
         self.domain = Helper.join(self.PROJECT_DOMAIN)
 
     @staticmethod
@@ -90,7 +92,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
         source.append(
             Helper.create_element_with_text(
                 tag='remote',
-                text=self.repository_locator,
+                text=self.repository_settings.repository_locator,
             )
         )
         source.append(Element('credentialsId'))

@@ -5,10 +5,11 @@ from lxml.etree import Element
 from python_utility.custom_argument_parser import CustomArgumentParser
 from jenkins_job_manager.freestyle_project_builder.freestyle_project_builder \
     import FreestyleProjectBuilder
+from jenkins_job_manager.freestyle_project_builder.publisher_settings \
+    import PublisherSettings
 from jenkins_job_manager.lxml_helper import serialize_element
 from jenkins_job_manager.project_builder import ProjectBuilder
-from jenkins_job_manager.version_control_constants import \
-    VersionControlConstants
+from jenkins_job_manager.repository_settings import RepositorySettings
 from jenkins_job_manager.workflow_project_builder.workflow_project_builder \
     import WorkflowProjectBuilder
 
@@ -19,22 +20,23 @@ class JenkinsJobManager:
 
     def __init__(self, arguments: list):
         parsed_arguments = self._create_parser().parse_args(arguments)
-        self.repository_type = parsed_arguments.type
-        self.repository_locator = parsed_arguments.locator
+        self.repository_settings = RepositorySettings(
+            repository_type=parsed_arguments.type,
+            repository_locator=parsed_arguments.locator,
+        )
         self.build_command = parsed_arguments.build_command
         self.description = parsed_arguments.description
-        self.junit = parsed_arguments.junit
-        self.hypertext_report = parsed_arguments.hypertext_report
-        self.checkstyle = parsed_arguments.checkstyle
-        self.jacoco = parsed_arguments.jacoco
-        self.recipients = parsed_arguments.recipients
+
+        publisher_settings = PublisherSettings()
+        publisher_settings.junit = parsed_arguments.junit
+        publisher_settings.hypertext_report = parsed_arguments.hypertext_report
+        publisher_settings.checkstyle = parsed_arguments.checkstyle
+        publisher_settings.jacoco = parsed_arguments.jacoco
+        publisher_settings.recipients = parsed_arguments.recipients
+        self.publisher_settings = publisher_settings
+
         self.labels = parsed_arguments.labels
         self.job_type = parsed_arguments.job_type
-
-        if self.is_valid_repository_type(self.repository_type) is False:
-            self.repository_type = self.guess_repository_type(
-                self.repository_locator
-            )
 
     @staticmethod
     def main():
@@ -47,34 +49,11 @@ class JenkinsJobManager:
         return 0
 
     @staticmethod
-    def get_repository_types() -> list:
-        return [
-            VersionControlConstants.GIT_TYPE,
-            VersionControlConstants.SUBVERSION_TYPE
-        ]
-
-    @staticmethod
     def get_job_types() -> list:
         return [
             JenkinsJobManager.FREESTYLE_JOB_TYPE,
             JenkinsJobManager.WORKFLOW_JOB_TYPE
         ]
-
-    @staticmethod
-    def is_valid_repository_type(repository_type: str) -> bool:
-        return repository_type in JenkinsJobManager.get_repository_types()
-
-    @staticmethod
-    def guess_repository_type(locator: str) -> str:
-        repository_type = ''
-
-        for valid_type in JenkinsJobManager.get_repository_types():
-            if valid_type in locator:
-                repository_type = valid_type
-
-                break
-
-        return repository_type
 
     @staticmethod
     def _add_required_arguments(parser: CustomArgumentParser) -> None:
@@ -117,7 +96,7 @@ class JenkinsJobManager:
         parser.add_argument(
             '--type',
             help='Repository type.',
-            choices=JenkinsJobManager.get_repository_types(),
+            choices=RepositorySettings.get_repository_types(),
         )
         parser.add_argument(
             '--build-command',
@@ -154,33 +133,33 @@ class JenkinsJobManager:
             self,
             builder: ProjectBuilder
     ) -> None:
-        builder.repository_locator = self.repository_locator
+        builder.repository_settings = self.repository_settings
         builder.description = self.description
 
     def _add_parsed_publisher_arguments(
             self,
             freestyle_builder: FreestyleProjectBuilder
     ) -> None:
-        freestyle_builder.junit = self.junit
-        freestyle_builder.checkstyle = self.checkstyle
-        freestyle_builder.hypertext_report = self.hypertext_report
-        freestyle_builder.jacoco = self.jacoco
+        freestyle_builder.publisher_settings = self.publisher_settings
 
     def _create_freestyle_builder(self) -> ProjectBuilder:
-        freestyle_builder = FreestyleProjectBuilder()
+        freestyle_builder = FreestyleProjectBuilder(
+            repository_settings=self.repository_settings,
+            publisher_settings=self.publisher_settings,
+        )
         self._add_common_arguments(builder=freestyle_builder)
-        freestyle_builder.repository_type = self.repository_type
         freestyle_builder.labels = self.labels
         self._add_parsed_publisher_arguments(
             freestyle_builder=freestyle_builder
         )
         freestyle_builder.build_command = self.build_command
-        freestyle_builder.recipients = self.recipients
 
         return freestyle_builder
 
     def _create_workflow_builder(self) -> ProjectBuilder:
-        workflow_builder = WorkflowProjectBuilder()
+        workflow_builder = WorkflowProjectBuilder(
+            repository_settings=self.repository_settings,
+        )
         self._add_common_arguments(builder=workflow_builder)
 
         return workflow_builder
@@ -191,7 +170,7 @@ class JenkinsJobManager:
         elif self.job_type is JenkinsJobManager.WORKFLOW_JOB_TYPE:
             builder = self._create_workflow_builder()
         else:
-            raise RuntimeError('Unexpected job type: ' + self.repository_type)
+            raise RuntimeError('Unexpected job type: ' + self.job_type)
 
         return builder.build()
 

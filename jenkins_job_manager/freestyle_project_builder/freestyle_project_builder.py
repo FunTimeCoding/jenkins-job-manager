@@ -14,99 +14,99 @@ from jenkins_job_manager.project_builder import ProjectBuilder
 class FreestyleProjectBuilder(ProjectBuilder):
     @property
     def repository_type(self) -> str:
-        return ''
-
-    @property
-    def labels(self) -> str:
-        return ''
-
-    @property
-    def build_command(self) -> str:
-        return ''
-
-    @property
-    def junit(self) -> str:
-        return ''
-
-    @property
-    def checkstyle(self) -> str:
-        return ''
-
-    @property
-    def hypertext_report(self) -> str:
-        return ''
-
-    @property
-    def recipients(self) -> str:
-        return ''
-
-    @property
-    def jacoco(self) -> bool:
-        return False
-
-    @repository_type.setter
-    def repository_type(self, value: str) -> None:
-        self._repository_type = value
+        return self._repository_type
 
     @repository_type.getter
     def repository_type(self) -> str:
         return self._repository_type
 
-    @labels.setter
-    def labels(self, value: str) -> None:
-        self._labels = value
+    @repository_type.setter
+    def repository_type(self, value: str) -> None:
+        self._repository_type = value
+
+    @property
+    def labels(self) -> str:
+        return self._labels
 
     @labels.getter
     def labels(self) -> str:
         return self._labels
 
-    @build_command.setter
-    def build_command(self, value: str) -> None:
-        self._build_command = value
+    @labels.setter
+    def labels(self, value: str) -> None:
+        self._labels = value
+
+    @property
+    def build_command(self) -> str:
+        return self._build_command
 
     @build_command.getter
     def build_command(self) -> str:
         return self._build_command
 
-    @junit.setter
-    def junit(self, value: str) -> None:
-        self._junit = value
+    @build_command.setter
+    def build_command(self, value: str) -> None:
+        self._build_command = value
+
+    @property
+    def junit(self) -> str:
+        return self._junit
 
     @junit.getter
     def junit(self) -> str:
         return self._junit
 
-    @checkstyle.setter
-    def checkstyle(self, value: str) -> None:
-        self._checkstyle = value
+    @junit.setter
+    def junit(self, value: str) -> None:
+        self._junit = value
+
+    @property
+    def checkstyle(self) -> str:
+        return ''
 
     @checkstyle.getter
     def checkstyle(self) -> str:
         return self._checkstyle
 
-    @hypertext_report.setter
-    def hypertext_report(self, value: str) -> None:
-        self._hypertext_report = value
+    @checkstyle.setter
+    def checkstyle(self, value: str) -> None:
+        self._checkstyle = value
+
+    @property
+    def hypertext_report(self) -> str:
+        return ''
 
     @hypertext_report.getter
     def hypertext_report(self) -> str:
         return self._hypertext_report
 
-    @recipients.setter
-    def recipients(self, value: str) -> None:
-        self._recipients = value
+    @hypertext_report.setter
+    def hypertext_report(self, value: str) -> None:
+        self._hypertext_report = value
+
+    @property
+    def recipients(self) -> str:
+        return ''
 
     @recipients.getter
     def recipients(self) -> str:
         return self._recipients
 
-    @jacoco.setter
-    def jacoco(self, value: bool) -> None:
-        self._jacoco = value
+    @recipients.setter
+    def recipients(self, value: str) -> None:
+        self._recipients = value
+
+    @property
+    def jacoco(self) -> bool:
+        return False
 
     @jacoco.getter
     def jacoco(self) -> bool:
         return self._jacoco
+
+    @jacoco.setter
+    def jacoco(self, value: bool) -> None:
+        self._jacoco = value
 
     def __init__(self):
         super().__init__()

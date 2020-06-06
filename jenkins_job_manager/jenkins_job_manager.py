@@ -166,7 +166,7 @@ class JenkinsJobManager:
         freestyle_builder.hypertext_report = self.hypertext_report
         freestyle_builder.jacoco = self.jacoco
 
-    def _create_freestyle_builder(self) -> FreestyleProjectBuilder:
+    def _create_freestyle_builder(self) -> ProjectBuilder:
         freestyle_builder = FreestyleProjectBuilder()
         self._add_common_arguments(builder=freestyle_builder)
         freestyle_builder.repository_type = self.repository_type
@@ -179,7 +179,7 @@ class JenkinsJobManager:
 
         return freestyle_builder
 
-    def _create_workflow_builder(self) -> WorkflowProjectBuilder:
+    def _create_workflow_builder(self) -> ProjectBuilder:
         workflow_builder = WorkflowProjectBuilder()
         self._add_common_arguments(builder=workflow_builder)
 

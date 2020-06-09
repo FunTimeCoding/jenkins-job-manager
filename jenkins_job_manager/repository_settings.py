@@ -28,14 +28,14 @@ class RepositorySettings:
         self._repository_locator = value
 
     def __init__(self, repository_type: str, repository_locator: str):
-        self.repository_locator = repository_locator
+        self._repository_locator = repository_locator
 
         if self.is_valid_repository_type(repository_type) is False:
             repository_type = self.guess_repository_type(
                 self.repository_locator
             )
 
-        self.repository_type = repository_type
+        self._repository_type = repository_type
 
     @staticmethod
     def get_repository_types() -> list:

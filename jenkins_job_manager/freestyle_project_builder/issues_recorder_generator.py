@@ -10,21 +10,15 @@ class IssuesRecorderGenerator:
         check_style = Element(
             'io.jenkins.plugins.analysis.warnings.checkstyle.CheckStyle'
         )
-        check_style.append(
-            Helper.create_empty_text_element(tag='id')
-        )
-        check_style.append(
-            Helper.create_empty_text_element(tag='name')
-        )
+        check_style.append(Element('id'))
+        check_style.append(Element('name'))
         check_style.append(
             Helper.create_element_with_text(
                 tag='pattern',
                 text=checkstyle
             )
         )
-        check_style.append(
-            Helper.create_empty_text_element(tag='reportEncoding')
-        )
+        check_style.append(Element('reportEncoding'))
         check_style.append(
             Helper.create_false_boolean_element(tag='skipSymbolicLinks')
         )
@@ -50,12 +44,8 @@ class IssuesRecorderGenerator:
 
     @staticmethod
     def append_source(element: Element) -> None:
-        element.append(
-            Helper.create_empty_text_element(tag='sourceCodeEncoding')
-        )
-        element.append(
-            Helper.create_empty_text_element(tag='sourceDirectory')
-        )
+        element.append(Element('sourceCodeEncoding'))
+        element.append(Element('sourceDirectory'))
 
     @staticmethod
     def append_ignores(element: Element) -> None:
@@ -100,9 +90,7 @@ class IssuesRecorderGenerator:
     def append_nodes(element: Element) -> None:
         IssuesRecorderGenerator.append_source(element=element)
         IssuesRecorderGenerator.append_ignores(element=element)
-        element.append(
-            Helper.create_empty_text_element(tag='referenceJobName')
-        )
+        element.append(Element('referenceJobName'))
         element.append(
             Helper.create_false_boolean_element(tag='failOnError')
         )

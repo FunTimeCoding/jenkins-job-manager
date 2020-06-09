@@ -148,12 +148,17 @@ class FreestyleProjectBuilder(ProjectBuilder):
     def build(self) -> Element:
         project = Element('project')
         project.append(Element('actions'))
-        project.append(
-            Helper.create_element_with_text(
-                tag='description',
-                text=self.description,
+
+        if self.description:
+            project.append(
+                Helper.create_element_with_text(
+                    tag='description',
+                    text=self.description,
+                )
             )
-        )
+        else:
+            project.append(Element('description'))
+
         self._append_general_markup(element=project)
         project.append(
             TriggersGenerator.generate(build_command=self.build_command)

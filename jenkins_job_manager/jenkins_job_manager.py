@@ -43,7 +43,7 @@ class JenkinsJobManager:
         system_exit(JenkinsJobManager(argument_vector[1:]).run())
 
     def run(self) -> int:
-        print("<?xml version='1.1' encoding='UTF-8'?>")
+        print('<?xml version="1.1" encoding="UTF-8"?>')
         print(self.generate_serialized_xml().strip())
 
         return 0

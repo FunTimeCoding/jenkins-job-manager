@@ -7,6 +7,5 @@ SCRIPT_DIRECTORY=$(
 )
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../../configuration/project.sh"
-
-~/src/jenkins-tools/bin/update-job.sh "${PROJECT_NAME_DASH}" configuration/job.xml
-~/src/jenkins-tools/bin/build.sh "${PROJECT_NAME_DASH}"
+"${HOME}/src/continuous-integration-tools/bin/jenkins/update-job.sh" "${PROJECT_NAME_DASH}" configuration/job.xml
+"${HOME}/src/continuous-integration-tools/bin/jenkins/build.sh" "${PROJECT_NAME_DASH}"

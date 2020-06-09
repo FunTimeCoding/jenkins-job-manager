@@ -33,9 +33,9 @@
             <classPattern>**/classes</classPattern>
             <sourcePattern>**/src/main/java</sourcePattern>
             <sourceInclusionPattern>**/*.java,**/*.groovy,**/*.kt,**/*.kts</sourceInclusionPattern>
-            <sourceExclusionPattern></sourceExclusionPattern>
-            <inclusionPattern></inclusionPattern>
-            <exclusionPattern></exclusionPattern>
+            <sourceExclusionPattern/>
+            <inclusionPattern/>
+            <exclusionPattern/>
             <skipCopyOfSrcFiles>false</skipCopyOfSrcFiles>
             <minimumInstructionCoverage>0</minimumInstructionCoverage>
             <minimumBranchCoverage>0</minimumBranchCoverage>

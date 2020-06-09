@@ -41,9 +41,9 @@ class ProjectBuilder:
         self._enabled = value
 
     def __init__(self):
-        self.repository_settings = None
-        self.description = ''
-        self.enabled = True
+        self._repository_settings = None
+        self._description = ''
+        self._enabled = True
 
     def build(self) -> Element:
         pass

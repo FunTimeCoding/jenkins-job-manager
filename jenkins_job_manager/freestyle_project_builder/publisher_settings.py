@@ -61,8 +61,8 @@ class PublisherSettings:
 
     def __init__(self):
         super().__init__()
-        self.junit = ''
-        self.checkstyle = ''
-        self.hypertext_report = ''
-        self.recipients = ''
-        self.jacoco = False
+        self._junit = ''
+        self._checkstyle = ''
+        self._hypertext_report = ''
+        self._recipients = ''
+        self._jacoco = False

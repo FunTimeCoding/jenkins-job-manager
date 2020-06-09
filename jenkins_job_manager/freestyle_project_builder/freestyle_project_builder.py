@@ -1,11 +1,13 @@
 from lxml.etree import Element
 
-from jenkins_job_manager.freestyle_project_builder.publisher_settings import \
-    PublisherSettings
-from jenkins_job_manager.freestyle_project_builder \
-    .publishers_generator import PublishersGenerator
-from jenkins_job_manager.freestyle_project_builder.triggers_generator import \
-    TriggersGenerator
+from jenkins_job_manager.freestyle_project_builder.freestyle_settings \
+    import FreestyleSettings
+from jenkins_job_manager.freestyle_project_builder.publisher_settings \
+    import PublisherSettings
+from jenkins_job_manager.freestyle_project_builder.publishers_generator \
+    import PublishersGenerator
+from jenkins_job_manager.freestyle_project_builder.triggers_generator \
+    import TriggersGenerator
 from jenkins_job_manager.general_markup_generator import GeneralMarkupGenerator
 from jenkins_job_manager.helper import Helper
 from jenkins_job_manager.project_builder import ProjectBuilder
@@ -13,30 +15,6 @@ from jenkins_job_manager.repository_settings import RepositorySettings
 
 
 class FreestyleProjectBuilder(ProjectBuilder):
-    @property
-    def labels(self) -> str:
-        return self._labels
-
-    @labels.getter
-    def labels(self) -> str:
-        return self._labels
-
-    @labels.setter
-    def labels(self, value: str) -> None:
-        self._labels = value
-
-    @property
-    def build_command(self) -> str:
-        return self._build_command
-
-    @build_command.getter
-    def build_command(self) -> str:
-        return self._build_command
-
-    @build_command.setter
-    def build_command(self, value: str) -> None:
-        self._build_command = value
-
     @property
     def publisher_settings(self) -> PublisherSettings:
         return self._publisher_settings
@@ -52,13 +30,13 @@ class FreestyleProjectBuilder(ProjectBuilder):
     def __init__(
             self,
             repository_settings: RepositorySettings,
-            publisher_settings: PublisherSettings
+            publisher_settings: PublisherSettings,
+            freestyle_settings: FreestyleSettings,
     ):
         super().__init__()
-        self.labels = ''
-        self.build_command = ''
-        self.repository_settings = repository_settings
-        self.publisher_settings = publisher_settings
+        self._freestyle_settings = freestyle_settings
+        self._repository_settings = repository_settings
+        self._publisher_settings = publisher_settings
 
     @staticmethod
     def _append_node_labels(element: Element, labels: str):
@@ -91,7 +69,7 @@ class FreestyleProjectBuilder(ProjectBuilder):
         )
         FreestyleProjectBuilder._append_node_labels(
             element=element,
-            labels=self.labels,
+            labels=self._freestyle_settings.labels,
         )
         element.append(Helper.create_false_boolean_element(tag='disabled'))
         element.append(
@@ -145,30 +123,37 @@ class FreestyleProjectBuilder(ProjectBuilder):
 
         element.append(builders)
 
-    def build(self) -> Element:
-        project = Element('project')
-        project.append(Element('actions'))
-
-        if self.description:
-            project.append(
+    @staticmethod
+    def _append_description(parent: Element, description: str) -> None:
+        if description:
+            parent.append(
                 Helper.create_element_with_text(
                     tag='description',
-                    text=self.description,
+                    text=description,
                 )
             )
         else:
-            project.append(Element('description'))
+            parent.append(Element('description'))
 
+    def build(self) -> Element:
+        project = Element('project')
+        project.append(Element('actions'))
+        self._append_description(
+            parent=project,
+            description=self.description,
+        )
         self._append_general_markup(element=project)
         project.append(
-            TriggersGenerator.generate(build_command=self.build_command)
+            TriggersGenerator.generate(
+                build_command=self._freestyle_settings.build_command
+            )
         )
         project.append(
             Helper.create_false_boolean_element(tag='concurrentBuild')
         )
         FreestyleProjectBuilder._append_builders(
             element=project,
-            build_command=self.build_command
+            build_command=self._freestyle_settings.build_command
         )
         self._append_publishers(parent=project)
         project.append(Element('buildWrappers'))

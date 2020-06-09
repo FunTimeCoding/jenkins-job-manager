@@ -7,5 +7,4 @@ SCRIPT_DIRECTORY=$(
 )
 # shellcheck source=/dev/null
 . "${SCRIPT_DIRECTORY}/../../configuration/project.sh"
-
-~/src/jenkins-tools/bin/delete-job.sh "${PROJECT_NAME_DASH}"
+"${HOME}/src/continuous-integration-tools/bin/jenkins/delete-job.sh" "${PROJECT_NAME_DASH}"

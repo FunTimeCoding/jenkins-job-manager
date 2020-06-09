@@ -37,21 +37,9 @@ class JavaCodeCoveragePublisher:
                 ),
             )
         )
-        element.append(
-            Helper.create_empty_text_element(
-                tag='sourceExclusionPattern',
-            )
-        )
-        element.append(
-            Helper.create_empty_text_element(
-                tag='inclusionPattern',
-            )
-        )
-        element.append(
-            Helper.create_empty_text_element(
-                tag='exclusionPattern',
-            )
-        )
+        element.append(Element('sourceExclusionPattern'))
+        element.append(Element('inclusionPattern'))
+        element.append(Element('exclusionPattern'))
 
     @staticmethod
     def append_minimum_limits(element: Element) -> None:

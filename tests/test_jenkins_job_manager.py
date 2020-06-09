@@ -3,10 +3,10 @@ from jenkins_job_manager.lxml_helper import serialize_element
 from jenkins_job_manager.repository_settings import RepositorySettings
 from tests.helper import load_fixture
 
-GIT_LOCATOR = 'http://example.org/my_git_repo.git'
-GITHUB_LOCATOR = 'http://github.com/username/my_git_repo'
-UNKNOWN_LOCATOR = 'http://example.org/no_known_repository_type'
-SUBVERSION_LOCATOR = 'http://example.org/my_svn_repo'
+GIT_LOCATOR = 'https://example.org/my_git_repo.git'
+GITHUB_LOCATOR = 'https://github.com/username/my_git_repo'
+UNKNOWN_LOCATOR = 'https://example.org/no_known_repository_type'
+SUBVERSION_LOCATOR = 'https://example.org/my_svn_repo'
 
 
 def test_missing_locator() -> None:

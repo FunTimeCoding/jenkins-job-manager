@@ -8,7 +8,7 @@
         <configVersion>2</configVersion>
         <userRemoteConfigs>
             <hudson.plugins.git.UserRemoteConfig>
-                <url>http://example.org/my_git_repo.git</url>
+                <url>https://example.org/my_git_repo.git</url>
             </hudson.plugins.git.UserRemoteConfig>
         </userRemoteConfigs>
         <branches>

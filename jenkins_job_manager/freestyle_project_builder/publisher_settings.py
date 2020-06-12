@@ -1,3 +1,8 @@
+
+
+# I do not know if 5 attributes should be allowed or if I should make a
+# workaround and store all settings in one dict attribute.
+# pylint: disable=R0902
 class PublisherSettings:
     @property
     def junit(self) -> str:

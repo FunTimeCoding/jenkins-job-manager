@@ -16,6 +16,7 @@ class WorkflowProjectBuilder(ProjectBuilder):
         'multibranch',
         'WorkflowMultiBranchProject'
     ]
+    BRANCH_PLUGIN = 'branch-api@2.1.2'
 
     def __init__(self, repository_settings: RepositorySettings):
         super().__init__()
@@ -44,7 +45,10 @@ class WorkflowProjectBuilder(ProjectBuilder):
             'class',
             'jenkins.branch.MultiBranchProjectViewHolder'
         )
-        folder_views.set('plugin', 'branch-api@2.1.2')
+        folder_views.set(
+            'plugin',
+            WorkflowProjectBuilder.BRANCH_PLUGIN
+        )
         folder_views.append(self._create_owner())
         parent.append(folder_views)
 
@@ -69,7 +73,10 @@ class WorkflowProjectBuilder(ProjectBuilder):
     def _append_icon(self, parent: Element) -> None:
         icon = Element('icon')
         icon.set('class', 'jenkins.branch.MetadataActionFolderIcon')
-        icon.set('plugin', 'branch-api@2.1.2')
+        icon.set(
+            'plugin',
+            WorkflowProjectBuilder.BRANCH_PLUGIN
+        )
         icon.append(self._create_owner())
         parent.append(icon)
 
@@ -144,7 +151,10 @@ class WorkflowProjectBuilder(ProjectBuilder):
                 ]
             ),
         )
-        sources.set('plugin', 'branch-api@2.1.2')
+        sources.set(
+            'plugin',
+            WorkflowProjectBuilder.BRANCH_PLUGIN
+        )
         self._append_data(parent=sources)
         sources.append(self._create_owner())
         parent.append(sources)

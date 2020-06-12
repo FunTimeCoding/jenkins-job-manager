@@ -46,4 +46,5 @@ class ProjectBuilder:
         self._enabled = True
 
     def build(self) -> Element:
+        # Empty because child classes should implement.
         pass

@@ -1,3 +1,5 @@
+import pytest
+
 from jenkins_job_manager.jenkins_job_manager import JenkinsJobManager
 from jenkins_job_manager.lxml_helper import serialize_element
 from jenkins_job_manager.repository_settings import RepositorySettings
@@ -10,11 +12,8 @@ SUBVERSION_LOCATOR = 'https://example.org/my_svn_repo'
 
 
 def test_missing_locator() -> None:
-    try:
+    with pytest.raises(SystemExit):
         JenkinsJobManager([])
-        assert False
-    except SystemExit as exception:
-        assert str(exception) == '1'
 
 
 def test_generate_with_git_repository() -> None:
